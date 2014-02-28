@@ -48,7 +48,7 @@ else {
 
 ~~@ARGV || die "syntax: build <module>\n";
 
-open F,"<$ARGV[0]/manifest.json" or die "failed to read manifest";
+open F,"<plugins/$ARGV[0]/manifest.json" or die "failed to read manifest";
 my $manifest;
 {
     local $/;
@@ -87,7 +87,7 @@ if (!$conf_use_cached_src) {
     if (exists $manifest->{source}->{patches}) {
         print "\napplying patches\n";
         for my $p (@{$manifest->{source}->{patches}}) {
-            system ("cd $ROOT/$manifest->{make}->{root}; patch -p1 <$ORIGIN/$ARGV[0]/$p");
+            system ("cd $ROOT/$manifest->{make}->{root}; patch -p1 <$ORIGIN/plugins/$ARGV[0]/$p");
         }
     }
 }

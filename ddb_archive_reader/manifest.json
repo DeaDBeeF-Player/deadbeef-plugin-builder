@@ -1,0 +1,20 @@
+{
+    source: {
+        type: "svn",
+        url: "https://subversion.assembla.com/svn/deadbeef_vfs_archive_reader/trunk",
+//        branch: "trunk"
+        patches: [
+            "ext_flags.patch",
+        ]
+    },
+    make: {
+        type: "make",
+        ENV: [
+            { ZLIB_LIBS: "$LIBDIR/lib/libz.a" },
+        ],
+        root: "src",
+        out: [
+            "src/ddb_archive_reader.so"
+        ],
+    }
+}

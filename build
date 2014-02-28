@@ -1,0 +1,125 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use FindBin qw'$Bin';
+use lib "$FindBin::Bin";
+use lib "$FindBin::Bin/perl_lib";
+BEGIN { $ENV{PERL_JSON_BACKEND} = 0 }
+use JSON -support_by_pp;
+use Data::Dumper;
+use File::Path qw(rmtree);
+
+
+my $conf_use_cached_src;
+
+#$conf_use_cached_src = 1;
+
+
+my $ORIGIN=$FindBin::Bin;
+chdir($ORIGIN);
+
+if (-e 'static-deps') {
+    print "static-deps exists, delete for redownload\n";
+}
+else {
+    print "downloading static-deps...\n";
+    system ('wget http://sourceforge.net/projects/deadbeef/files/staticdeps/ddb-static-deps-latest.tar.bz2/download -O temp/ddb-static-deps.tar.bz2 && mkdir static-deps && tar jxf temp/ddb-static-deps.tar.bz2 -C static-deps');
+    die "static-deps download error\n" if ($?);
+}
+
+my $LIBDIR;
+my $CFLAGS;
+my $LDFLAGS;
+my $ARCH = $ENV{ARCH};
+
+if ($ARCH eq 'i686') {
+    $LIBDIR="$ORIGIN/static-deps/lib-x86-32";
+    $CFLAGS="-m32 -I$LIBDIR/include/i386-linux-gnu";
+    $LDFLAGS='-melf_i386';
+}
+elsif ($ARCH eq 'x86_64') {
+    $LIBDIR="$ORIGIN/static-deps/lib-x86-64";
+    $CFLAGS="-m64 -I$LIBDIR/include/x86_64-linux-gnu";
+    $LDFLAGS='-melf_x86_64';
+    }
+else {
+    die "unknown arch $ARCH\n";
+}
+
+~~@ARGV || die "syntax: build <module>\n";
+
+open F,"<$ARGV[0]/manifest.json" or die "failed to read manifest";
+my $manifest;
+{
+    local $/;
+    $manifest = <F>;
+}
+close F;
+
+my $json = JSON->new;
+$json->relaxed([1]);
+$json->allow_singlequote([1]);
+$json->allow_barekey([1]);
+
+$manifest = $json->decode($manifest);
+
+#print Dumper($manifest)."\n";
+
+my $ROOT = "temp/$ARGV[0]";
+mkdir "temp";
+print "getting source code using $manifest->{source}->{type} from $manifest->{source}->{url}\n";
+if (!$conf_use_cached_src) {
+    rmtree $ROOT;
+    if ($manifest->{source}->{type} eq 'svn') {
+        system ("svn checkout $manifest->{source}->{url} $ROOT");
+        die "svn checkout failed\n" if ($?);
+    }
+    elsif ($manifest->{source}->{type} eq 'git') {
+        system ("git clone $manifest->{source}->{url} $ROOT");
+        die "git clone failed\n" if ($?);
+    }
+    elsif ($manifest->{source}->{type} eq 'hg') {
+        system ("hg clone $manifest->{source}->{url} $ROOT");
+        die "hg clone failed\n" if ($?);
+    }
+    print "\nsource code download success.\n";
+
+    if (exists $manifest->{source}->{patches}) {
+        print "\napplying patches\n";
+        for my $p (@{$manifest->{source}->{patches}}) {
+            system ("cd $ROOT/$manifest->{make}->{root}; patch -p1 <$ORIGIN/$ARGV[0]/$p");
+        }
+    }
+}
+
+print "\npreparing environment...\n";
+
+
+my $AP="$ORIGIN/tools/apbuild";
+`cd $AP; ./apinit`;
+$ENV{CC}="$AP/apgcc";
+$ENV{CXX}="$AP/apg++";
+$ENV{APBUILD_STATIC_LIBGCC}=1;
+$ENV{CFLAGS} = "$CFLAGS -I$LIBDIR/include";
+$ENV{CXXFLAGS} = "$CFLAGS";
+$ENV{LDFLAGS} = "$LDFLAGS -L$LIBDIR/lib";
+
+if (exists $manifest->{make}->{ENV}) {
+    for my $i (@{$manifest->{make}->{ENV}}) {
+        for my $n (keys %$i) {
+            my $v = eval("\"$i->{$n}\"");
+            print "$n=$v\n";
+            $ENV{$n} = $v;
+        }
+    }
+}
+
+print "changing to: $ROOT/$manifest->{make}->{root}\n";
+print "\ninvoking make\n";
+if ($manifest->{make}->{type} eq 'make') {
+    system ("cd $ROOT/$manifest->{make}->{root}; make");
+}
+else {
+    die "make type '$manifest->{make}->{type}' is not supported\n";
+}
+

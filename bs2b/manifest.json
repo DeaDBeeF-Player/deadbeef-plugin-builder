@@ -1,0 +1,19 @@
+{
+    source: {
+        type: "git",
+        url: "git://gitorious.org/deadbeef-sm-plugins/bs2b.git",
+        patches: [
+            "bs2b.diff"
+        ],
+    },
+    make: {
+        type: "make",
+        ENV: [
+            { BS2B_LIBS: "$LIBDIR/lib/libbs2b.a" },
+        ],
+        root: "/",
+        out: [
+            "src/ddb_bs2b.so"
+        ],
+    }
+}

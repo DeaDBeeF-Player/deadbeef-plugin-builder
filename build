@@ -30,17 +30,20 @@ else {
 my $LIBDIR;
 my $CFLAGS;
 my $LDFLAGS;
+my $CONFIGURE_FLAGS;
 my $ARCH = $ENV{ARCH};
 
 if ($ARCH eq 'i686') {
     $LIBDIR="$ORIGIN/static-deps/lib-x86-32";
     $CFLAGS="-m32 -I$LIBDIR/include/i386-linux-gnu";
-    $LDFLAGS='-melf_i386';
+    $CONFIGURE_FLAGS = "--build=i686-unknown-linux-gnu";
+#    $LDFLAGS='-melf_i386';
 }
 elsif ($ARCH eq 'x86_64') {
     $LIBDIR="$ORIGIN/static-deps/lib-x86-64";
     $CFLAGS="-m64 -I$LIBDIR/include/x86_64-linux-gnu";
-    $LDFLAGS='-melf_x86_64';
+#    $LDFLAGS='-melf_x86_64';
+    $CONFIGURE_FLAGS="--build=x86_64-unknown-linux-gnu";
     }
 else {
     die "unknown arch $ARCH\n";
@@ -72,15 +75,15 @@ if (!$conf_use_cached_src) {
     rmtree $ROOT;
     if ($manifest->{source}->{type} eq 'svn') {
         system ("svn checkout $manifest->{source}->{url} $ROOT");
-        die "svn checkout failed\n" if ($?);
+        die "svn checkout failed\n" if $?;
     }
     elsif ($manifest->{source}->{type} eq 'git') {
         system ("git clone $manifest->{source}->{url} $ROOT");
-        die "git clone failed\n" if ($?);
+        die "git clone failed\n" if $?;
     }
     elsif ($manifest->{source}->{type} eq 'hg') {
         system ("hg clone $manifest->{source}->{url} $ROOT");
-        die "hg clone failed\n" if ($?);
+        die "hg clone failed\n" if $?;
     }
     print "\nsource code download success.\n";
 
@@ -88,6 +91,7 @@ if (!$conf_use_cached_src) {
         print "\napplying patches\n";
         for my $p (@{$manifest->{source}->{patches}}) {
             system ("cd $ROOT/$manifest->{make}->{root}; patch -p1 <$ORIGIN/plugins/$ARGV[0]/$p");
+            die "patch failed\n" if $?;
         }
     }
 }
@@ -103,6 +107,17 @@ $ENV{APBUILD_STATIC_LIBGCC}=1;
 $ENV{CFLAGS} = "$CFLAGS -I$LIBDIR/include";
 $ENV{CXXFLAGS} = "$CFLAGS";
 $ENV{LDFLAGS} = "$LDFLAGS -L$LIBDIR/lib";
+my $GTK_ROOT="$LIBDIR/gtk-2.12.12/usr";
+my $GTK_ROOT_216="$LIBDIR/gtk-2.16.0";
+my $GTK_ROOT_300="$LIBDIR/gtk-3.0.0";
+
+my $GTK216_CFLAGS = "-I${GTK_ROOT_216}/include/gtk-2.0 -I${GTK_ROOT_216}/lib/gtk-2.0/include -I${GTK_ROOT_216}/include/atk-1.0 -I${GTK_ROOT_216}/include/cairo -I${GTK_ROOT_216}/include/pango-1.0 -I${GTK_ROOT_216}/include -I${GTK_ROOT_216}/include/glib-2.0 -I${GTK_ROOT_216}/lib/glib-2.0/include";
+
+my $GTK216_LIBS="-L${GTK_ROOT_216}/lib -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgio-2.0 -lpangoft2-1.0 -lgdk_pixbuf-2.0 -lpangocairo-1.0 -lcairo -lpango-1.0 -lfreetype -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lglib-2.0";
+
+my $GTK300_CFLAGS="-I${GTK_ROOT_300}/include/gtk-3.0 -I${GTK_ROOT_300}/include/pango-1.0 -I${GTK_ROOT_300}/include/gio-unix-2.0/ -I${GTK_ROOT_300}/include/atk-1.0 -I${GTK_ROOT_300}/include/cairo -I${GTK_ROOT_300}/include/gdk-pixbuf-2.0 -I${GTK_ROOT_300}/include/freetype2 -I${GTK_ROOT_300}/include/glib-2.0 -I${GTK_ROOT_300}/lib/glib-2.0/include";
+
+my $GTK300_LIBS="-L${GTK_ROOT_300}/lib -lgtk-3 -lgdk-3 -latk-1.0 -lgio-2.0 -lpangocairo-1.0 -lgdk_pixbuf-2.0 -lcairo-gobject -lpango-1.0 -lcairo -lgobject-2.0 -lgthread-2.0 -lglib-2.0 -lfreetype";
 
 if (exists $manifest->{make}->{ENV}) {
     for my $i (@{$manifest->{make}->{ENV}}) {
@@ -118,6 +133,21 @@ print "changing to: $ROOT/$manifest->{make}->{root}\n";
 print "\ninvoking make\n";
 if ($manifest->{make}->{type} eq 'make') {
     system ("cd $ROOT/$manifest->{make}->{root}; make");
+    die "make finished with an error\n" if $?;
+}
+elsif ($manifest->{make}->{type} eq 'autotools') {
+    if (exists $manifest->{make}->{bootstrap}) {
+        system ("cd $ROOT/$manifest->{make}->{root}; $manifest->{make}->{bootstrap}");
+        die "$manifest->{make}->{bootstrap} finished with an error\n" if $?;
+    }
+    my $conf_flags = $CONFIGURE_FLAGS;
+    if (exists $manifest->{make}->{configure_flags}) {
+        $conf_flags .= ' '.$manifest->{make}->{configure_flags};
+    }
+    system ("cd $ROOT/$manifest->{make}->{root}; ./configure $conf_flags");
+    die "configure finished with an error\n" if $?;
+    system ("cd $ROOT/$manifest->{make}->{root}; make");
+    die "make finished with an error\n" if $?;
 }
 else {
     die "make type '$manifest->{make}->{type}' is not supported\n";

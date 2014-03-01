@@ -1,0 +1,20 @@
+diff --git a/Makefile.am b/Makefile.am
+index 0200783..0f87573 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -36,13 +36,13 @@ endif
+ # normal lib
+ if HAVE_GTK2
+ ddb_misc_filebrowser_GTK2_la_SOURCES = $(filebrowser_SOURCES)
+-ddb_misc_filebrowser_GTK2_la_LDFLAGS = -module
++ddb_misc_filebrowser_GTK2_la_LDFLAGS = -module -avoid-version
+ ddb_misc_filebrowser_GTK2_la_LIBADD  = $(LDADD) $(GTK2_DEPS_LIBS)
+ ddb_misc_filebrowser_GTK2_la_CFLAGS  = -std=c99 $(GTK2_DEPS_CFLAGS) -Wall
+ endif
+ if HAVE_GTK3
+ ddb_misc_filebrowser_GTK3_la_SOURCES = $(filebrowser_SOURCES)
+-ddb_misc_filebrowser_GTK3_la_LDFLAGS = -module
++ddb_misc_filebrowser_GTK3_la_LDFLAGS = -module -avoid-version
+ ddb_misc_filebrowser_GTK3_la_LIBADD  = $(LDADD) $(GTK3_DEPS_LIBS)
+ ddb_misc_filebrowser_GTK3_la_CFLAGS  = -std=c99 $(GTK3_DEPS_CFLAGS) -Wall
+ endif

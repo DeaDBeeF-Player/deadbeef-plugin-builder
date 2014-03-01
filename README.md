@@ -31,10 +31,10 @@ This will produce static build of bs2b plugin
 * fetching sources from svn, hg, git
 * patching
 * building with GNU Make (make->type=make)
+* building with autotools (make->type=autotools)
 
 ## What doesn't work (yet)
 
-* autotools (configure && make)
 * generating final zips
 * lots of other things
 

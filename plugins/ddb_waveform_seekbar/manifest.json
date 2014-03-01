@@ -1,0 +1,17 @@
+{
+    source: {
+        type: "git",
+        url: "https://github.com/cboxdoerfer/ddb_waveform_seekbar.git",
+        patches: [
+            "make.patch",
+            ]
+    },
+    make: {
+        type: "make",
+        root: "/",
+        out: [
+            "src/gtk2/ddb_misc_waveform_GTK2.so",
+            "src/gtk3/ddb_misc_waveform_GTK3.so"
+            ]
+    }
+}

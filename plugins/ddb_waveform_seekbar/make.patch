@@ -1,0 +1,24 @@
+diff --git a/Makefile b/Makefile
+index 872f73d..2ac7856 100644
+--- a/Makefile
++++ b/Makefile
+@@ -36,8 +36,8 @@ GTK3_LIBS?=`pkg-config --libs gtk+-3.0`
+ SQLITE_LIBS?=-lsqlite3
+ 
+ CC?=gcc
+-CFLAGS+=-Wall -fPIC -std=c99 -D_GNU_SOURCE
+-LDFLAGS+=-shared
++CFLAGS+=-Wall -fPIC -std=c99 -D_GNU_SOURCE -shared -lm
++LDFLAGS+=-shared -lm
+ 
+ GTK2_DIR?=gtk2
+ GTK3_DIR?=gtk3
+@@ -51,7 +51,7 @@ define compile
+ endef
+ 
+ define link
+-	$(CC) $(LDFLAGS) $1 $2 $3 -o $@
++	$(CC) -Wl,$(LDFLAGS) $1 $2 $3 -o $@
+ endef
+ 
+ # Builds both GTK+2 and GTK+3 versions of the plugin.

@@ -18,7 +18,7 @@ index cf49b21..5919b68 100644
 +all: $(SOURCES) $(OUT)
 +
 +$(OUT): $(OBJECTS)
-+	$(CC) $(CFLAGS) $(OBJECTS) -o $@ $(BS2B_LIBS) -Wl,$(LDFLAGS) 
++	$(CC) $(CFLAGS) $(OBJECTS) -o $@ $(BS2B_LIBS) $(LDFLAGS) 
 +
 +.c.o:
 +	$(CC) $(CFLAGS) $< -c -o $@

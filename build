@@ -27,9 +27,9 @@ else {
     die "static-deps download error\n" if ($?);
 }
 
-my $LIBDIR;
-my $CFLAGS;
-my $LDFLAGS;
+my $LIBDIR="";
+my $CFLAGS="";
+my $LDFLAGS="";
 my $CONFIGURE_FLAGS;
 my $ARCH = $ENV{ARCH};
 

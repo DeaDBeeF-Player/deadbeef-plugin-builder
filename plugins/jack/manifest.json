@@ -1,0 +1,18 @@
+{
+    source: {
+        type: "git",
+        url: "git://gitorious.org/deadbeef-sm-plugins/jack.git",
+        patches: [
+            "buildfix.diff"
+        ],
+    },
+    make: {
+        type: "make",
+        ENV: [
+        ],
+        root: "/",
+        out: [
+            "ddb_jack.so"
+        ],
+    }
+}

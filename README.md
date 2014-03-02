@@ -1,3 +1,6 @@
+
+[![Build Status](https://drone.io/github.com/Alexey-Yakovenko/deadbeef-plugin-builder/status.png)](https://drone.io/github.com/Alexey-Yakovenko/deadbeef-plugin-builder/latest)
+
 # DeaDBeeF Plugin Builder
 
 ## Intro

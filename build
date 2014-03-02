@@ -22,7 +22,7 @@ GetOptions ("help|?" => \$help,
 or die ("error in cmdline args\n");
 
 if ($help) {
-    print "Usage: $0 [options] plugin_name(s)\n";
+    print "Usage: $0 [options] [plugin_name(s)]\n";
     print "Options:\n";
     print "  --help                 Show this text\n";
     print "  --nofetch              Don't fetch package sources, use the cached copy\n";
@@ -70,8 +70,6 @@ else {
     die "static-deps download error\n" if ($?);
 }
 
-~~@ARGV || die "syntax: build <module>\n";
-
 
 my $AP="$ORIGIN/tools/apbuild";
 `cd $AP; ./apinit`;
@@ -95,7 +93,16 @@ my $GTK300_LIBS="-L${GTK_ROOT_300}/lib -lgtk-3 -lgdk-3 -latk-1.0 -lgio-2.0 -lpan
 
 my %CLEAN_ENV = %ENV;
 
-for my $package (@ARGV) {
+my @packages;
+
+if (~~@ARGV) {
+    @packages = @ARGV;
+}
+else {
+    @packages = split (/\n/, `ls plugins`);
+}
+
+for my $package (@packages) {
     %ENV = %CLEAN_ENV;
     open F,"<plugins/$package/manifest.json" or die "failed to read manifest";
     my $manifest;

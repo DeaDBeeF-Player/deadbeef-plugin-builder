@@ -42,7 +42,7 @@ This is useful when trying to make a patch, more on this below.
 1. Run ./build --arch=x86_64 pluginname
 2. Look at the errors, and correct them in the cached sources (temp/pluginname)
 3. Re-run ./build --nofetch --arch=x86_64 pluginname (notice the nofetch). If you don't use --nofetch -- your local modifications will be lost
-4. Repeat until you're happy with the result, then do something like "git diff >../plugins/pluginname/buildfixes.diff", and add the patch into manifest.
+4. Repeat until you're happy with the result, then do something like "git diff >../../plugins/pluginname/buildfixes.diff", and add the patch into manifest.
 
 ## What works
 

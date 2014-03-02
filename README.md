@@ -14,14 +14,18 @@ Not all features are supported yet, but it's getting there.
 
 It's early work in progress, so don't expect much yet.
 
-## Requirements:
+## Requirements
 
-wget, perl, tar, make
+* x86\_64 linux distro with ia32libs installed
+* wget, tar, bzip2 for downloading and unpacking dependencies
+* perl
+* make, autotools for building
 
 ## How to use
 
 ````
 ARCH=i686 ./build bs2b
+ARCH=x86_64./build bs2b
 ````
 
 This will produce static build of bs2b plugin

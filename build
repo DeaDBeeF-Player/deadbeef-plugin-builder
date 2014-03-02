@@ -60,12 +60,12 @@ else {
 
 $ENV{ARCH} = $ARCH;
 
-
 if (-e 'static-deps') {
     print "static-deps exists, delete for redownload\n";
 }
 else {
     print "downloading static-deps...\n";
+    mkdir "temp";
     system ('wget http://sourceforge.net/projects/deadbeef/files/staticdeps/ddb-static-deps-latest.tar.bz2/download -O temp/ddb-static-deps.tar.bz2 && mkdir static-deps && tar jxf temp/ddb-static-deps.tar.bz2 -C static-deps');
     die "static-deps download error\n" if ($?);
 }
@@ -122,7 +122,6 @@ for my $package (@packages) {
     #print Dumper($manifest)."\n";
 
     my $ROOT = "temp/$package";
-    mkdir "temp";
     print "getting source code using $manifest->{source}->{type} from $manifest->{source}->{url}\n";
     if (!$conf_use_cached_src) {
         rmtree $ROOT;

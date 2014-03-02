@@ -7,7 +7,7 @@ Index: src/Makefile
  
  $(OUT): vfs_archive_reader.c libfex.a
 -	$(CC) $(CFLAGS) vfs_archive_reader.c libfex.a $(LDFLAGS) -o $(OUT)
-+	$(CC) $(CFLAGS) vfs_archive_reader.c libfex.a -o $(OUT) -Wl,$(LDFLAGS)
++	$(CC) $(CFLAGS) vfs_archive_reader.c libfex.a -o $(OUT) $(LDFLAGS)
  
  libfex.a: libfex
  	mv fex/libfex.a .

@@ -66,8 +66,7 @@ if (-e 'static-deps') {
 else {
     print "downloading static-deps...\n";
     mkdir "temp";
-    system ('wget http://sourceforge.net/projects/deadbeef/files/staticdeps/ddb-static-deps-latest.tar.bz2/download -O temp/ddb-static-deps.tar.bz2 && mkdir static-deps && tar jxf temp/ddb-static-deps.tar.bz2 -C static-deps');
-    die "static-deps download error\n" if ($?);
+    system ('wget http://sourceforge.net/projects/deadbeef/files/staticdeps/ddb-static-deps-latest.tar.bz2/download -O temp/ddb-static-deps.tar.bz2 && mkdir static-deps && tar jxf temp/ddb-static-deps.tar.bz2 -C static-deps') && die "failed to download static-deps\n";
 }
 
 
@@ -126,24 +125,20 @@ for my $package (@packages) {
     if (!$conf_use_cached_src) {
         rmtree $ROOT;
         if ($manifest->{source}->{type} eq 'svn') {
-            system ("svn checkout $manifest->{source}->{url} $ROOT");
-            die "svn checkout failed\n" if $?;
+            system ("svn checkout $manifest->{source}->{url} $ROOT") && die "svn checkout failed\n";
         }
         elsif ($manifest->{source}->{type} eq 'git') {
-            system ("git clone $manifest->{source}->{url} $ROOT");
-            die "git clone failed\n" if $?;
+            system ("git clone $manifest->{source}->{url} $ROOT") && die "git clone failed\n";
         }
         elsif ($manifest->{source}->{type} eq 'hg') {
-            system ("hg clone $manifest->{source}->{url} $ROOT");
-            die "hg clone failed\n" if $?;
+            system ("hg clone $manifest->{source}->{url} $ROOT") && die "hg clone failed\n";
         }
         print "\nsource code download success.\n";
 
         if (exists $manifest->{source}->{patches}) {
             print "\napplying patches\n";
             for my $p (@{$manifest->{source}->{patches}}) {
-                system ("cd $ROOT/$manifest->{make}->{root}; patch -p1 <$ORIGIN/plugins/$package/$p");
-                die "patch failed\n" if $?;
+                system ("cd $ROOT/$manifest->{make}->{root}; patch -p1 <$ORIGIN/plugins/$package/$p") && die "patch failed\n";
             }
         }
     }
@@ -165,24 +160,20 @@ for my $package (@packages) {
     print "\ninvoking make\n";
     if ($manifest->{make}->{type} eq 'make') {
         system ("cd $ROOT/$manifest->{make}->{root}; make clean") if $conf_use_cached_src;
-        system ("cd $ROOT/$manifest->{make}->{root}; make");
-        die "make finished with an error\n" if $?;
+        system ("cd $ROOT/$manifest->{make}->{root}; make") && die "make finished with an error\n";
     }
     elsif ($manifest->{make}->{type} eq 'autotools') {
         system ("cd $ROOT/$manifest->{make}->{root}; make distclean") if $conf_use_cached_src;
         if (exists $manifest->{make}->{bootstrap}) {
-            system ("cd $ROOT/$manifest->{make}->{root}; $manifest->{make}->{bootstrap}");
-            die "$manifest->{make}->{bootstrap} finished with an error\n" if $?;
+            system ("cd $ROOT/$manifest->{make}->{root}; $manifest->{make}->{bootstrap}") && die "$manifest->{make}->{bootstrap} finished with an error\n";
         }
         my $conf_flags = $CONFIGURE_FLAGS;
         if (exists $manifest->{make}->{configure_flags}) {
             $conf_flags .= ' '.$manifest->{make}->{configure_flags};
         }
-        system ("cd $ROOT/$manifest->{make}->{root}; ./configure $conf_flags");
-        die "configure finished with an error\n" if $?;
+        system ("cd $ROOT/$manifest->{make}->{root}; ./configure $conf_flags") && die "configure finished with an error\n";
         system ("cd $ROOT/$manifest->{make}->{root}; make clean") if $conf_use_cached_src;
-        system ("cd $ROOT/$manifest->{make}->{root}; make");
-        die "make finished with an error\n" if $?;
+        system ("cd $ROOT/$manifest->{make}->{root}; make") && die "make finished with an error\n";
     }
     else {
         die "make type '$manifest->{make}->{type}' is not supported\n";

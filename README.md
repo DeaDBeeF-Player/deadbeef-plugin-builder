@@ -20,6 +20,9 @@ It's early work in progress, so don't expect much yet.
 * wget, tar, bzip2 for downloading and unpacking dependencies
 * perl
 * make, autotools for building
+* deadbeef installed
+    * alternatively, unpack
+      [this](http://sourceforge.net/projects/deadbeef/files/staticdeps/ddb-headers-latest.tar.bz2/download) into static-deps/lib-x86-32 and static-deps/lib-x86-64
 
 ## Usage examples
 

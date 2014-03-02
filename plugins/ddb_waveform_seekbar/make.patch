@@ -18,7 +18,7 @@ index 872f73d..2ac7856 100644
  
  define link
 -	$(CC) $(LDFLAGS) $1 $2 $3 -o $@
-+	$(CC) -Wl,$(LDFLAGS) $1 $2 $3 -o $@
++	$(CC) $(CFLAGS) $(LDFLAGS) $1 $2 $3 -o $@
  endef
  
  # Builds both GTK+2 and GTK+3 versions of the plugin.

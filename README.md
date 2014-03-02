@@ -6,7 +6,7 @@ This is the deadbeef plugin build system, as the name implies.
 
 Each plugin has a subfolder under plugins, and a manifest.json in it.
 
-Example: plugins/bs2b/manifest
+Example: plugins/bs2b/manifest.json
 
 The folder can also have patch(es), referenced from manifest.
 
@@ -21,14 +21,28 @@ It's early work in progress, so don't expect much yet.
 * perl
 * make, autotools for building
 
-## How to use
+## Usage examples
+
+### Build bs2b and ddb\_waveform\_seekbar for i686
 
 ````
-ARCH=i686 ./build bs2b
-ARCH=x86_64./build bs2b
+./build --arch=i686 bs2b ddb_waveform_seekbar
 ````
 
-This will produce static build of bs2b plugin
+### Build filebrowser for x86_64 using pre-downloaded sources
+
+````
+./build --arch=x86_64 --nofetch ddb_filebrowser
+````
+
+This is useful when trying to make a patch, more on this below.
+
+## How to make a patch
+
+1. Run ./build --arch=x86_64 pluginname
+2. Look at the errors, and correct them in the cached sources (temp/pluginname)
+3. Re-run ./build --nofetch --arch=x86_64 pluginname (notice the nofetch). If you don't use --nofetch -- your local modifications will be lost
+4. Repeat until you're happy with the result, then do something like "git diff >../plugins/pluginname/buildfixes.diff", and add the patch into manifest.
 
 ## What works
 

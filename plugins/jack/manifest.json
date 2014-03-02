@@ -12,7 +12,7 @@
         ],
         root: "/",
         out: [
-            "ddb_jack.so"
+            "jack.so"
         ],
     }
 }

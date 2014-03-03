@@ -1,0 +1,21 @@
+{
+    source: {
+        type: "git",
+        url: "https://github.com/barthez/deadbeef-gnome-mmkeys.git",
+        patches: [
+            "buildfix.diff"
+        ],
+    },
+    make: {
+        type: "make",
+        ENV: [
+            { PKG_CONFIG_PATH: "${GTK_ROOT_300}/lib/pkgconfig" },
+            { INCLUDES: "-I${GTK_ROOT_300}/include/glib-2.0 -I${GTK_ROOT_300}/lib/glib-2.0/include" },
+            { LIBS: "-L${GTK_ROOT_300}/lib -lgio-2.0 -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lglib-2.0"},
+        ],
+        root: "/",
+        out: [
+            "ddb_gnome_mmkeys.so"
+        ],
+    }
+}

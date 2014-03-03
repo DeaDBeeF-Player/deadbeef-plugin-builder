@@ -1,0 +1,20 @@
+{
+    source: {
+        type: "hg",
+        url: "https://bitbucket.org/trollixx/deadbeef-lyrics",
+        patches: [
+            "buildfix.diff"
+        ],
+    },
+    make: {
+        type: "make",
+        ENV: {
+            GTK2_CFLAGS: "$GTK216_CFLAGS",
+            GTK2_LIBS: "$GTK216_LIBS",
+        },
+        root: "/",
+        out: [
+            "ddb_lyrics.so",
+        ],
+    }
+}

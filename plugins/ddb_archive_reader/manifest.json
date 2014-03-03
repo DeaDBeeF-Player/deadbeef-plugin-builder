@@ -9,9 +9,9 @@
     },
     make: {
         type: "make",
-        ENV: [
-            { ZLIB_LIBS: "$LIBDIR/lib/libz.a" },
-        ],
+        ENV: {
+            ZLIB_LIBS: "$LIBDIR/lib/libz.a"
+        },
         root: "src",
         out: [
             "src/ddb_archive_reader.so"

@@ -8,9 +8,9 @@
     },
     make: {
         type: "make",
-        ENV: [
-            { BS2B_LIBS: "$LIBDIR/lib/libbs2b.a" },
-        ],
+        ENV: {
+            BS2B_LIBS: "$LIBDIR/lib/libbs2b.a"
+        },
         root: "/",
         out: [
             "src/ddb_bs2b.so"

@@ -10,12 +10,12 @@
         type: "autotools",
         bootstrap: "./autogen.sh",
         configure_flags: "--enable-gtk2 --enable-gtk3",
-        ENV: [
-            { GTK2_DEPS_CFLAGS: "$GTK216_CFLAGS" },
-            { GTK2_DEPS_LIBS: "$GTK216_LIBS" },
-            { GTK3_DEPS_CFLAGS: "$GTK300_CFLAGS" },
-            { GTK3_DEPS_LIBS: "$GTK300_LIBS" },
-        ],
+        ENV: {
+            GTK2_DEPS_CFLAGS: "$GTK216_CFLAGS",
+            GTK2_DEPS_LIBS: "$GTK216_LIBS",
+            GTK3_DEPS_CFLAGS: "$GTK300_CFLAGS",
+            GTK3_DEPS_LIBS: "$GTK300_LIBS",
+        },
         root: "",
         out: [
             ".libs/ddb_misc_filebrowser_GTK2.so",

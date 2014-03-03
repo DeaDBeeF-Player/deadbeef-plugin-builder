@@ -8,8 +8,8 @@
     },
     make: {
         type: "make",
-        ENV: [
-        ],
+        ENV: {
+        },
         root: "/",
         out: [
             "jack.so"

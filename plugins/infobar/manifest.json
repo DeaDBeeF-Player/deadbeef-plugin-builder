@@ -8,14 +8,14 @@
     },
     make: {
         type: "make",
-        ENV: [
-            { GTK2_CFLAGS: "$GTK216_CFLAGS" },
-            { GTK2_LIBS: "$GTK216_LIBS" },
-            { GTK3_CFLAGS: "$GTK300_CFLAGS" },
-            { GTK3_LIBS: "$GTK300_LIBS" },
-            { LIBXML2_CFLAGS: "-I$LIBDIR/include/libxml2" },
-            { LIBXML2_LIBS: "$LIBDIR/lib/libxml2.a" },
-        ],
+        ENV: {
+            GTK2_CFLAGS: "$GTK216_CFLAGS",
+            GTK2_LIBS: "$GTK216_LIBS",
+            GTK3_CFLAGS: "$GTK300_CFLAGS",
+            GTK3_LIBS: "$GTK300_LIBS",
+            LIBXML2_CFLAGS: "-I$LIBDIR/include/libxml2",
+            LIBXML2_LIBS: "$LIBDIR/lib/libxml2.a",
+        },
         root: "/",
         out: [
             "gtk2/ddb_infobar_gtk2.so",

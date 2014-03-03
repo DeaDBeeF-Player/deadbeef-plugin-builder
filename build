@@ -147,12 +147,10 @@ for my $package (@packages) {
 
 
     if (exists $manifest->{make}->{ENV}) {
-        for my $i (@{$manifest->{make}->{ENV}}) {
-            for my $n (keys %$i) {
-                my $v = eval("\"$i->{$n}\"");
-                print "$n=$v\n";
-                $ENV{$n} = $v;
-            }
+        for my $n (keys %{$manifest->{make}->{ENV}}) {
+            my $v = eval("\"$manifest->{make}->{ENV}->{$n}\"");
+            print "$n=$v\n";
+            $ENV{$n} = $v;
         }
     }
 

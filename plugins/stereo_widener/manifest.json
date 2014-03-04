@@ -1,0 +1,18 @@
+{
+    source: {
+        type: "git",
+        url: "git://gitorious.org/deadbeef-sm-plugins/stereo-widener.git",
+        patches: [
+            "makefix.diff"
+        ],
+    },
+    make: {
+        type: "make",
+        ENV: {
+        },
+        root: "",
+        out: [
+            "ddb_stereo_widener.so"
+        ],
+    }
+}

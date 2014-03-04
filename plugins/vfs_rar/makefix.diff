@@ -1,5 +1,5 @@
 diff --git a/Makefile b/Makefile
-index 78ea084..4e58d90 100644
+index 78ea084..cdaf06d 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -1,113 +1,70 @@
@@ -173,7 +173,7 @@ index 78ea084..4e58d90 100644
 +all: $(SOURCES) $(OUT)
 +
 +$(OUT): $(OBJECTS)
-+	$(CXX) $(OBJECTS) $(CFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@
++	$(CXX) $(OBJECTS) $(CXXFLAGS) $(LDFLAGS) -o $@
 +
 +.c.o:
 +	$(CXX) $(CFLAGS) $(CXXFLAGS) $< -c -o $@

@@ -143,8 +143,14 @@ for my $package (@packages) {
         }
     }
 
-    print "\npreparing environment...\n";
+    if (exists $manifest->{source}->{exec} && !$conf_use_cached_src) {
+        for my $e (@{$manifest->{source}->{exec}}) {
+            print "running: $e\n";
+            system "cd $ROOT/$manifest->{make}->{root}; $e";
+        }
+    }
 
+    print "\npreparing environment...\n";
 
     if (exists $manifest->{make}->{ENV}) {
         for my $n (keys %{$manifest->{make}->{ENV}}) {

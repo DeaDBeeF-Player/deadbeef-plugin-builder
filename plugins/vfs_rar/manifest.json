@@ -1,0 +1,22 @@
+{
+    source: {
+        type: "git",
+        url: "https://github.com/shaohao/vfs_rar.git",
+        exec: [
+            "wget http://www.rarlab.com/rar/unrarsrc-5.0.14.tar.gz && tar zxvf unrarsrc-5.0.14.tar.gz"
+        ],
+        patches: [
+            "makefix.diff"
+        ]
+    },
+    make: {
+        type: "make",
+        ENV: {
+            LIBDIR: "$LIBDIR"
+        },
+        root: "",
+        out: [
+            "vfs_rar.so"
+        ],
+    }
+}

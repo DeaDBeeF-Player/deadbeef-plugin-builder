@@ -1,0 +1,20 @@
+{
+    source: {
+        type: "git",
+        url: "https://code.google.com/p/deadbeef-pause-on-lock/",
+        patches: [
+            "makefix.diff"
+        ],
+    },
+    make: {
+        type: "make",
+        ENV: {
+            GLIB_CFLAGS: "-I$LIBDIR/include/dbus-1 -I$LIBDIR/include/dbus-1.0 $GTK300_CFLAGS",
+            GLIB_LIBS: " -L${GTK_ROOT_300}/lib -ldbus-glib-1 -lglib-2.0"
+        },
+        root: "",
+        out: [
+            "ddb_pause_on_lock.so"
+        ],
+    }
+}

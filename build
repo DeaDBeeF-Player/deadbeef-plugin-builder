@@ -120,6 +120,11 @@ for my $package (@packages) {
 
     #print Dumper($manifest)."\n";
 
+    if ($manifest->{disable}) {
+        print STDERR "skipping $package because it's disabled in manifest\n";
+        next;
+    }
+
     my $ROOT = "temp/$package";
     print "getting source code using $manifest->{source}->{type} from $manifest->{source}->{url}\n";
     if (!$conf_use_cached_src) {

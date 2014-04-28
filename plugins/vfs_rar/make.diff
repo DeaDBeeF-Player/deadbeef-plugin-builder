@@ -1,5 +1,5 @@
 diff --git a/Makefile b/Makefile
-index 06bc90e..2151816 100644
+index 06bc90e..dce5d43 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -9,7 +9,7 @@ UNRARDIR = unrar
@@ -11,3 +11,12 @@ index 06bc90e..2151816 100644
  CXXFLAGS += -c -fPIC
  CXXFLAGS += -Wall \
  	    -Wno-parentheses \
+@@ -23,7 +23,7 @@ ifeq ($(DEBUG),1)
+ CXXFLAGS += -g -DDEBUG
+ endif
+ 
+-LDFLAGS = -shared -fPIC -pthread
++LDFLAGS += -shared -fPIC -pthread
+ 
+ BIN = $(APP).so
+ 

@@ -1,0 +1,13 @@
+diff --git a/Makefile b/Makefile
+index 06bc90e..2151816 100644
+--- a/Makefile
++++ b/Makefile
+@@ -9,7 +9,7 @@ UNRARDIR = unrar
+ CXX = g++
+ STRIP = strip
+ 
+-CXXFLAGS = -O2
++CXXFLAGS += -O2
+ CXXFLAGS += -c -fPIC
+ CXXFLAGS += -Wall \
+ 	    -Wno-parentheses \

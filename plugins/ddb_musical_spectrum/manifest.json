@@ -1,11 +1,10 @@
 {
     // disabled because there's no fftw3 in staticdeps yet + needs gtk2.16 fix
-    disable: true,
     source: {
         type: "git",
         url: "https://github.com/cboxdoerfer/ddb_musical_spectrum.git",
         patches: [
-//            "make.patch",
+            "make.diff",
         ]
     },
     make: {

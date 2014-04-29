@@ -1,16 +1,18 @@
 diff --git a/Makefile b/Makefile
-index 06bc90e..dce5d43 100644
+index 06bc90e..0ec5d77 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -9,7 +9,7 @@ UNRARDIR = unrar
+@@ -9,8 +9,8 @@ UNRARDIR = unrar
  CXX = g++
  STRIP = strip
  
 -CXXFLAGS = -O2
+-CXXFLAGS += -c -fPIC
 +CXXFLAGS += -O2
- CXXFLAGS += -c -fPIC
++CXXFLAGS += -fPIC
  CXXFLAGS += -Wall \
  	    -Wno-parentheses \
+ 	    -Wno-switch \
 @@ -23,7 +23,7 @@ ifeq ($(DEBUG),1)
  CXXFLAGS += -g -DDEBUG
  endif
@@ -20,3 +22,27 @@ index 06bc90e..dce5d43 100644
  
  BIN = $(APP).so
  
+@@ -81,20 +81,20 @@ vpath %.hpp $(UNRARDIR)
+ all: $(BIN)
+ 
+ $(BIN): $(addprefix $(OBJDIR)/,$(OBJS))
+-	$(CXX) $(LDFLAGS) $^ -o $@
++	$(CXX) $(CXXFLAGS) $(LDFLAGS) $^ -o $@
+ ifneq ($(DEBUG),1)
+ 	$(STRIP) $@
+ endif
+ 
+ vpath %.o $(OBJDIR)
+ $(OBJDIR)/%.o: %.cpp | $(OBJDIR)
+-	$(CXX) $(CXXFLAGS) $< -o $@
++	$(CXX) $(CXXFLAGS) -c $< -o $@
+ $(OBJDIR):
+ 	-mkdir -p $@
+ 
+ vpath %.d $(DEPDIR)
+ $(DEPDIR)/%.d: %.cpp | $(DEPDIR)
+-	$(CXX) $(CXXFLAGS) -MM $< > $@
++	$(CXX) $(CXXFLAGS) -c -MM $< > $@
+ 	sed -i 's,\($*\)\.o[ :]*,\1.o $*.d: ,g' $@
+ $(DEPDIR):
+ 	-mkdir -p $@

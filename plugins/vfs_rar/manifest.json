@@ -1,13 +1,10 @@
 {
-    disable: true,
+    disable: false,
     source: {
         type: "git",
         url: "https://github.com/shaohao/vfs_rar.git",
         exec: [
             "wget http://www.rarlab.com/rar/unrarsrc-5.1.2.tar.gz && tar zxvf unrarsrc-5.1.2.tar.gz"
-        ],
-        patches: [
-            "make.diff"
         ],
     },
     make: {

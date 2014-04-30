@@ -15,6 +15,7 @@
             GTK2_LIBS: "$GTK216_LIBS",
             GTK3_CFLAGS: "$GTK300_CFLAGS",
             GTK3_LIBS: "$GTK300_LIBS",
+            FFTW_LIBS: "$LIBDIR/lib/libfftw3.a",
         },
         out: [
             'gtk2/ddb_vis_musical_spectrum_GTK2.so',

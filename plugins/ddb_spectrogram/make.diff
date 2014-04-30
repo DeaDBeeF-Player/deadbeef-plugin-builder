@@ -1,0 +1,19 @@
+diff --git a/Makefile b/Makefile
+index 9c894c7..86bb61b 100644
+--- a/Makefile
++++ b/Makefile
+@@ -43,11 +43,13 @@ OBJ_GTK2?=$(patsubst %.c, $(GTK2_DIR)/%.o, $(SOURCES))
+ OBJ_GTK3?=$(patsubst %.c, $(GTK3_DIR)/%.o, $(SOURCES))
+ 
+ define compile
++	echo $(CC) $(CFLAGS) $1 $2 $< -c -o $@
+ 	$(CC) $(CFLAGS) $1 $2 $< -c -o $@
+ endef
+ 
+ define link
+-	$(CC) $(LDFLAGS) $1 $2 $3 -o $@
++	echo $(CC) $(LDFLAGS) $1 $2 $3 -o $@
++	$(CC) $(CFLAGS) $(LDFLAGS) $1 $2 $3 -o $@
+ endef
+ 
+ # Builds both GTK+2 and GTK+3 versions of the plugin.

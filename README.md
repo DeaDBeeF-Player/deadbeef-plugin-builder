@@ -56,10 +56,9 @@ This is useful when trying to make a patch, more on this below.
 * patching
 * building with GNU Make (make->type=make)
 * building with autotools (make->type=autotools)
+* generating packages (versioned zip files)
 
 ## What doesn't work (yet)
 
-* generating final zips
-* lots of other things
-
-but that will come with time, as I'm trying to make all plugins working.
+* extracting descriptions/authorship/licenses (this would have to be written in the manifests)
+* generating the final plugin downloads page

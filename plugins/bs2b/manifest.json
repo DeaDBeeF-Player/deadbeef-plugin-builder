@@ -13,7 +13,7 @@
         },
         root: "/",
         out: [
-            "src/ddb_bs2b.so"
+            "ddb_bs2b.so"
         ],
     }
 }

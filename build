@@ -12,12 +12,14 @@ use Getopt::Long qw(GetOptions);
 
 my $help;
 my $conf_use_cached_src;
+my $conf_nopackage;
 my $ARCH = $ENV{ARCH};
 
 #$conf_use_cached_src = 1;
 
 GetOptions ("help|?" => \$help,
         "nofetch" => \$conf_use_cached_src,
+        "nopackage" => \$conf_nopackage,
         "arch=s" => \$ARCH),
 or die ("error in cmdline args\n");
 
@@ -26,6 +28,7 @@ if ($help) {
     print "Options:\n";
     print "  --help                 Show this text\n";
     print "  --nofetch              Don't fetch package sources, use the cached copy\n";
+    print "  --nopackage            Don't package the output files\n";
     print "  --arch=ARCH            i686 or x86_64\n";
     exit 0;
 }
@@ -119,26 +122,38 @@ for my $package (@packages) {
     $manifest = $json->decode($manifest);
 
     #print Dumper($manifest)."\n";
-
     if ($manifest->{disable}) {
         print STDERR "skipping $package because it's disabled in manifest\n";
         next;
     }
 
+    if (!$manifest->{make}->{out} || !(~~@{$manifest->{make}->{out}})) {
+        print STDERR "skipping $package because it doesn't define output\n";
+        next;
+    }
+
+
     my $ROOT = "temp/$package";
     print "getting source code using $manifest->{source}->{type} from $manifest->{source}->{url}\n";
+    my $rev = 'unknown';
+
     if (!$conf_use_cached_src) {
         rmtree $ROOT;
         if ($manifest->{source}->{type} eq 'svn') {
             system ("svn checkout $manifest->{source}->{url} $ROOT") && die "svn checkout failed\n";
+            $rev = `cd temp/$package && svn info | grep "Revision" | cut -c11-`;
         }
         elsif ($manifest->{source}->{type} eq 'git') {
             system ("git clone $manifest->{source}->{url} $ROOT") && die "git clone failed\n";
+            $rev = `cd temp/$package && git rev-parse --short HEAD`;
         }
         elsif ($manifest->{source}->{type} eq 'hg') {
             system ("hg clone $manifest->{source}->{url} $ROOT") && die "hg clone failed\n";
+            $rev = `cd temp/$package && hg log -r . --template '{node|short}'`;
         }
         print "\nsource code download success.\n";
+        print "revision: $rev\n";
+        chomp $rev;
 
         if (exists $manifest->{source}->{patches}) {
             print "\napplying patches\n";
@@ -188,4 +203,33 @@ for my $package (@packages) {
         die "make type '$manifest->{make}->{type}' is not supported\n";
     }
 
+    next if $conf_nopackage;
+    print "packaging $package...\n";
+
+    # packaging
+    # each plugin must list its output
+    # the simple case is "out" list, that's for when plugin only consists of *.so
+
+    # output is 1st copied to 'temp/plugins' folder,
+    # then the plugins folder is zipped
+    my $outdir = "temp/output/$ARCH/plugins";
+    system ("rm -rf $outdir") && die "failed to remove $outdir\n";
+    system ("mkdir -p $outdir") && die "failed to mkdir $outdir\n";
+    for my $o (@{$manifest->{make}->{out}}) {
+        my $fname = "$ROOT/$o";
+        print "copying $fname to $outdir\n";
+        system ("cp $fname $outdir") && die "failed to copy $o to $outdir\n";
+    }
+
+    # FIXME: support putting output into subdirs in 'plugins'
+    
+    # get plugin version, description, etc
+    # this is tricky, because this stuff is in the code, and we can't load
+    # plugins on build server. essentially this means that we need to encode
+    # full description and version number in the manifest files.
+
+    my $out_fname = "$package-$rev-$ARCH.zip";
+    print "will pack $out_fname\n";
+    unlink $out_fname;
+    system ("cd temp/output/$ARCH && zip -r $out_fname plugins") && die "failed to zip $out_fname\n";
 }

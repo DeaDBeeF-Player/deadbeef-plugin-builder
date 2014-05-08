@@ -17,8 +17,8 @@
             SQLITE_LIBS: "$LIBDIR/lib/libsqlite3.a",
         },
         out: [
-            "src/gtk2/ddb_misc_waveform_GTK2.so",
-            "src/gtk3/ddb_misc_waveform_GTK3.so"
+            "gtk2/ddb_misc_waveform_GTK2.so",
+            "gtk3/ddb_misc_waveform_GTK3.so"
         ]
     }
 }

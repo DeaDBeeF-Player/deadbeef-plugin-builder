@@ -12,7 +12,7 @@
         },
         root: "",
         out: [
-            "ddb_stereo_widener.so"
+            "stereo_widener.so"
         ],
     }
 }

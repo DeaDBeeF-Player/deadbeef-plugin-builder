@@ -1,5 +1,5 @@
 diff --git a/Makefile b/Makefile
-index 872f73d..2ac7856 100644
+index e06b20c..a0867f8 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -36,8 +36,8 @@ GTK3_LIBS?=`pkg-config --libs gtk+-3.0`
@@ -8,16 +8,18 @@ index 872f73d..2ac7856 100644
  CC?=gcc
 -CFLAGS+=-Wall -fPIC -std=c99 -D_GNU_SOURCE
 -LDFLAGS+=-shared
-+CFLAGS+=-Wall -fPIC -std=c99 -D_GNU_SOURCE -shared -lm
++CFLAGS+=-Wall -fPIC -std=c99 -D_GNU_SOURCE -lm
 +LDFLAGS+=-shared -lm
  
  GTK2_DIR?=gtk2
  GTK3_DIR?=gtk3
-@@ -51,7 +51,7 @@ define compile
+@@ -52,8 +52,8 @@ define compile
  endef
  
  define link
+-	echo $(CC) $(LDFLAGS) $1 $2 $3 -o $@
 -	$(CC) $(LDFLAGS) $1 $2 $3 -o $@
++	echo $(CC) $(CFLAGS) $(LDFLAGS) $1 $2 $3 -o $@
 +	$(CC) $(CFLAGS) $(LDFLAGS) $1 $2 $3 -o $@
  endef
  

@@ -1,6 +1,6 @@
-diff -r 0bb2eb79e515 Makefile
---- a/Makefile	Mon Dec 16 18:00:04 2013 +0200
-+++ b/Makefile	Sat Mar 01 11:49:06 2014 +0100
+diff -r b870df1b662c Makefile
+--- a/Makefile	Thu Jan 30 15:13:12 2014 +0200
++++ b/Makefile	Thu Jul 10 09:00:29 2014 +0200
 @@ -42,7 +42,7 @@
  endef
  
@@ -10,9 +10,24 @@ diff -r 0bb2eb79e515 Makefile
  endef
  
  # Builds both GTK+2 and GTK+3 versions of the plugin.
-diff -r 0bb2eb79e515 ui.c
---- a/ui.c	Mon Dec 16 18:00:04 2013 +0200
-+++ b/ui.c	Sat Mar 01 11:49:06 2014 +0100
+diff -r b870df1b662c infobar.c
+--- a/infobar.c	Thu Jan 30 15:13:12 2014 +0200
++++ b/infobar.c	Thu Jul 10 09:00:29 2014 +0200
+@@ -333,6 +333,11 @@
+     .plugin.version_major = 1,
+     .plugin.version_minor = 4,
+     .plugin.type = DB_PLUGIN_MISC,
++#if !GTK_CHECK_VERSION(3, 0, 0)
++    .plugin.id = "infobar_gtk2",
++#else
++    .plugin.id = "infobar_gtk3",
++#endif
+     .plugin.name = "Infobar",
+     .plugin.descr = "Infobar plugin for DeadBeeF audio player.\nFetches and shows:\n"
+                     "- song's lyrics;\n- artist's biography;\n- list of similar artists.\n\n"
+diff -r b870df1b662c ui.c
+--- a/ui.c	Thu Jan 30 15:13:12 2014 +0200
++++ b/ui.c	Thu Jul 10 09:00:29 2014 +0200
 @@ -19,6 +19,10 @@
  
  #include "ui.h"

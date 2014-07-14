@@ -224,20 +224,15 @@ for my $package (@packages) {
 
     # FIXME: support putting output into subdirs in 'plugins'
     
-    # get plugin version, description, etc
-    # this is tricky, because this stuff is in the code, and we can't load
-    # plugins on build server. essentially this means that we need to encode
-    # full description and version number in the manifest files.
-
-    # the first file in 'out' must be the plugin containing the version, etc
+    # get plugin version, and generate descr file
+    # this is needed e.g. for build-md script to find the right plugin zip
     my $ver;
-    my $name;
-    my $descr;
-    my $website;
 
     my $out = $manifest->{make}->{out};
     my $descr_fname = "temp/output/$ARCH/$package.descr";
     open F,">temp/output/$ARCH/$package.descr" || die "failed to open $descr_fname\n";
+
+    # try loading all files from 'out', until we find one that works
     foreach (@$out) {
         my $config = `$PLUGINFO $ROOT/$manifest->{make}->{root}/$_`;
         if (!$?) {

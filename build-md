@@ -50,7 +50,7 @@ foreach (@packages) {
             $links .= "<a href='http://sourceforge.net/projects/deadbeef/files/plugins/$conf{fname_x86_64}/download'>x86_64</a>";
         }
 
-        print F "<tr><td>$conf{name} $conf{version} $links</td><td>$descr<br/>[<a href=\"$conf{website}\">Author's website</a>]</td></tr>\n";
+        print F "<tr><td valign='top'>$conf{name} $conf{version} $links</td><td valign='top'>$descr<br/>[<a href=\"$conf{website}\">Author's website</a>]</td></tr>\n";
     }
 }
 

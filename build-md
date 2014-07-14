@@ -1,0 +1,68 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+my @packages = split (/\n/, `ls plugins`);
+
+mkdir 'temp';
+mkdir 'temp/output';
+mkdir 'temp/output/web';
+
+my $fname = 'temp/output/web/plugins.md';
+
+open F,">$fname" || die "Failed to open $fname\n";
+
+print F "<table><tr><th>Name</th><th>Description</th></tr>\n";
+
+foreach (@packages) {
+    my %conf;
+    my $package = $_;
+    my $descr_fname = "temp/output/i686/$package.descr";
+    if (-e $descr_fname) {
+        local $/;
+        open CONF,"<$descr_fname" || die "Failed to open $descr_fname\n";
+        my %i686_conf = parse_config (<CONF>);
+        close CONF;
+        map ({$conf{$_} = $i686_conf{$_}} keys %i686_conf);
+    }
+    $descr_fname = "temp/output/x86_64/$package.descr";
+    if (-e $descr_fname) {
+        local $/;
+        open CONF,"<$descr_fname" || die "Failed to open $descr_fname\n";
+        my %x86_64_conf = parse_config (<CONF>);
+        close CONF;
+        map ({$conf{$_} = $x86_64_conf{$_}} keys %x86_64_conf);
+    }
+
+    if (exists $conf{name}) {
+        print "$conf{name} -> $conf{version}\n";
+        my $descr = $conf{descr};
+        $descr =~ s/\n/<br\/>/g;
+
+        my $links = '';
+        if ($conf{fname_i686}) {
+            $links .= "<a href='http://sourceforge.net/projects/deadbeef/files/plugins/$conf{fname_i686}/download'>i686</a>";
+        }
+        if ($conf{fname_x86_64}) {
+            if ($conf{fname_i686}) {
+                $links .= ' | ';
+            }
+            $links .= "<a href='http://sourceforge.net/projects/deadbeef/files/plugins/$conf{fname_x86_64}/download'>x86_64</a>";
+        }
+
+        print F "<tr><td>$conf{name} $conf{version} $links</td><td>$descr<br/>[<a href=\"$conf{website}\">Author's website</a>]</td></tr>\n";
+    }
+}
+
+print F "</table>\n";
+
+close F;
+
+sub parse_config {
+    $_ = shift;
+    my %out;
+    while (/([a-z_0-9]*)="([^"]*)"\n/g) {
+        $out{$1} = $2;
+    }
+    return %out;
+}

@@ -20,7 +20,7 @@ my $ARCH = $ENV{ARCH};
 GetOptions ("help|?" => \$help,
         "nofetch" => \$conf_use_cached_src,
         "nopackage" => \$conf_nopackage,
-        "arch=s" => \$ARCH,
+        "arch=s" => \$ARCH),
 or die ("error in cmdline args\n");
 
 if ($help) {
@@ -236,6 +236,8 @@ for my $package (@packages) {
     my $website;
 
     my $out = $manifest->{make}->{out};
+    my $descr_fname = "temp/output/$ARCH/$package.descr";
+    open F,">temp/output/$ARCH/$package.descr" || die "failed to open $descr_fname\n";
     foreach (@$out) {
         my $config = `$PLUGINFO $ROOT/$manifest->{make}->{root}/$_`;
         if (!$?) {
@@ -243,11 +245,7 @@ for my $package (@packages) {
             $ver = $conf_vars{version};
 
             # write description file
-            my $descr_fname = "temp/output/$ARCH/$package.descr";
-            unlink $descr_fname;
-            open F,">temp/output/$ARCH/$package.descr" || die "failed to open $descr_fname\n";
             print F $config;
-            close F;
             last;
         }
 
@@ -262,6 +260,8 @@ for my $package (@packages) {
     }
 
     my $out_fname = "$package-$ver-$rev$build-$ARCH.zip";
+    print F "fname_$ARCH=\"$out_fname\"\n";
+    close F;
     print "will pack $out_fname\n";
     unlink $out_fname;
     system ("cd temp/output/$ARCH && zip -r $out_fname plugins") && die "failed to zip $out_fname\n";
@@ -270,7 +270,7 @@ for my $package (@packages) {
 sub parse_config {
     $_ = shift;
     my %out;
-    while (/([a-z_]*)="([^"]*)"\n/g) {
+    while (/([a-z_0-9]*)="([^"]*)"\n/g) {
         $out{$1} = $2;
     }
     return %out;

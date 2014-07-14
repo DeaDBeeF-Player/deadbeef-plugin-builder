@@ -20,7 +20,7 @@ my $ARCH = $ENV{ARCH};
 GetOptions ("help|?" => \$help,
         "nofetch" => \$conf_use_cached_src,
         "nopackage" => \$conf_nopackage,
-        "arch=s" => \$ARCH),
+        "arch=s" => \$ARCH,
 or die ("error in cmdline args\n");
 
 if ($help) {
@@ -231,14 +231,24 @@ for my $package (@packages) {
 
     # the first file in 'out' must be the plugin containing the version, etc
     my $ver;
+    my $name;
+    my $descr;
+    my $website;
+
     my $out = $manifest->{make}->{out};
     foreach (@$out) {
-        $ver = `$PLUGINFO $ROOT/$manifest->{make}->{root}/$_ | grep version`;
+        my $config = `$PLUGINFO $ROOT/$manifest->{make}->{root}/$_`;
         if (!$?) {
-            if ($ver =~ /version="([^"]*)"$/) {
-                $ver = $1;
-                last;
-            }
+            my %conf_vars = parse_config ($config);
+            $ver = $conf_vars{version};
+
+            # write description file
+            my $descr_fname = "temp/output/$ARCH/$package.descr";
+            unlink $descr_fname;
+            open F,">temp/output/$ARCH/$package.descr" || die "failed to open $descr_fname\n";
+            print F $config;
+            close F;
+            last;
         }
 
     }
@@ -255,4 +265,13 @@ for my $package (@packages) {
     print "will pack $out_fname\n";
     unlink $out_fname;
     system ("cd temp/output/$ARCH && zip -r $out_fname plugins") && die "failed to zip $out_fname\n";
+}
+
+sub parse_config {
+    $_ = shift;
+    my %out;
+    while (/([a-z_]*)="([^"]*)"\n/g) {
+        $out{$1} = $2;
+    }
+    return %out;
 }

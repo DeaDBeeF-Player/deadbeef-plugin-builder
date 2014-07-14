@@ -228,7 +228,12 @@ for my $package (@packages) {
     # plugins on build server. essentially this means that we need to encode
     # full description and version number in the manifest files.
 
-    my $out_fname = "$package-$rev-$ARCH.zip";
+    my $build = '';
+    if ($manifest->{build}) {
+        $build = "-$manifest->{build}";
+    }
+
+    my $out_fname = "$package-$rev$build-$ARCH.zip";
     print "will pack $out_fname\n";
     unlink $out_fname;
     system ("cd temp/output/$ARCH && zip -r $out_fname plugins") && die "failed to zip $out_fname\n";

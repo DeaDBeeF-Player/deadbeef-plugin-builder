@@ -40,7 +40,6 @@ my $CFLAGS="";
 my $LDFLAGS="";
 my $CONFIGURE_FLAGS;
 
-
 if (!defined $ARCH) {
     die "Target arch is unspecified. Please use ARCH env variable, or --arch option\n";
 }
@@ -60,6 +59,8 @@ elsif ($ARCH eq 'x86_64') {
 else {
     die "unknown arch $ARCH\n";
 }
+
+my $PLUGINFO="$ORIGIN/tools/pluginfo/$ARCH/pluginfo";
 
 $ENV{ARCH} = $ARCH;
 
@@ -228,12 +229,29 @@ for my $package (@packages) {
     # plugins on build server. essentially this means that we need to encode
     # full description and version number in the manifest files.
 
+    # the first file in 'out' must be the plugin containing the version, etc
+    my $ver;
+    my $out = $manifest->{make}->{out};
+    foreach (@$out) {
+        $ver = `$PLUGINFO $ROOT/$manifest->{make}->{root}/$_ | grep version`;
+        if (!$?) {
+            if ($ver =~ /version="([^"]*)"$/) {
+                $ver = $1;
+                last;
+            }
+        }
+
+    }
+    if (!$ver) {
+        $ver = 'unknown';
+    }
+
     my $build = '';
     if ($manifest->{build}) {
         $build = "-$manifest->{build}";
     }
 
-    my $out_fname = "$package-$rev$build-$ARCH.zip";
+    my $out_fname = "$package-$ver-$rev$build-$ARCH.zip";
     print "will pack $out_fname\n";
     unlink $out_fname;
     system ("cd temp/output/$ARCH && zip -r $out_fname plugins") && die "failed to zip $out_fname\n";

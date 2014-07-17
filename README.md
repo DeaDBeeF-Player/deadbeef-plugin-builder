@@ -43,7 +43,7 @@ The folder can also have patch(es), referenced from manifest.
 
 * Hosted on the internet, using svn, hg or git (no tarballs supported here).
 * Using GNU make or autotools. If your plugin uses anything else -- you'll have to write a Makefile, and supply it as a patch.
-* Ability to link the dependencies statically. The static versions of many libs is supplied automatically by this system. If there are no static libs for stuff that your plugin needs -- you're out of luck for now. Make a feature request to add the lib which you need.
+* Ability to link the dependencies statically. The static versions of many libs are supplied automatically by this system. If there are no static libs for the stuff that your plugin needs -- you're out of luck for now. Make a feature request to add the lib(s) which you need.
 
 ## Usage examples
 

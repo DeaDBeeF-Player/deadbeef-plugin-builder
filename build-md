@@ -12,7 +12,7 @@ my $fname = 'temp/output/web/plugins.md';
 
 open F,">$fname" || die "Failed to open $fname\n";
 
-print F "<table><tr><th>Name</th><th>Description</th></tr>\n";
+print F "<table><tr><th>Name</th><th>Revision</th><th>Download</th><th>Description</th></tr>\n";
 
 foreach (@packages) {
     my %conf = ();
@@ -44,12 +44,12 @@ foreach (@packages) {
         }
         if ($conf{fname_x86_64}) {
             if ($conf{fname_i686}) {
-                $links .= ' | ';
+                $links .= '<br/>';
             }
             $links .= "<a href='http://sourceforge.net/projects/deadbeef/files/plugins/x86_64/$conf{fname_x86_64}/download'>x86_64</a>";
         }
 
-        print F "<tr><td valign='top'>$conf{name} $conf{revision} $links</td><td valign='top'>$descr<br/>[<a href=\"$conf{website}\">Author's website</a>]</td></tr>\n";
+        print F "<tr><td valign='top'>$conf{name}</td><td valign='top'>$conf{revision}</td><td valign='top'> $links</td><td valign='top'>$descr<br/>[<a href=\"$conf{website}\">Author's website</a>]</td></tr>\n";
     }
     else {
         print STDERR "skipping plugin $package (bad .descr)\n";

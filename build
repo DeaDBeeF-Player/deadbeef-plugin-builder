@@ -234,7 +234,9 @@ for my $package (@packages) {
 
     # try loading all files from 'out', until we find one that works
     foreach (@$out) {
-        my $config = `$PLUGINFO $ROOT/$manifest->{make}->{root}/$_`;
+        $ENV{LD_LIBRARY_PATH} = "$GTK_ROOT_216/lib:$GTK_ROOT_300/lib:$LIBDIR/lib";
+        print "LD_LIBRARY_PATH=$ENV{LD_LIBRARY_PATH}\n";
+        my $config = `$PLUGINFO $ROOT/$_`;
         if (!$?) {
             my %conf_vars = parse_config ($config);
             $ver = $conf_vars{version};
@@ -254,7 +256,8 @@ for my $package (@packages) {
         $build = "-$manifest->{build}";
     }
 
-    my $out_fname = "$package-$ver-$rev$build-$ARCH.zip";
+    my $out_fname = "$package-$rev$build-$ARCH.zip";
+    print F "revision=\"$rev\"\n";
     print F "fname_$ARCH=\"$out_fname\"\n";
     close F;
     print "will pack $out_fname\n";

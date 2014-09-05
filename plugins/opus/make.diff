@@ -1,35 +1,16 @@
 diff --git a/Makefile b/Makefile
-index a6b3a2f..d1a6116 100644
+index 0be786c..b81e57c 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -1,14 +1,14 @@
- PREFIX?=/usr
- 
--USE_OPUSURL=true
-+USE_OPUSURL?=true
- 
- OUT=opus.so
--INCLUDE=-I${PREFIX}/include -I${PREFIX}/include/opus -I${PREFIX}/include/deadbeef -I/usr/local/include/opus
+@@ -5,9 +5,9 @@ INCLUDE=-I${PREFIX}/include -I${PREFIX}/include/opus -I${PREFIX}/include/deadbee
  CC?=gcc
--CFLAGS+=-Wall -Wno-sequence-point -Wno-parentheses -g -O2 -std=c99 -fPIC -D_GNU_SOURCE -DUSE_OPUSFILE_FLOAT -DUSE_OPUSURL ${INCLUDE}
-+CFLAGS+=-Wall -Wno-sequence-point -Wno-parentheses -g -O2 -std=c99 -fPIC -D_GNU_SOURCE -DUSE_OPUSFILE_FLOAT -DUSE_OPUSURL
- # CFLAGS+=-D_FILE_OFFSET_BITS=64 (for largefile support on 32 bit systems)
- LDFLAGS+=-s -shared -lopusfile
- ifeq ($(USE_OPUSURL), true)
-+	CFLAGS+=-DUSE_OPUSURL
- 	LDFLAGS+=-lopusurl
- endif
  
-diff --git a/opus.c b/opus.c
-index 11ce1d1..72f05d3 100644
---- a/opus.c
-+++ b/opus.c
-@@ -28,7 +28,7 @@
- #include <limits.h>
- #include <stdbool.h>
- #include <math.h>
--#include <opusfile.h>
-+#include <opus/opusfile.h>
- #include <deadbeef.h>
- #include "opedit.h"
- #include "opcall.h"
+ CFLAGS+=-fPIC -Wall -Wstrict-overflow=5 -fstrict-overflow -Wno-sequence-point -Wno-parentheses -g -Os -std=c99 -fPIC -D_GNU_SOURCE
+-CFLAGS+=-DHAVE_OGG_STREAM_FLUSH_FILL # ogg_stream_flush_fill() function is available (libogg v1.3.0 onwards)
++# CFLAGS+=-DHAVE_OGG_STREAM_FLUSH_FILL # ogg_stream_flush_fill() function is available (libogg v1.3.0 onwards)
+ CFLAGS+=-DUSE_OPUSFILE_FLOAT # decode to floats (disable for pure fixed point decoding dithered to 16-bit ints)
+-CFLAGS+=-DUSE_OPUSURL # to use libopusurl.so for fetching streaming station data
++# CFLAGS+=-DUSE_OPUSURL # to use libopusurl.so for fetching streaming station data
+ # CFLAGS+=-D_FILE_OFFSET_BITS=64 # for largefile support on 32 bit systems
+ CFLAGS+=${INCLUDE}
+ 

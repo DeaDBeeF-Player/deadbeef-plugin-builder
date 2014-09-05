@@ -1,5 +1,4 @@
 {
-    disable: true,
     source: {
         type: "git",
         url: "https://bitbucket.org/Lithopsian/deadbeef-opus.git",
@@ -11,7 +10,6 @@
         type: "make",
         root: "/",
         ENV: {
-            USE_OPUSURL: "false",
         },
         out: [
             "opus.so",

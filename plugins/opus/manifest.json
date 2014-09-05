@@ -1,5 +1,6 @@
 {
     source: {
+        disable: "true",
         type: "git",
         url: "https://bitbucket.org/Lithopsian/deadbeef-opus.git",
         patches: [
@@ -7,7 +8,6 @@
         ],
     },
     make: {
-        disable: "true",
         type: "make",
         root: "/",
         ENV: {

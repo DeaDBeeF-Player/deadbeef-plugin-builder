@@ -1,8 +1,8 @@
 diff --git a/Makefile b/Makefile
-index 0be786c..b81e57c 100644
+index 0be786c..0149e50 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -5,9 +5,9 @@ INCLUDE=-I${PREFIX}/include -I${PREFIX}/include/opus -I${PREFIX}/include/deadbee
+@@ -5,13 +5,13 @@ INCLUDE=-I${PREFIX}/include -I${PREFIX}/include/opus -I${PREFIX}/include/deadbee
  CC?=gcc
  
  CFLAGS+=-fPIC -Wall -Wstrict-overflow=5 -fstrict-overflow -Wno-sequence-point -Wno-parentheses -g -Os -std=c99 -fPIC -D_GNU_SOURCE
@@ -14,3 +14,17 @@ index 0be786c..b81e57c 100644
  # CFLAGS+=-D_FILE_OFFSET_BITS=64 # for largefile support on 32 bit systems
  CFLAGS+=${INCLUDE}
  
+-LDFLAGS+= -s -shared -lopusfile -Wl,--exclude-libs=ALL
++LDFLAGS+= -s -shared -lopusfile -logg -lopus -lm -Wl,--exclude-libs=ALL
+ ifeq ($(USE_OPUSURL), true)
+ 	LDFLAGS+=-lopusurl
+ endif
+@@ -23,7 +23,7 @@ OBJECTS=$(SOURCES:.c=.o)
+ all: $(SOURCES) $(OUT)
+ 
+ $(OUT): $(OBJECTS)
+-	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
++	$(CC) $(CFLAGS) $(OBJECTS) $(LDFLAGS) -o $@
+ 
+ .c.o:
+ 	$(CC) $(CFLAGS) $< -c -o $@

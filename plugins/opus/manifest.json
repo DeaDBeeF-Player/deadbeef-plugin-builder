@@ -2,9 +2,6 @@
     source: {
         type: "git",
         url: "https://bitbucket.org/Lithopsian/deadbeef-opus.git",
-        patches: [
-            "make.diff"
-        ],
     },
     make: {
         type: "make",

@@ -3,7 +3,7 @@
         type: "git",
         url: "git://git.code.sf.net/p/deadbeef-fb/code",
         patches: [
-            "avoidversion.diff"
+            "buildfixes.diff"
         ],
     },
     make: {

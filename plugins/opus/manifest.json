@@ -1,16 +1,14 @@
 {
     source: {
         type: "git",
-        url: "https://bitbucket.org/Lithopsian/deadbeef-opus.git",
-        patches: [
-            "make.diff"
-        ],
+        url: "https://bitbucket.org/Lithopsian/deadbeef-opus.git"
     },
     make: {
         type: "make",
         root: "/",
         ENV: {
-            PREFIX: "$LIBDIR"
+            PREFIX: "$LIBDIR",
+            USE_OPUSURL: "false"
         },
         out: [
             "opus.so",

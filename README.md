@@ -33,8 +33,9 @@ The folder can also have patch(es), referenced from manifest.
 
 * x86\_64 linux distro with ia32libs installed (build on i686 also works, but no cross-compilation to x86_64)
 * wget, tar, bzip2 for downloading and unpacking dependencies
+* git, svn, hg for fetching plugin sources
 * perl
-* make, autotools for building
+* make and autotools for building
 * deadbeef installed
     * alternatively, unpack
       [this](http://sourceforge.net/projects/deadbeef/files/staticdeps/ddb-headers-latest.tar.bz2/download) into static-deps/lib-x86-32 and static-deps/lib-x86-64

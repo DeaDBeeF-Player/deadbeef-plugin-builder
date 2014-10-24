@@ -3,7 +3,7 @@
         type: "git",
         url: "https://github.com/shaohao/vfs_rar.git",
         exec: [
-            "wget http://www.rarlab.com/rar/unrarsrc-5.1.7.tar.gz && tar zxvf unrarsrc-5.1.7.tar.gz"
+            "wget http://www.rarlab.com/rar/unrarsrc-5.2.1.tar.gz && tar zxvf unrarsrc-5.2.1.tar.gz"
         ],
         patches: [
             "make.diff"

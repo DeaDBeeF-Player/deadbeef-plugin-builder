@@ -146,7 +146,13 @@ for my $package (@packages) {
         }
         elsif ($manifest->{source}->{type} eq 'git') {
             system ("git clone $manifest->{source}->{url} $ROOT") && die "git clone failed\n";
-            $rev = `cd temp/$package && git rev-parse --short HEAD`;
+            if ($manifest->{source}->{revision}) {
+                $rev = $manifest->{source}->{revision};
+                system ("cd $ROOT && git checkout $rev") && die "git checkout $rev failed\n";
+            }
+            else {
+                $rev = `cd temp/$package && git rev-parse --short HEAD`;
+            }
         }
         elsif ($manifest->{source}->{type} eq 'hg') {
             system ("hg clone $manifest->{source}->{url} $ROOT") && die "hg clone failed\n";

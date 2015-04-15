@@ -1,7 +1,7 @@
 {
     source: {
         type: "git",
-        url: "git://gitorious.org/deadbeef-sm-plugins/jack.git",
+        url: "https://gitorious.org/deadbeef-sm-plugins/jack.git",
         patches: [
             "buildfix.diff"
         ],

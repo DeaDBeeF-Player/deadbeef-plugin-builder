@@ -1,7 +1,7 @@
 {
     source: {
         type: "git",
-        url: "git://gitorious.org/deadbeef-sm-plugins/stereo-widener.git",
+        url: "https://gitorious.org/deadbeef-sm-plugins/stereo-widener.git",
         patches: [
             "makefix.diff"
         ],

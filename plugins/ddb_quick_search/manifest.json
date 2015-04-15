@@ -1,0 +1,20 @@
+{
+    source: {
+        type: "git",
+        url: "https://github.com/cboxdoerfer/ddb_quick_search.git",
+    },
+    make: {
+        type: "make",
+        root: "/",
+        ENV: {
+            GTK2_CFLAGS: "$GTK216_CFLAGS",
+            GTK2_LIBS: "$GTK216_LIBS",
+            GTK3_CFLAGS: "$GTK300_CFLAGS",
+            GTK3_LIBS: "$GTK300_LIBS",
+        },
+        out: [
+            'gtk2/ddb_misc_quick_search_GTK2.so',
+            'gtk3/ddb_misc_quick_search_GTK3.so',
+        ]
+    }
+}

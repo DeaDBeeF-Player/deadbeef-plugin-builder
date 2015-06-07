@@ -1,7 +1,10 @@
 {
     source: {
         type: "git",
-        url: "https://github.com/kravich/ddb_customizabletb.git"
+        url: "https://github.com/kravich/ddb_customizabletb.git",
+        patches: [
+            "build.patch"
+        ],
     },
     make: {
         type: "make",

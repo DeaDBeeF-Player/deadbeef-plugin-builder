@@ -2,6 +2,8 @@
 use strict;
 use warnings;
 
+use Data::Dumper;
+
 my @packages = split (/\n/, `ls plugins`);
 
 mkdir 'temp';
@@ -35,7 +37,13 @@ foreach (@packages) {
     }
 
     if (exists $conf{name}) {
+        print "reading $conf{name}\n";
         my $descr = $conf{descr};
+        if (!$descr) {
+            print "null descr!\n";
+            print Dumper(\%conf)."\n";
+            next;
+        }
         $descr =~ s/\n/<br\/>/g;
 
         my $links = '';
@@ -62,9 +70,13 @@ close F;
 
 sub parse_config {
     $_ = shift;
+    s/\\"/&quot;/g;
     my %out;
     while (/([a-z_0-9]*)="([^"]*)"\n/g) {
-        $out{$1} = $2;
+        my $key = $1;
+        my $val = $2;
+        $val =~ s/&quot;/"/g;
+        $out{$key} = $val;
     }
     return %out;
 }

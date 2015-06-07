@@ -107,7 +107,9 @@ else {
 
 for my $package (@packages) {
     %ENV = %CLEAN_ENV;
-    open F,"<plugins/$package/manifest.json" or die "failed to read manifest";
+    my $filename = "plugins/$package/manifest.json";
+    next unless -e $filename;
+    open F,"<$filename" or die "failed to read manifest for $package";
     my $manifest;
     {
         local $/;

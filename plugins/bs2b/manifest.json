@@ -1,7 +1,7 @@
 {
     source: {
         type: "git",
-        url: "https://gitorious.org/deadbeef-sm-plugins/bs2b.git",
+        url: "https://github.com/Alexey-Yakovenko/bs2b.git",
         patches: [
             "bs2b.diff"
         ],

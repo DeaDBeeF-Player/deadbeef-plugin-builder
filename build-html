@@ -10,7 +10,7 @@ mkdir 'temp';
 mkdir 'temp/output';
 mkdir 'temp/output/web';
 
-my $fname = 'temp/output/web/plugins.md';
+my $fname = 'temp/output/web/plugins-content.html';
 
 open F,">$fname" || die "Failed to open $fname\n";
 

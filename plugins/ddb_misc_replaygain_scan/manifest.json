@@ -1,0 +1,24 @@
+{
+    source: {
+        type: "git",
+        url: "https://github.com/Soukyuu/ddb_misc_replaygain_scan.git",
+        patches: [
+            "build.diff"
+        ],
+    },
+    make: {
+        type: "make",
+        ENV: {
+            GTK2_DEPS_CFLAGS: "$GTK216_CFLAGS",
+            GTK2_DEPS_LIBS: "$GTK216_LIBS",
+            GTK3_DEPS_CFLAGS: "$GTK300_CFLAGS",
+            GTK3_DEPS_LIBS: "$GTK300_LIBS",
+        },
+        root: "/",
+        out: [
+            "ddb_misc_replaygain_scan.so",
+            "ddb_misc_replaygain_scan_GTK2.so",
+            "ddb_misc_replaygain_scan_GTK3.so"
+        ],
+    }
+}

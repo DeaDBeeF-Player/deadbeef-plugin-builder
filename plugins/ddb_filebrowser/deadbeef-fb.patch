@@ -1,10 +1,10 @@
 diff --git a/Makefile.am b/Makefile.am
-index 29861ea..966b5ce 100644
+index 30ff13a..c3c3faa 100644
 --- a/Makefile.am
 +++ b/Makefile.am
 @@ -37,18 +37,18 @@ endif
  if DEBUG
- EXTRA_FLAGS = -g3 -ggdb
+ EXTRA_FLAGS = -g3 -ggdb -Wall
  else
 -EXTRA_FLAGS = -Werror
 +EXTRA_FLAGS =
@@ -15,12 +15,12 @@ index 29861ea..966b5ce 100644
 -ddb_misc_filebrowser_GTK2_la_LDFLAGS = -module
 +ddb_misc_filebrowser_GTK2_la_LDFLAGS = -module -avoid-version
  ddb_misc_filebrowser_GTK2_la_LIBADD  = $(LDADD) $(GTK2_DEPS_LIBS)
- ddb_misc_filebrowser_GTK2_la_CFLAGS  = -std=c99 $(GTK2_DEPS_CFLAGS) -Wall $(EXTRA_FLAGS)
+ ddb_misc_filebrowser_GTK2_la_CFLAGS  = -std=c99 $(GTK2_DEPS_CFLAGS) $(EXTRA_FLAGS)
  endif
  if HAVE_GTK3
  ddb_misc_filebrowser_GTK3_la_SOURCES = $(filebrowser_SOURCES)
 -ddb_misc_filebrowser_GTK3_la_LDFLAGS = -module
 +ddb_misc_filebrowser_GTK3_la_LDFLAGS = -module -avoid-version
  ddb_misc_filebrowser_GTK3_la_LIBADD  = $(LDADD) $(GTK3_DEPS_LIBS)
- ddb_misc_filebrowser_GTK3_la_CFLAGS  = -std=c99 $(GTK3_DEPS_CFLAGS) -Wall $(EXTRA_FLAGS)
+ ddb_misc_filebrowser_GTK3_la_CFLAGS  = -std=c99 $(GTK3_DEPS_CFLAGS) $(EXTRA_FLAGS)
  endif

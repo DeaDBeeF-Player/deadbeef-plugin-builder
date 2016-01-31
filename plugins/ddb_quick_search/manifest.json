@@ -1,5 +1,4 @@
 {
-    disable: "true",
     source: {
         type: "git",
         url: "https://github.com/cboxdoerfer/ddb_quick_search.git",

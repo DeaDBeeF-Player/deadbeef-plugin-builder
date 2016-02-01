@@ -1,8 +1,10 @@
 {
-    disable: "true",
     source: {
         type: "git",
         url: "https://github.com/Soukyuu/ddb_misc_replaygain_scan.git",
+        patches: [
+            "build.patch"
+        ],
     },
     make: {
         type: "make",

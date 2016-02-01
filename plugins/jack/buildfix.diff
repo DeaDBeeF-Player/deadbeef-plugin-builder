@@ -8,3 +8,17 @@ index 792e33d..1d8a169 100644
  all:
 -	gcc -I/usr/local/include  -std=c99 -shared -O2 -o jack.so -ljack jack.c -fPIC -Wall -march=native
 +	$(CC) $(CFLAGS) -std=c99 -shared -O2 -o jack.so -ljack jack.c -fPIC -Wall $(LDFLAGS)
+diff --git a/jack.c b/jack.c
+index 43e26cb..ce386c1 100644
+--- a/jack.c
++++ b/jack.c
+@@ -325,7 +325,8 @@ static const char settings_dlg[] =
+ 
+ // define plugin interface
+ static DB_output_t plugin = {
+-    DB_PLUGIN_SET_API_VERSION
++    .plugin.api_vmajor = 1,
++    .plugin.api_vminor = 0,
+     .plugin.version_major = 0,
+     .plugin.version_minor = 2,
+     //.plugin.nostop = 0,

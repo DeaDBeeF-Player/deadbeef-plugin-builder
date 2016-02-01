@@ -25,3 +25,18 @@ index 0fb6aaa..7ca9545 100644
 +
 +clean:
 +	rm $(OBJECTS) $(OUT)
+diff --git a/stereo_widener.c b/stereo_widener.c
+index f8dcc0d..48c6d42 100644
+--- a/stereo_widener.c
++++ b/stereo_widener.c
+@@ -144,8 +144,8 @@ static const char ddb_sw_dialog[] =
+ ;
+ 
+ static DB_dsp_t plugin = {
+-    .plugin.api_vmajor = DB_API_VERSION_MAJOR,
+-    .plugin.api_vminor = DB_API_VERSION_MINOR,
++    .plugin.api_vmajor = 1,
++    .plugin.api_vminor = 0,
+     .plugin.type = DB_PLUGIN_DSP,
+     .plugin.id = "stereo_widener",
+     .plugin.name = "Stereo widener",

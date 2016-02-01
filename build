@@ -244,16 +244,20 @@ for my $package (@packages) {
     foreach (@$out) {
         $ENV{LD_LIBRARY_PATH} = "$GTK_ROOT_216/lib:$GTK_ROOT_300/lib:$LIBDIR/lib";
         print "LD_LIBRARY_PATH=$ENV{LD_LIBRARY_PATH}\n";
-        my $config = `$PLUGINFO $ROOT/$_`;
+        my $curr = $_;
+        my $config = `$PLUGINFO $ROOT/$curr`;
         if (!$?) {
             my %conf_vars = parse_config ($config);
             $ver = $conf_vars{version};
 
             # write description file
+            print "Got descr from $curr\n";
             print F $config;
             last;
         }
-
+        else {
+            print "Failed to get descr from $curr\n";
+        }
     }
     if (!$ver) {
         $ver = 'unknown';

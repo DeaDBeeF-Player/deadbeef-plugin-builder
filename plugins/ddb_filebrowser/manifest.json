@@ -1,7 +1,7 @@
 {
     source: {
         type: "git",
-        url: "git://git.code.sf.net/p/deadbeef-fb/code",
+        url: "https://gitlab.com/zykure/deadbeef-fb.git",
         patches: [
             "deadbeef-fb.patch"
         ],

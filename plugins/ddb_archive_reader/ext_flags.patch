@@ -1,20 +1,20 @@
-Index: src/Makefile
-===================================================================
---- src/Makefile	(revision 16)
-+++ src/Makefile	(working copy)
-@@ -8,7 +8,7 @@
+diff --git a/src/Makefile b/src/Makefile
+index d8ca3ae..30b2fa5 100644
+--- a/src/Makefile
++++ b/src/Makefile
+@@ -15,7 +15,7 @@ endif
  all: $(OUT)
  
- $(OUT): vfs_archive_reader.c libfex.a
--	$(CC) $(CFLAGS) vfs_archive_reader.c libfex.a $(LDFLAGS) -o $(OUT)
-+	$(CC) $(CFLAGS) vfs_archive_reader.c libfex.a -o $(OUT) $(LDFLAGS)
+ $(OUT): vfs_archive_reader.c libfex.a build_dir
+-	$(CC) $(CFLAGS) vfs_archive_reader.c libfex.a $(LDFLAGS) -o $(BUILDDIR)/$(OUT)
++	$(CC) $(CFLAGS) vfs_archive_reader.c libfex.a -o $(BUILDDIR)/$(OUT) $(LDFLAGS)
  
- libfex.a: libfex
- 	mv fex/libfex.a .
-Index: src/fex/makefile
-===================================================================
---- src/fex/makefile	(revision 16)
-+++ src/fex/makefile	(working copy)
+ build_dir:
+ 	mkdir -p $(BUILDDIR)
+diff --git a/src/fex/makefile b/src/fex/makefile
+index 6bc5a7a..001a1c3 100644
+--- a/src/fex/makefile
++++ b/src/fex/makefile
 @@ -4,9 +4,9 @@
  all: libfex.a demo
  

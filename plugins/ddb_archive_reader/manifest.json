@@ -1,8 +1,7 @@
 {
     source: {
-        type: "svn",
-        url: "https://subversion.assembla.com/svn/deadbeef_vfs_archive_reader/trunk",
-//        branch: "trunk"
+        type: "git",
+        url: "https://github.com/carlosanunes/deadbeef_vfs_archive_reader",
         patches: [
             "ext_flags.patch",
         ]

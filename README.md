@@ -1,5 +1,4 @@
-
-[![Build Status](https://drone.io/github.com/Alexey-Yakovenko/deadbeef-plugin-builder/status.png)](https://drone.io/github.com/Alexey-Yakovenko/deadbeef-plugin-builder/latest)
+[![Build Status](https://travis-ci.org/Alexey-Yakovenko/deadbeef-plugin-builder.svg?branch=master)](https://travis-ci.org/Alexey-Yakovenko/deadbeef-plugin-builder)
 
 # DeaDBeeF Plugin Builder
 

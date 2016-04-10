@@ -1,7 +1,7 @@
 {
     source: {
         type: "git",
-        url: "https://github.com/kernelhcy/DeaDBeeF-MPRIS-plugin.git",
+        url: "https://github.com/Serranya/deadbeef-mpris2-plugin",
         patches: [
             "make.diff"
         ],

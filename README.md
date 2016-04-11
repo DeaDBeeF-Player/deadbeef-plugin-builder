@@ -7,17 +7,17 @@
 
 This is the deadbeef plugin build system, as the name implies.
 
-This tool is for plugin developers, and __not__ for end users.
+This tool is for the plugin developers, and __not__ for the end-users.
 
-It allows to write a simple configuration file, and build a statically linked cross-distro binaries for your plugin using the "build" tool, both for i686 and x86_64.
+It lets you write a simple configuration file, and build statically linked cross-distro binaries for your plugins using the `build` tool, both for i686 and x86\_64.
 
-The tool called "build-md" can be used to generate markdown file, which will be used for publishing all plugins on the deadbeef website.
+The tool called `build-md` can be used to generate markdown file, which is used for publishing all the plugins on the deadbeef website.
 
-Each plugin has a subfolder in the "plugins" folder, and a manifest.json in it.
+Each plugin has a subfolder in the `plugins` folder, and a file called `manifest.json` in it.
 
 Example: plugins/bs2b/manifest.json
 
-The folder can also have patch(es), referenced from manifest.
+The folder can also have patch(es), referenced from the manifest.
 
 ## Features
 
@@ -31,7 +31,7 @@ The folder can also have patch(es), referenced from manifest.
 
 ## Requirements for running the deadbeef-plugin-builder tools
 
-* x86\_64 linux distro with ia32libs installed (build on i686 also works, but no cross-compilation to x86_64)
+* x86\_64 linux distro with ia32libs installed (build on i686 also works, but no cross-compilation to x86\_64)
 * wget, tar, bzip2 for downloading and unpacking dependencies
 * git, svn, hg for fetching plugin sources
 * perl

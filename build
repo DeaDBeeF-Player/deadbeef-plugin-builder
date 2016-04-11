@@ -240,24 +240,32 @@ for my $package (@packages) {
     my $descr_fname = "temp/output/$ARCH/$package.descr";
     open F,">temp/output/$ARCH/$package.descr" || die "failed to open $descr_fname\n";
 
-    # try loading all files from 'out', until we find one that works
+    # try loading all files from 'out',
+    # alternating GTK2 and GTK3 libs,
+    # until we find one that works
+    my @libpaths = ("$GTK_ROOT_216/lib", "$GTK_ROOT_300/lib");
     foreach (@$out) {
-        $ENV{LD_LIBRARY_PATH} = "$GTK_ROOT_216/lib:$GTK_ROOT_300/lib:$LIBDIR/lib";
-        print "LD_LIBRARY_PATH=$ENV{LD_LIBRARY_PATH}\n";
-        my $curr = $_;
-        my $config = `$PLUGINFO $ROOT/$curr`;
-        if (!$?) {
-            my %conf_vars = parse_config ($config);
-            $ver = $conf_vars{version};
+        my $found = 0;
+        foreach my $gtklibpath (@libpaths) {
+            $ENV{LD_LIBRARY_PATH} = "$gtklibpath:$LIBDIR/lib";
+            print "LD_LIBRARY_PATH=$ENV{LD_LIBRARY_PATH}\n";
+            my $curr = $_;
+            my $config = `$PLUGINFO $ROOT/$curr`;
+            if (!$?) {
+                my %conf_vars = parse_config ($config);
+                $ver = $conf_vars{version};
 
-            # write description file
-            print "Got descr from $curr\n";
-            print F $config;
-            last;
+                # write description file
+                print "Got descr from $curr\n";
+                print F $config;
+                $found = 1;
+                last;
+            }
+            else {
+                print "Failed to get descr from $curr\n";
+            }
         }
-        else {
-            print "Failed to get descr from $curr\n";
-        }
+        last if $found;
     }
     if (!$ver) {
         $ver = 'unknown';

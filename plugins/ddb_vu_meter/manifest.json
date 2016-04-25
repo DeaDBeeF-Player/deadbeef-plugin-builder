@@ -3,6 +3,7 @@
         type: "git",
         url: "https://github.com/cboxdoerfer/ddb_vu_meter.git",
         patches: [
+            "make.diff"
         ],
     },
     make: {

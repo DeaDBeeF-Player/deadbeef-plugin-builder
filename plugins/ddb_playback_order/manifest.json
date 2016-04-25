@@ -3,6 +3,7 @@
         type: "git",
         url: "https://github.com/cboxdoerfer/ddb_playback_order.git",
         patches: [
+            "make.diff"
         ],
     },
     make: {

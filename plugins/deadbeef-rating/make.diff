@@ -1,3 +1,11 @@
+diff --git a/Makefile b/Makefile
+new file mode 100644
+index 0000000..7f91313
+--- /dev/null
++++ b/Makefile
+@@ -0,0 +1,2 @@
++all:
++	$(CC) $(CFLAGS) -std=c99 -fPIC $(LDFLAGS) -o rating.so rating.c
 diff --git a/rating.c b/rating.c
 index b7c7c14..e40393b 100644
 --- a/rating.c

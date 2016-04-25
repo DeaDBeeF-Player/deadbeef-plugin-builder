@@ -1,13 +1,13 @@
 diff --git a/Makefile b/Makefile
 new file mode 100644
-index 0000000..7f91313
+index 0000000..f2f65b0
 --- /dev/null
 +++ b/Makefile
 @@ -0,0 +1,2 @@
 +all:
-+	$(CC) $(CFLAGS) -std=c99 -fPIC $(LDFLAGS) -o rating.so rating.c
++	$(CC) $(CFLAGS) -std=c99 -fPIC $(LDFLAGS) -shared -o rating.so rating.c
 diff --git a/rating.c b/rating.c
-index b7c7c14..cc43390 100644
+index b7c7c14..37ee246 100644
 --- a/rating.c
 +++ b/rating.c
 @@ -1,4 +1,4 @@
@@ -23,7 +23,7 @@ index b7c7c14..cc43390 100644
 -    .plugin.name = "rating",
 -    .plugin.descr = "Enables commands to rate song(s) by editing the metadata tag rating.",
 +    .plugin.name = "Song Rating",
-+    .plugin.descr = "Adds commands to rate songs, reads/writes the ratings from/to file tags.",
++    .plugin.descr = "Adds menu commands for rating songs, reads/writes the ratings from/to file tags.",
      .plugin.copyright =
          "Rating plugin for DeaDBeeF Player\n"
          "Author: Christian Hernvall\n"

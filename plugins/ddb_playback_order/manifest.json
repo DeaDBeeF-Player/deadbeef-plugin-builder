@@ -15,8 +15,8 @@
         },
         root: "/",
         out: [
-            "ddb_misc_playback_order_GTK2.so",
-            "ddb_misc_playback_order_GTK3.so",
+            "gtk2/ddb_misc_playback_order_GTK2.so",
+            "gtk3/ddb_misc_playback_order_GTK3.so",
         ],
     }
 }

@@ -63,7 +63,7 @@ This is useful when trying to make a patch, more on this below.
 
 ## Why patch?
 
-When you're adding a new plugin to the system, in most cases, you'll need to apply a patch, so that it works with static linking. Many plugins use weird build systems, such as shell scripts, cmake, qmake, etc. Even when they use makefiles or autotools -- there are bugs, which prevent to build the static binaries. So when you make the manifest, and run "build" - you'll get errors. Or you simply won't be able to build, because the plugin uses e.g. cmake. So you'll need to add a Makefile. Of course, the best way to do this, is to fix your code. But if for some reasons you don't want to do it, or you're not the developer of the plugin -- you'll need to create a patch, and reference it from the manifest.json. Look at how it's done in other plugins.
+When you're adding a new plugin to the system, in most cases, you'll need to apply a patch, so that it works with static linking. Many plugins use weird build systems, such as shell scripts, cmake, qmake, etc. Even when they use makefiles or autotools -- there are bugs, which prevent building the static binaries. So when you make the manifest, and run "build" - you'll get errors. Or you simply won't be able to build, because the plugin uses e.g. cmake. So you'll need to add a Makefile. Of course, the best way to do this, is to fix your code. But if for some reasons you don't want to do it, or you're not the developer of the plugin -- you'll need to create a patch, and reference it from the manifest.json. Look at how it's done in other plugins.
 
 ## How to make a patch
 

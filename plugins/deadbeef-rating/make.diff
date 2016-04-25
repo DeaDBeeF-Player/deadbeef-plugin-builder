@@ -7,9 +7,15 @@ index 0000000..7f91313
 +all:
 +	$(CC) $(CFLAGS) -std=c99 -fPIC $(LDFLAGS) -o rating.so rating.c
 diff --git a/rating.c b/rating.c
-index b7c7c14..e40393b 100644
+index b7c7c14..cc43390 100644
 --- a/rating.c
 +++ b/rating.c
+@@ -1,4 +1,4 @@
+-#include <deadbeef.h>
++#include <deadbeef/deadbeef.h>
+ #include <string.h>
+ #include <stdlib.h>
+ 
 @@ -220,8 +220,8 @@ static DB_misc_t plugin = {
      .plugin.version_major = 1,
      .plugin.version_minor = 0,

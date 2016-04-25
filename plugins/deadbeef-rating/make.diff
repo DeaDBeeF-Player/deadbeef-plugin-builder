@@ -1,0 +1,27 @@
+diff --git a/rating.c b/rating.c
+index b7c7c14..e40393b 100644
+--- a/rating.c
++++ b/rating.c
+@@ -220,8 +220,8 @@ static DB_misc_t plugin = {
+     .plugin.version_major = 1,
+     .plugin.version_minor = 0,
+     .plugin.type = DB_PLUGIN_MISC,
+-    .plugin.name = "rating",
+-    .plugin.descr = "Enables commands to rate song(s) by editing the metadata tag rating.",
++    .plugin.name = "Song Rating",
++    .plugin.descr = "Adds commands to rate songs, reads/writes the ratings from/to file tags.",
+     .plugin.copyright =
+         "Rating plugin for DeaDBeeF Player\n"
+         "Author: Christian Hernvall\n"
+@@ -240,8 +240,8 @@ static DB_misc_t plugin = {
+         "along with this program; if not, write to the Free Software\n"
+         "Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.\n"
+     ,
+-    .plugin.website = "http://deadbeef.sf.net",
++    .plugin.website = "https://github.com/splushii/deadbeef-rating",
+     .plugin.start = rating_start,
+     .plugin.stop = rating_stop,
+     .plugin.get_actions = rating_get_actions,
+-};
+\ No newline at end of file
++};

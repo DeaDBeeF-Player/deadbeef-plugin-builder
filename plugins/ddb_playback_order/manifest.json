@@ -1,0 +1,22 @@
+{
+    source: {
+        type: "git",
+        url: "https://github.com/cboxdoerfer/ddb_playback_order.git",
+        patches: [
+        ],
+    },
+    make: {
+        type: "make",
+        ENV: {
+            GTK2_CFLAGS: "$GTK216_CFLAGS",
+            GTK2_LIBS: "$GTK216_LIBS",
+            GTK3_CFLAGS: "$GTK300_CFLAGS",
+            GTK3_LIBS: "$GTK300_LIBS",
+        },
+        root: "/",
+        out: [
+            "ddb_misc_playback_order_GTK2.so",
+            "ddb_misc_playback_order_GTK3.so",
+        ],
+    }
+}

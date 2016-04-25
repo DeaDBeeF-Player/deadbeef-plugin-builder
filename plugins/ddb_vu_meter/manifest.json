@@ -15,8 +15,8 @@
         },
         root: "/",
         out: [
-            "ddb_vis_vu_meter_GTK2.so",
-            "ddb_vis_vu_meter_GTK3.so",
+            "gtk2/ddb_vis_vu_meter_GTK2.so",
+            "gtk3/ddb_vis_vu_meter_GTK3.so",
         ],
     }
 }

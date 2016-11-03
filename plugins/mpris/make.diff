@@ -2,12 +2,13 @@ diff --git a/Makefile.am b/Makefile.am
 index 0b7141f..edc3f91 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -3,5 +3,6 @@ pkglib_LTLIBRARIES = mpris.la
+@@ -3,6 +3,6 @@ pkglib_LTLIBRARIES = mpris.la
  ACLOCAL_AMFLAGS= -I m4
  
  mpris_la_SOURCES=src/mpris.c src/mprisServer.c src/mprisServer.h src/logging.c src/logging.h src/artwork.h
 -mpris_la_CFLAGS=${GIO_DEPS_CFLAGS} ${GTHREAD_DEPS_CFLAGS} ${GLIB_DEPS_CFLAGS}
--mpris_la_LDFLAGS=${GIO_DEPS_LIBS} ${GTHREAD_DEPS_LIBS} ${GLIB_DEPS_LIBS} -module -avoid-version -shared
+-mpris_la_LDFLAGS=-module -avoid-version -shared
+-mpris_la_LIBADD=${GIO_DEPS_LIBS} ${GTHREAD_DEPS_LIBS} ${GLIB_DEPS_LIBS}
 +mpris_la_CFLAGS=${MPRIS_DEPS_CFLAGS}
 +mpris_la_LDFLAGS=-module -avoid-version
 +mpris_la_LIBADD=${MPRIS_DEPS_LIBS}
@@ -19,7 +20,7 @@ index 9ca1a54..04d4f26 100644
  dnl Process this file with autoconf to produce a configure script.
  
 -AC_PREREQ([2.69])
- AC_INIT([deadbeef-mpris2-plugin], [1.8], [peterlamby@web.de])
+ AC_INIT([deadbeef-mpris2-plugin], [1.10], [peterlamby@web.de], [DeaDBeeF MPRIS2 Plugin], [https://github.com/Serranya/deadbeef-mpris2-plugin])
 -AC_CONFIG_SRCDIR([src/mpris.c])
 -AC_CONFIG_AUX_DIR([build-aux])
 -AC_CONFIG_MACRO_DIR([m4])
@@ -40,24 +41,3 @@ index 9ca1a54..04d4f26 100644
  
  AC_CONFIG_FILES([Makefile])
  AC_OUTPUT
-diff --git a/src/mpris.c b/src/mpris.c
-index a91b592..96241d4 100644
---- a/src/mpris.c
-+++ b/src/mpris.c
-@@ -13,14 +13,14 @@ static int onStart() {
- 	oldLoopStatus = mprisData.deadbeef->conf_get_int("playback.loop", 0);
- 	oldShuffleStatus = mprisData.deadbeef->conf_get_int("playback.order", PLAYBACK_ORDER_LINEAR);
- 
--	mprisThread = g_thread_new("mpris-listener", startServer, (void *)&mprisData);
-+	mprisThread = g_thread_create (startServer, (void *)&mprisData, TRUE, NULL);
- 
- 	return 0;
- }
- 
- static int onStop() {
- 	stopServer();
--	g_thread_unref(mprisThread);
-+	g_thread_join (mprisThread);
- 
- 	return 0;
- }

@@ -2,9 +2,6 @@
     source: {
         type: "git",
         url: "https://github.com/Alexey-Yakovenko/bs2b.git",
-        patches: [
-            "bs2b.diff"
-        ],
     },
     make: {
         type: "make",

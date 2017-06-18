@@ -9,8 +9,8 @@
     make: {
         type: "make",
         ENV: {
-            INCLUDES: "-I${GTK_ROOT_300}/include/glib-2.0 -I${GTK_ROOT_300}/lib/glib-2.0/include",
-            LIBS: "-L${GTK_ROOT_300}/lib -lgio-2.0 -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lglib-2.0",
+            INCLUDES: "${GTK310_CFLAGS}",
+            LIBS: "${GTK310_LIBS}",
         },
         root: "/",
         out: [

@@ -10,8 +10,8 @@
         type: "autotools",
         bootstrap: "mkdir -p m4 && autoreconf --install",
         ENV: {
-            MPRIS_DEPS_CFLAGS: "$GTK300_CFLAGS",
-            MPRIS_DEPS_LIBS: "$GTK300_LIBS",
+            MPRIS_DEPS_CFLAGS: "$GTK310_CFLAGS",
+            MPRIS_DEPS_LIBS: "$GTK310_LIBS",
         },
         root: "",
         out: [

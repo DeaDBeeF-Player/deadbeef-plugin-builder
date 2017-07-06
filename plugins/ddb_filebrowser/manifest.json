@@ -13,8 +13,8 @@
         ENV: {
             GTK2_DEPS_CFLAGS: "$GTK216_CFLAGS",
             GTK2_DEPS_LIBS: "$GTK216_LIBS",
-            GTK3_DEPS_CFLAGS: "$GTK300_CFLAGS",
-            GTK3_DEPS_LIBS: "$GTK300_LIBS",
+            GTK3_DEPS_CFLAGS: "$GTK310_CFLAGS",
+            GTK3_DEPS_LIBS: "$GTK310_LIBS",
         },
         root: "",
         out: [

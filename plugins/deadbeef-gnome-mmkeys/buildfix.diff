@@ -1,5 +1,5 @@
 diff --git a/Makefile b/Makefile
-index 35b19ca..e4f147e 100644
+index 11f9ef0..f9dfa50 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -1,6 +1,6 @@
@@ -18,6 +18,6 @@ index 35b19ca..e4f147e 100644
  $(NAME).so: $(NAME).c
 -	$(CC) $(INCLUDES) $(OPTIONS) -o $(NAME).so $(NAME).c $(LIBS)
 +	$(CC) $(CFLAGS) $(INCLUDES) $(OPTIONS) -o $(NAME).so $(NAME).c $(LIBS) $(LDFLAGS)
- 	
+ 
  install:
  	mkdir -p $(ROOTDIR)$(INSTALL_DIR)

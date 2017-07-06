@@ -12,8 +12,8 @@
         ENV: {
             GTK2_INCLUDE_DIRS: "$GTK216_CFLAGS",
             GTK2_LIBS: "$GTK216_LIBS",
-            GTK3_INCLUDE_DIRS: "$GTK300_CFLAGS",
-            GTK3_LIBS: "$GTK300_LIBS"
+            GTK3_INCLUDE_DIRS: "$GTK310_CFLAGS",
+            GTK3_LIBS: "$GTK310_LIBS"
         },
         out: [
             "ddb_customizabletb_gtk2.so",

@@ -3,6 +3,9 @@
         type: "git",
         url: "https://github.com/danpla/ddb_copy_info.git",
         revision: "v1.0.0",
+        patches: [
+            "make.diff"
+        ],
     },
     make: {
         type: "make",

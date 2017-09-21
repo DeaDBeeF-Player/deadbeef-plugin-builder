@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Alexey-Yakovenko/deadbeef-plugin-builder.svg?branch=master)](https://travis-ci.org/Alexey-Yakovenko/deadbeef-plugin-builder)
+[![Build Status](https://travis-ci.org/DeaDBeeF-Player/deadbeef-plugin-builder.svg?branch=master)](https://travis-ci.org/DeaDBeeF-Player/deadbeef-plugin-builder)
 
 # DeaDBeeF Plugin Builder
 

@@ -1,19 +1,19 @@
 diff --git a/Makefile.am b/Makefile.am
-index 0b7141f..edc3f91 100644
+index b6e72a3..edc3f91 100644
 --- a/Makefile.am
 +++ b/Makefile.am
 @@ -3,6 +3,6 @@ pkglib_LTLIBRARIES = mpris.la
  ACLOCAL_AMFLAGS= -I m4
  
  mpris_la_SOURCES=src/mpris.c src/mprisServer.c src/mprisServer.h src/logging.c src/logging.h src/artwork.h
--mpris_la_CFLAGS=${GIO_DEPS_CFLAGS} ${GTHREAD_DEPS_CFLAGS} ${GLIB_DEPS_CFLAGS}
+-mpris_la_CFLAGS=${GIO_DEPS_CFLAGS} ${GIOUNIX_DEPS_CFLAGS} ${GTHREAD_DEPS_CFLAGS} ${GLIB_DEPS_CFLAGS}
 -mpris_la_LDFLAGS=-module -avoid-version -shared
--mpris_la_LIBADD=${GIO_DEPS_LIBS} ${GTHREAD_DEPS_LIBS} ${GLIB_DEPS_LIBS}
+-mpris_la_LIBADD=${GIO_DEPS_LIBS} ${GIOUNIX_DEPS_LIBS} ${GTHREAD_DEPS_LIBS} ${GLIB_DEPS_LIBS}
 +mpris_la_CFLAGS=${MPRIS_DEPS_CFLAGS}
 +mpris_la_LDFLAGS=-module -avoid-version
 +mpris_la_LIBADD=${MPRIS_DEPS_LIBS}
 diff --git a/configure.ac b/configure.ac
-index 9ca1a54..04d4f26 100644
+index 69b3ac0..9483583 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -1,12 +1,8 @@
@@ -30,14 +30,15 @@ index 9ca1a54..04d4f26 100644
  AM_SILENT_RULES([yes])
  
  dnl Override $PACKAGE to make $pkglibdir use deadbeef search path
-@@ -20,9 +16,7 @@ PKG_PROG_PKG_CONFIG
+@@ -20,10 +16,7 @@ PKG_PROG_PKG_CONFIG
  
  LT_INIT
  
 -PKG_CHECK_MODULES([GLIB_DEPS], [glib-2.0], , AC_MSG_ERROR([glibc-2 is required for this package]))
 -PKG_CHECK_MODULES([GIO_DEPS], [gio-2.0], , AC_MSG_ERROR([gio-2 is required for this package]))
+-PKG_CHECK_MODULES([GIOUNIX_DEPS], [gio-unix-2.0], , AC_MSG_ERROR([gio-unix-2 is required for this package]))
 -PKG_CHECK_MODULES([GTHREAD_DEPS], [gthread-2.0], , AC_MSG_ERROR([gthread-2 is required for this package]))
-+PKG_CHECK_MODULES([MPRIS_DEPS], [glib-2.0 gio-2.0 gthread-2.0])
+++PKG_CHECK_MODULES([MPRIS_DEPS], [glib-2.0 gio-2.0 gio-unix-2.0 gthread-2.0])
  
- AC_CONFIG_FILES([Makefile])
- AC_OUTPUT
+ AS_IF([test "x$ac_cv_prog_cc_c99" = "xno"], AC_MSG_ERROR([C99 Support is required]))
+ 

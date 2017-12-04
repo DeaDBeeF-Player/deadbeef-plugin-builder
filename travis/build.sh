@@ -1,12 +1,14 @@
 case "$TRAVIS_OS_NAME" in
     linux)
         STATICDEPS_URL="http://sourceforge.net/projects/deadbeef/files/staticdeps/ddb-static-deps-latest.tar.bz2/download"
-        mkdir temp
-        mkdir static-deps
-        echo "downloading static deps..."
-        wget -q $STATICDEPS_URL -O temp/ddb-static-deps.tar.bz2 || exit 1
-        echo "unpacking static deps..."
-        tar jxf temp/ddb-static-deps.tar.bz2 -C static-deps || exit 1
+        mkdir -p temp
+        if [ ! -d static-deps ]; then
+            mkdir static-deps
+            echo "downloading static deps..."
+            wget -q $STATICDEPS_URL -O temp/ddb-static-deps.tar.bz2 || exit 1
+            echo "unpacking static deps..."
+            tar jxf temp/ddb-static-deps.tar.bz2 -C static-deps || exit 1
+        fi
 
         echo "downloading deadbeef headers..."
         wget -q http://sourceforge.net/projects/deadbeef/files/staticdeps/ddb-headers-latest.tar.bz2/download -O temp/ddb-headers-latest.tar.bz2

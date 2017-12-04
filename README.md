@@ -86,3 +86,9 @@ When you're adding a new plugin to the system, in most cases, you'll need to app
 8. Run readelf -d on all your *.so files, to verify they link to what they need to link.
 9. After this is done - you're ready to submit a pull request. Hopefully you know how to do it. If not -- please refer to github manual.
 
+## Running a build locally, via docker
+
+1. Install docker
+2. Run once: `./docker-bootstrap.sh` -- this would create the base image.
+3. Run for each build: `./docker-build.sh`
+

@@ -1,7 +1,15 @@
 diff --git a/src/Makefile b/src/Makefile
-index d8ca3ae..30b2fa5 100644
+index d8ca3ae..350923c 100644
 --- a/src/Makefile
 +++ b/src/Makefile
+@@ -1,6 +1,6 @@
+ CC?=gcc
+ ZLIB_LIBS?=-lz
+-CFLAGS+=-std=c99 -fPIC -Wall
++CFLAGS+=-std=c99 -Wall
+ LDFLAGS+=-shared -lm $(ZLIB_LIBS) -I.
+ MAKE=make
+ BUILDDIR=.
 @@ -15,7 +15,7 @@ endif
  all: $(OUT)
  
@@ -12,7 +20,7 @@ index d8ca3ae..30b2fa5 100644
  build_dir:
  	mkdir -p $(BUILDDIR)
 diff --git a/src/fex/makefile b/src/fex/makefile
-index bb9af4c..9587064 100644
+index bb9af4c..6d16a29 100644
 --- a/src/fex/makefile
 +++ b/src/fex/makefile
 @@ -4,9 +4,9 @@
@@ -22,9 +30,9 @@ index bb9af4c..9587064 100644
 -	cd   fex;$(CXX) -I.. -c -Os -fno-rtti -fno-exceptions *.cpp -fPIC -Wall
 -	cd unrar;$(CXX)      -c -Os -fno-rtti -fno-exceptions *.cpp -fPIC -Wall
 -	cd  7z_C;$(CC)       -c -Os *.c -fPIC -Wall
-+	cd   fex;$(CXX) $(CXXFLAGS) -I.. -c -Os -fno-rtti -fno-exceptions *.cpp -fPIC -Wall
-+	cd unrar;$(CXX) $(CXXFLAGS)      -c -Os -fno-rtti -fno-exceptions *.cpp -fPIC -Wall
-+	cd  7z_C;$(CC) $(CFLAGS)       -c -Os *.c -fPIC -Wall
++	cd   fex;$(CXX) $(CXXFLAGS) -I.. -c -Os -fno-rtti -fno-exceptions *.cpp -Wall
++	cd unrar;$(CXX) $(CXXFLAGS)      -c -Os -fno-rtti -fno-exceptions *.cpp -Wall
++	cd  7z_C;$(CC) $(CFLAGS)       -c -Os *.c -Wall
  	$(AR) $(ARFLAGS) libfex.a fex/*.o unrar/*.o 7z_C/*.o
  	-ranlib libfex.a 
  	-$(RM) fex/*.o

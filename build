@@ -55,7 +55,7 @@ elsif ($ARCH eq 'x86_64') {
     $CFLAGS="-m64 -fPIC -I$LIBDIR/include/x86_64-linux-gnu";
     $CONFIGURE_FLAGS="--build=x86_64-unknown-linux-gnu";
     $LDFLAGS="-L$LIBDIR/lib/x86_64-linux-gnu";
-    }
+}
 else {
     die "unknown arch $ARCH\n";
 }

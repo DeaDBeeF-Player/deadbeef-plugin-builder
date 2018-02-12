@@ -1,5 +1,4 @@
 {
-    // disabled because there's no fftw3 in staticdeps yet + needs gtk2.16 fix
     source: {
         type: "git",
         url: "https://github.com/cboxdoerfer/ddb_musical_spectrum.git",

@@ -6,7 +6,7 @@ index a762261..32aa5ad 100644
  SQLITE_LIBS?=-lsqlite3
  
  CC?=gcc
--CFLAGS+=-Wall -O2 -fPIC -std=c99 -D_GNU_SOURCE
+-CFLAGS+=-Wall -O2 -g -fPIC -std=c99 -D_GNU_SOURCE
 -LDFLAGS+=-shared
 +CFLAGS+=-Wall -O2 -fPIC -std=c99 -D_GNU_SOURCE -lm
 +LDFLAGS+=-shared -lm
@@ -17,9 +17,7 @@ index a762261..32aa5ad 100644
  endef
  
  define link
--	echo $(CC) $(LDFLAGS) $1 $2 $3 -o $@
 -	$(CC) $(LDFLAGS) $1 $2 $3 -o $@
-+	echo $(CC) $(CFLAGS) $(LDFLAGS) $1 $2 $3 -o $@
 +	$(CC) $(CFLAGS) $(LDFLAGS) $1 $2 $3 -o $@
  endef
  

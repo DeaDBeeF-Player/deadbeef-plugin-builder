@@ -10,13 +10,18 @@ OUTDIR=temp/output
 case "$TRAVIS_OS_NAME" in
     linux)
         echo Uploading linux artifacts...
+        echo i686 ...
         rsync -a -e "$SSHOPTS" $OUTDIR/i686/*.zip waker,deadbeef@frs.sourceforge.net:/home/frs/project/d/de/deadbeef/plugins/i686 || exit 1
+        echo x86_64 ...
         rsync -a -e "$SSHOPTS" $OUTDIR/x86_64/*.zip waker,deadbeef@frs.sourceforge.net:/home/frs/project/d/de/deadbeef/plugins/x86_64 || exit 1
 
+        echo Generating html ...
         cat web/header.html >$OUTDIR/web/plugins.html
         cat web/plugins-head.html >>$OUTDIR/web/plugins.html
         cat $OUTDIR/web/plugins-content.html >>$OUTDIR/web/plugins.html
         cat web/footer.html >>$OUTDIR/web/plugins.html
+
+        echo Uploading html ...
         rsync -a -e "$SSHOPTS" $OUTDIR/web/plugins.html waker,deadbeef@web.sourceforge.net:/home/groups/d/de/deadbeef/htdocs/ || exit 1
     ;;
 esac

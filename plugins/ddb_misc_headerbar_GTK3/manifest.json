@@ -1,0 +1,26 @@
+{
+    source: {
+        type: "git",
+        url: "https://github.com/saivert/ddb_misc_headerbar_GTK3.git",
+        patches: [
+            "build.diff"
+        ],
+    },
+    make: {
+        type: "autotools",
+        bootstrap: "./autogen.sh",
+        root: "/",
+        ENV: {
+            GTK_DEPS_CFLAGS: "$GTK310_CFLAGS",
+            GTK_DEPS_LIBS: "$GTK310_LIBS",
+            GLIB_DEPS_CFLAGS: " ",
+            GLIB_DEPS_LIBS: " ",
+            GIO_DEPS_CFLAGS: " ",
+            GIO_DEPS_LIBS: " "
+        },
+        out: [
+            "src/.libs/ddb_misc_headerbar_GTK3.so",
+        ],
+    }
+}
+

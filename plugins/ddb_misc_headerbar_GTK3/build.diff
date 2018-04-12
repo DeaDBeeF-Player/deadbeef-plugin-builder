@@ -1,0 +1,12 @@
+diff --git a/src/headerbarui.c b/src/headerbarui.c
+index 1ea0c91..e35b5bf 100644
+--- a/src/headerbarui.c
++++ b/src/headerbarui.c
+@@ -20,7 +20,6 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <gtk/gtk.h>
+-#include <gdk/gdkx.h>
+ #include <deadbeef/deadbeef.h>
+ #include <deadbeef/gtkui_api.h>
+ #include "resources.h"

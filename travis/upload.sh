@@ -4,7 +4,7 @@ eval "$(ssh-agent -s)"
 chmod 600 travis/id_rsa
 ssh-add travis/id_rsa || exit 1
 
-SSHOPTS="ssh -o StrictHostKeyChecking=no"
+SSHOPTS="ssh -o StrictHostKeyChecking=no -v"
 OUTDIR=temp/output
 
 case "$TRAVIS_OS_NAME" in

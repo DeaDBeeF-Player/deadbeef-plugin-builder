@@ -14,7 +14,7 @@ case "$TRAVIS_OS_NAME" in
         wget -q http://sourceforge.net/projects/deadbeef/files/staticdeps/ddb-headers-latest.tar.bz2/download -O temp/ddb-headers-latest.tar.bz2
         echo "unpacking deadbeef headers..."
         tar jxf temp/ddb-headers-latest.tar.bz2 -C static-deps/lib-x86-64/include/ || exit 1
-        tar jxf temp/ddb-headers-latest.tar.bz2 -C static-deps/lib-x86-32/include/ || exit 1
+        #tar jxf temp/ddb-headers-latest.tar.bz2 -C static-deps/lib-x86-32/include/ || exit 1
         echo "building for x86_64..."
         ./build --arch=x86_64 || exit 1
 #        echo "building for i686..."

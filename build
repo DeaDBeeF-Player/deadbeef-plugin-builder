@@ -264,7 +264,7 @@ for my $package (@packages) {
     foreach (@$out) {
         my $found = 0;
         foreach my $gtklibpath (@libpaths) {
-            $ENV{LD_LIBRARY_PATH} = "${gtklibpath}/lib:${gtklibpath}/usr/lib/${MULTILIB_DIR}:${LIBDIR}/lib:${LIBDIR}/${MULTILIB_DIR}";
+            $ENV{LD_LIBRARY_PATH} = "${gtklibpath}/lib:${gtklibpath}/lib/${MULTILIB_DIR}:${gtklibpath}/usr/lib/${MULTILIB_DIR}:${LIBDIR}/lib:${LIBDIR}/lib/${MULTILIB_DIR}";
             print "LD_LIBRARY_PATH=$ENV{LD_LIBRARY_PATH}\n";
             my $curr = $_;
             my $config = `$PLUGINFO $ROOT/$curr`;

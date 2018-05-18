@@ -39,22 +39,25 @@ my $LIBDIR="";
 my $CFLAGS="";
 my $LDFLAGS="";
 my $CONFIGURE_FLAGS;
+my $MULTILIB_DIR;
 
 if (!defined $ARCH) {
     die "Target arch is unspecified. Please use ARCH env variable, or --arch option\n";
 }
 
 if ($ARCH eq 'i686') {
+    $MULTILIB_DIR='i386-linux-gnu';
     $LIBDIR="$ORIGIN/static-deps/lib-x86-32";
-    $CFLAGS="-m32 -I$LIBDIR/include/i386-linux-gnu";
+    $CFLAGS="-m32 -I$LIBDIR/include/$MULTILIB_DIR";
     $CONFIGURE_FLAGS = "--build=i686-unknown-linux-gnu";
-    $LDFLAGS="-L$LIBDIR/lib/i386-linux-gnu";
+    $LDFLAGS="-L$LIBDIR/lib/$MULTILIB_DIR";
 }
 elsif ($ARCH eq 'x86_64') {
+    $MULTILIB_DIR='x86_64-linux-gnu';
     $LIBDIR="$ORIGIN/static-deps/lib-x86-64";
-    $CFLAGS="-m64 -fPIC -I$LIBDIR/include/x86_64-linux-gnu";
+    $CFLAGS="-m64 -fPIC -I$LIBDIR/include/$MULTILIB_DIR";
     $CONFIGURE_FLAGS="--build=x86_64-unknown-linux-gnu";
-    $LDFLAGS="-L$LIBDIR/lib/x86_64-linux-gnu";
+    $LDFLAGS="-L$LIBDIR/lib/$MULTILIB_DIR";
 }
 else {
     die "unknown arch $ARCH\n";
@@ -257,11 +260,11 @@ for my $package (@packages) {
     # try loading all files from 'out',
     # alternating GTK2 and GTK3 libs,
     # until we find one that works
-    my @libpaths = ("$GTK_ROOT_216/lib", "$GTK_ROOT_310/lib");
+    my @libpaths = ("$GTK_ROOT_216", "$GTK_ROOT_310");
     foreach (@$out) {
         my $found = 0;
         foreach my $gtklibpath (@libpaths) {
-            $ENV{LD_LIBRARY_PATH} = "$gtklibpath:$LIBDIR/lib";
+            $ENV{LD_LIBRARY_PATH} = "${gtklibpath}/lib:${gtklibpath}/usr/lib/${MULTILIB_DIR}:${LIBDIR}/lib:${LIBDIR}/${MULTILIB_DIR}";
             print "LD_LIBRARY_PATH=$ENV{LD_LIBRARY_PATH}\n";
             my $curr = $_;
             my $config = `$PLUGINFO $ROOT/$curr`;

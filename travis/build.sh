@@ -8,6 +8,8 @@ case "$TRAVIS_OS_NAME" in
             wget -q $STATICDEPS_URL -O temp/ddb-static-deps.tar.bz2 || exit 1
             echo "unpacking static deps..."
             tar jxf temp/ddb-static-deps.tar.bz2 -C static-deps || exit 1
+            # temporary workaround for libX11 issue
+            rm static-deps/lib-x86-64//lib/x86_64-linux-gnu/libX11.*
         fi
 
         echo "downloading deadbeef headers..."

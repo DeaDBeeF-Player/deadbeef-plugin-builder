@@ -21,6 +21,7 @@ foreach (@packages) {
     my $package = $_;
     my $descr_fname = "temp/output/i686/$package.descr";
     if (-e $descr_fname) {
+        print "Found $descr_fname\n";
         local $/;
         open CONF,"<$descr_fname" || die "Failed to open $descr_fname\n";
         my %i686_conf = parse_config (<CONF>);
@@ -29,12 +30,15 @@ foreach (@packages) {
     }
     $descr_fname = "temp/output/x86_64/$package.descr";
     if (-e $descr_fname) {
+        print "Found $descr_fname\n";
         local $/;
         open CONF,"<$descr_fname" || die "Failed to open $descr_fname\n";
         my %x86_64_conf = parse_config (<CONF>);
         close CONF;
         map ({$conf{$_} = $x86_64_conf{$_}} keys %x86_64_conf);
     }
+
+    print "Plugin descr:\n" . Dumper (\%conf) . "\n";
 
     if (exists $conf{name}) {
         print "reading $conf{name}\n";

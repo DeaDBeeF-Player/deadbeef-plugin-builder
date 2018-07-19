@@ -1,0 +1,15 @@
+{
+    source: {
+        type: "git",
+        url: "https://github.com/kuba160/ddb_discord_presence.git"
+    },
+    make: {
+        type: "make",
+        ENV: {
+        },
+        root: "/",
+        out: [
+            "discord_presence.so"
+        ]
+    }
+}

@@ -10,7 +10,7 @@
         type: "make",
         ENV: {
             INCLUDES: "${GTK310_CFLAGS}",
-            LIBS: "${GTK310_LIBS}",
+            LIBS: "${GTK310_LIBS} -lgio-2.0",
         },
         root: "/",
         out: [

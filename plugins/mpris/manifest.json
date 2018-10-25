@@ -11,7 +11,7 @@
         bootstrap: "mkdir -p m4 && autoreconf --install",
         ENV: {
             MPRIS_DEPS_CFLAGS: "$GTK310_CFLAGS",
-            MPRIS_DEPS_LIBS: "$GTK310_LIBS",
+            MPRIS_DEPS_LIBS: "$GTK310_LIBS -lgio-2.0",
         },
         root: "",
         out: [

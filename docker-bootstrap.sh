@@ -6,7 +6,8 @@
 mkdir -p temp
 mkdir -p static-deps
 
-wget -q http://sourceforge.net/projects/deadbeef/files/staticdeps/ddb-static-deps-latest.tar.bz2/download -O temp/ddb-static-deps.tar.bz2
+rm temp/ddb-static-deps.tar.bz2
+curl -L http://sourceforge.net/projects/deadbeef/files/staticdeps/ddb-static-deps-latest.tar.bz2/download -o temp/ddb-static-deps.tar.bz2
 
 tar jxf temp/ddb-static-deps.tar.bz2 -C static-deps
 

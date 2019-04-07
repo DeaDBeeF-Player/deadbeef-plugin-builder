@@ -126,7 +126,10 @@ for my $package (@packages) {
     %ENV = %CLEAN_ENV;
     my $filename = "plugins/$package/manifest.json";
     next unless -e $filename;
-    open F,"<$filename" or die "failed to read manifest for $package";
+
+    print "Preparing to build package: $package\n";
+
+    open F,"<$filename" or die "failed to read manifest for $package\n";
     my $manifest;
     {
         local $/;
@@ -174,7 +177,7 @@ for my $package (@packages) {
             }
         }
         elsif ($manifest->{source}->{type} eq 'hg') {
-            system ("hg clone $manifest->{source}->{url} $ROOT") && die "hg clone failed\n";
+            system ("hg clone --config ui.tls=false $manifest->{source}->{url} $ROOT") && die "hg clone failed\n";
             $rev = `cd temp/$package && hg log -r . --template '{node|short}'`;
         }
         print "\nsource code download success.\n";
@@ -261,9 +264,10 @@ for my $package (@packages) {
     # alternating GTK2 and GTK3 libs,
     # until we find one that works
     my @libpaths = ("$GTK_ROOT_216", "$GTK_ROOT_310");
+    my $found = 0;
     foreach (@$out) {
-        my $found = 0;
         foreach my $gtklibpath (@libpaths) {
+            print "Trying to load $_ with $gtklibpath...\n";
             $ENV{LD_LIBRARY_PATH} = "${gtklibpath}/lib:${gtklibpath}/lib/${MULTILIB_DIR}:${gtklibpath}/usr/lib/${MULTILIB_DIR}:${LIBDIR}/lib:${LIBDIR}/lib/${MULTILIB_DIR}";
             print "LD_LIBRARY_PATH=$ENV{LD_LIBRARY_PATH}\n";
             my $curr = $_;
@@ -283,6 +287,9 @@ for my $package (@packages) {
             }
         }
         last if $found;
+    }
+    if (!$found) {
+        die "Failed to get descr for the plugin $package";
     }
     if (!$ver) {
         $ver = 'unknown';

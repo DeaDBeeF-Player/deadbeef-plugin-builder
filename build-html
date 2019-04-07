@@ -14,7 +14,7 @@ my $fname = 'temp/output/web/plugins-content.html';
 
 open F,">$fname" || die "Failed to open $fname\n";
 
-print F "<table><tr><th>Name</th><th>Revision</th><th>Download</th><th>Description</th></tr>\n";
+print F "<table class='table'><tr><th scope='col'>Name</th><th scope='col'>Revision</th><th scope='col'>Download</th><th scope='col'>Description</th></tr>\n";
 
 foreach (@packages) {
     my %conf = ();
@@ -61,7 +61,7 @@ foreach (@packages) {
             $links .= "<a href='http://sourceforge.net/projects/deadbeef/files/plugins/x86_64/$conf{fname_x86_64}/download'>x86_64</a>";
         }
 
-        print F "<tr><td valign='top'>$conf{name}</td><td valign='top'>$conf{revision}</td><td valign='top'> $links</td><td valign='top'>$descr<br/>[<a href=\"$conf{website}\">Author's website</a>]</td></tr>\n";
+        print F "<tr><td scope='row' valign='top'>$conf{name}</td><td scope='row' valign='top'>$conf{revision}</td><td scope='row' valign='top'> $links</td><td scope='row' valign='top'>$descr<br/>[<a href=\"$conf{website}\">Author's website</a>]</td></tr>\n";
     }
     else {
         print STDERR "skipping plugin $package (bad .descr)\n";

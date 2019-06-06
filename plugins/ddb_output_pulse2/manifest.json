@@ -1,0 +1,14 @@
+{
+    source: {
+        type: "git",
+        url: "https://github.com/saivert/ddb_output_pulse2.git",
+	revision: "v1.0"
+    },
+    make: {
+        type: "make",
+        root: "/",
+        out: [
+            'pulse2.so'
+        ]
+    }
+}

@@ -2,11 +2,13 @@
     source: {
         type: "git",
         url: "https://github.com/saivert/ddb_output_pulse2.git",
-	revision: "v1.0"
+        revision: "v1.0",
+        patches: ["make.diff"]
     },
     make: {
         type: "make",
         root: "/",
+        ENV: ["LDFLAGS": "$LDFLAGS"],
         out: [
             'pulse2.so'
         ]

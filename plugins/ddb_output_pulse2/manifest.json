@@ -8,7 +8,9 @@
     make: {
         type: "make",
         root: "/",
-        ENV: ["LDFLAGS": "$LDFLAGS"],
+        ENV: {
+            LDFLAGS: "$LDFLAGS"
+        },
         out: [
             'pulse2.so'
         ]

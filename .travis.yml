@@ -12,7 +12,7 @@ script:
 
 before_install:
     - sudo apt-get -qq update
-    - sudo apt-get install -y -qq autopoint automake autoconf intltool libc6-dev-i386 libc6-dev yasm perl wget g++-multilib zip libglib2.0-bin
+    - sudo apt-get install -y -qq autopoint automake autoconf intltool libc6-dev-i386 libc6-dev yasm perl wget g++-multilib zip libglib2.0-bin libgtk-3.0 libpulse0
 
 notifications:
     irc:

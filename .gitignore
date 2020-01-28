@@ -1,0 +1,6 @@
+*~
+.DS_Store
+docker-artifacts
+static-deps
+temp
+tools/apbuild/apsymbols.h

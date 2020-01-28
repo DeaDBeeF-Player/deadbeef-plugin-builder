@@ -1,5 +1,4 @@
 #!/bin/sh
 
-docker build -t deadbeef-plugin-builder .
-docker run deadbeef-plugin-builder
-docker run -v ${PWD}/docker-artifacts:/usr/src/deadbeef/temp deadbeef-plugin-builder
+docker build -t deadbeef-plugin-builder . || exit 1
+docker run --rm -v ${PWD}/docker-artifacts:/usr/src/deadbeef/temp deadbeef-plugin-builder

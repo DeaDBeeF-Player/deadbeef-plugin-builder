@@ -101,14 +101,14 @@ my $GTK310_LIBS;
 
 
 if ($ARCH eq 'i686') {
-    $GTK310_CFLAGS="-I${GTK_ROOT_310}/usr/include/gtk-3.0 -I${GTK_ROOT_310}/usr/include/pango-1.0 -I${GTK_ROOT_310}/usr/include/gio-unix-2.0/ -I${GTK_ROOT_310}/usr/include/atk-1.0 -I${GTK_ROOT_310}/usr/include/cairo -I${GTK_ROOT_310}/usr/include/gdk-pixbuf-2.0 -I${GTK_ROOT_310}/usr/include/freetype2 -I${GTK_ROOT_310}/usr/include/glib-2.0 -I${GTK_ROOT_310}/lib/glib-2.0/usr/include -I${GTK_ROOT_310}/usr/lib/i386-linux-gnu -I${GTK_ROOT_310}/usr/lib/i386-linux-gnu/glib-2.0/include";
+    $GTK310_CFLAGS="-I${GTK_ROOT_310}/include/gtk-3.0 -I${GTK_ROOT_310}/include/pango-1.0 -I${GTK_ROOT_310}/include/gio-unix-2.0/ -I${GTK_ROOT_310}/include/atk-1.0 -I${GTK_ROOT_310}/include/cairo -I${GTK_ROOT_310}/include/gdk-pixbuf-2.0 -I${GTK_ROOT_310}/include/freetype2 -I${GTK_ROOT_310}/include/glib-2.0 -I${GTK_ROOT_310}/lib/glib-2.0/include -I${GTK_ROOT_310}/lib/glib-2.0/include";
 
-    $GTK310_LIBS="-L${GTK_ROOT_310}/lib -L${GTK_ROOT_310}/usr/lib -L${GTK_ROOT_310}/usr/lib/i386-linux-gnu -lgtk-3 -lpango-1.0 -lcairo -lgobject-2.0 -lgthread-2.0 -lglib-2.0";
+    $GTK310_LIBS="-L${GTK_ROOT_310}/lib -L${GTK_ROOT_310}/lib/i386-linux-gnu -lgtk-3 -lpango-1.0 -lcairo -lgobject-2.0 -lgthread-2.0 -lglib-2.0";
 }
 elsif ($ARCH eq 'x86_64') {
-    $GTK310_CFLAGS="-I${GTK_ROOT_310}/usr/include/gtk-3.0 -I${GTK_ROOT_310}/usr/include/pango-1.0 -I${GTK_ROOT_310}/usr/include/gio-unix-2.0/ -I${GTK_ROOT_310}/usr/include/atk-1.0 -I${GTK_ROOT_310}/usr/include/cairo -I${GTK_ROOT_310}/usr/include/gdk-pixbuf-2.0 -I${GTK_ROOT_310}/usr/include/freetype2 -I${GTK_ROOT_310}/usr/include/glib-2.0 -I${GTK_ROOT_310}/lib/glib-2.0/usr/include -I${GTK_ROOT_310}/usr/lib/x86_64-linux-gnu -I${GTK_ROOT_310}/usr/lib/x86_64-linux-gnu/glib-2.0/include";
+    $GTK310_CFLAGS="-I${GTK_ROOT_310}/include/gtk-3.0 -I${GTK_ROOT_310}/include/pango-1.0 -I${GTK_ROOT_310}/include/gio-unix-2.0/ -I${GTK_ROOT_310}/include/atk-1.0 -I${GTK_ROOT_310}/include/cairo -I${GTK_ROOT_310}/include/gdk-pixbuf-2.0 -I${GTK_ROOT_310}/include/freetype2 -I${GTK_ROOT_310}/include/glib-2.0 -I${GTK_ROOT_310}/lib/glib-2.0/include";
 
-    $GTK310_LIBS="-L${GTK_ROOT_310}/lib -L${GTK_ROOT_310}/usr/lib -L${GTK_ROOT_310}/usr/lib/x86_64-linux-gnu -lgtk-3 -lpango-1.0 -lcairo -lgobject-2.0 -lgthread-2.0 -lglib-2.0";
+    $GTK310_LIBS="-L${GTK_ROOT_310}/lib -L${GTK_ROOT_310}/lib/x86_64-linux-gnu -lgtk-3 -lpango-1.0 -lcairo -lgobject-2.0 -lgthread-2.0 -lglib-2.0";
 }
 
 my %CLEAN_ENV = %ENV;
@@ -268,7 +268,7 @@ for my $package (@packages) {
     foreach (@$out) {
         foreach my $gtklibpath (@libpaths) {
             print "Trying to load $_ with $gtklibpath...\n";
-            $ENV{LD_LIBRARY_PATH} = "${gtklibpath}/lib:${gtklibpath}/lib/${MULTILIB_DIR}:${gtklibpath}/usr/lib/${MULTILIB_DIR}:${LIBDIR}/lib:${LIBDIR}/lib/${MULTILIB_DIR}";
+            $ENV{LD_LIBRARY_PATH} = "${gtklibpath}/lib:${gtklibpath}/lib/${MULTILIB_DIR}:${LIBDIR}/lib:${LIBDIR}/lib/${MULTILIB_DIR}";
             print "LD_LIBRARY_PATH=$ENV{LD_LIBRARY_PATH}\n";
             my $curr = $_;
             my $config = `$PLUGINFO $ROOT/$curr`;

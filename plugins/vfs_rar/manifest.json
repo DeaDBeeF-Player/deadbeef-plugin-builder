@@ -1,4 +1,5 @@
 {
+    disable: true,
     source: {
         type: "git",
         url: "https://github.com/shaohao/vfs_rar.git",
@@ -11,6 +12,9 @@
     },
     make: {
         type: "make",
+        ENV: {
+            CXX_LDFLAGS: "-nostdlib -lstdc++ -lc"
+        },
         root: "",
         out: [
             "vfs_rar.so"

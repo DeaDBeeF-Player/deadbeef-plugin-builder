@@ -1,5 +1,5 @@
 diff --git a/Makefile b/Makefile
-index 06bc90e..0ec5d77 100644
+index 06bc90e..7e0e008 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -9,8 +9,8 @@ UNRARDIR = unrar
@@ -18,7 +18,7 @@ index 06bc90e..0ec5d77 100644
  endif
  
 -LDFLAGS = -shared -fPIC -pthread
-+LDFLAGS += -shared -fPIC -pthread
++LDFLAGS += -shared -fPIC -pthread $(CXX_LDFLAGS)
  
  BIN = $(APP).so
  

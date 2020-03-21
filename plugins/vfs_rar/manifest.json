@@ -13,7 +13,7 @@
     make: {
         type: "make",
         ENV: {
-            CXX_LDFLAGS: "-nostdlib -lstdc++ -lc"
+            CXX_LDFLAGS: "-nostdlib -lstdc++ -lc -lpthread"
         },
         root: "",
         out: [

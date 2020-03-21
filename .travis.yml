@@ -8,6 +8,8 @@ os:
 
 script:
     - ./travis/build.sh
+
+after_success:
     - ./travis/upload.sh
 
 before_install:

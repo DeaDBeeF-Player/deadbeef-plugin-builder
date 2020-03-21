@@ -50,3 +50,16 @@ index 06bc90e..9aec31c 100644
  	sed -i 's,\($*\)\.o[ :]*,\1.o $*.d: ,g' $@
  $(DEPDIR):
  	-mkdir -p $@
+diff --git a/vfs_rar.cpp b/vfs_rar.cpp
+index ca942eb..7a790d7 100644
+--- a/vfs_rar.cpp
++++ b/vfs_rar.cpp
+@@ -6,6 +6,8 @@ using namespace std;
+ #include <deadbeef/deadbeef.h>
+ #include "unrar/rar.hpp"
+ 
++void * __dso_handle = 0;
++
+ //-----------------------------------------------------------------------------
+ 
+ #ifdef DEBUG

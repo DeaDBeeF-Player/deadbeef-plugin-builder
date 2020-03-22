@@ -4,8 +4,7 @@
         type: "git",
         url: "https://github.com/shaohao/vfs_rar.git",
         exec: [
-            "wget http://www.rarlab.com/rar/unrarsrc-5.5.8.tar.gz && tar zxvf unrarsrc-5.5.8.tar.gz",
-            "sed -i 's/#define UNIX_TIME_NS//' unrar/os.hpp"
+            "wget http://www.rarlab.com/rar/unrarsrc-5.9.1.tar.gz && tar zxvf unrarsrc-*.tar.gz",
         ],
         patches: [
             "make.diff"
@@ -13,9 +12,6 @@
     },
     make: {
         type: "make",
-        ENV: {
-            CXX_LDFLAGS: "-nostdlib -lstdc++ -lc -lpthread"
-        },
         root: "",
         out: [
             "vfs_rar.so"

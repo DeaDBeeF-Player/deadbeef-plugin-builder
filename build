@@ -89,6 +89,11 @@ my @libpaths = ("");
 
 my $PLUGINFO;
 
+my $GTK216_CFLAGS;
+my $GTK216_LIBS;
+my $GTK310_CFLAGS;
+my $GTK310_LIBS;
+
 if ($os eq 'linux') {
     $PLUGINFO="$ORIGIN/tools/pluginfo/$ARCH/pluginfo";
     if (-e 'static-deps') {
@@ -113,12 +118,12 @@ if ($os eq 'linux') {
     my $GTK_ROOT_216="$LIBDIR/gtk-2.16.0";
     my $GTK_ROOT_310="$LIBDIR/gtk-3.10.8";
 
-    my $GTK216_CFLAGS = "-I${GTK_ROOT_216}/include/gtk-2.0 -I${GTK_ROOT_216}/lib/gtk-2.0/include -I${GTK_ROOT_216}/include/atk-1.0 -I${GTK_ROOT_216}/include/cairo -I${GTK_ROOT_216}/include/pango-1.0 -I${GTK_ROOT_216}/include -I${GTK_ROOT_216}/include/glib-2.0 -I${GTK_ROOT_216}/lib/glib-2.0/include";
+    $GTK216_CFLAGS = "-I${GTK_ROOT_216}/include/gtk-2.0 -I${GTK_ROOT_216}/lib/gtk-2.0/include -I${GTK_ROOT_216}/include/atk-1.0 -I${GTK_ROOT_216}/include/cairo -I${GTK_ROOT_216}/include/pango-1.0 -I${GTK_ROOT_216}/include -I${GTK_ROOT_216}/include/glib-2.0 -I${GTK_ROOT_216}/lib/glib-2.0/include";
 
-    my $GTK216_LIBS="-L${GTK_ROOT_216}/lib -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgio-2.0 -lpangoft2-1.0 -lgdk_pixbuf-2.0 -lpangocairo-1.0 -lcairo -lpango-1.0 -lfreetype -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lglib-2.0 -lpthread";
+    $GTK216_LIBS="-L${GTK_ROOT_216}/lib -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgio-2.0 -lpangoft2-1.0 -lgdk_pixbuf-2.0 -lpangocairo-1.0 -lcairo -lpango-1.0 -lfreetype -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lglib-2.0 -lpthread";
 
-    my $GTK310_CFLAGS;
-    my $GTK310_LIBS;
+    $GTK310_CFLAGS;
+    $GTK310_LIBS;
 
 
     if ($ARCH eq 'i686') {
@@ -292,6 +297,7 @@ for my $package (@packages) {
     for my $o (@{$manifest->{make}->{out}}) {
         my $fname = "$ROOT/$o";
         my $newname = $o;
+        $newname =~ s/.*\/([^\/]*$)/$1/;
         if ($os eq 'mac') {
             $newname =~ s/\.so$/\.dylib/;
         }

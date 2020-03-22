@@ -1,8 +1,8 @@
 {
-    disable: true,
     source: {
         type: "git",
         url: "https://github.com/shaohao/vfs_rar.git",
+        revision: "3741d759240c93ead820df4db8bc0ac393213fcd",
         exec: [
             "wget http://www.rarlab.com/rar/unrarsrc-5.5.8.tar.gz && tar zxvf unrarsrc-5.5.8.tar.gz",
             "sed -i 's/#define UNIX_TIME_NS//' unrar/os.hpp"
@@ -13,9 +13,6 @@
     },
     make: {
         type: "make",
-        ENV: {
-            CXX_LDFLAGS: "-nostdlib -lstdc++ -lc -lpthread"
-        },
         root: "",
         out: [
             "vfs_rar.so"

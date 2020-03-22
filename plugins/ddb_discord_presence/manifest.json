@@ -1,4 +1,5 @@
 {
+    supports_macos: true,
     source: {
         type: "git",
         url: "https://github.com/kuba160/ddb_discord_presence.git",
@@ -10,7 +11,7 @@
     make: {
         type: "make",
         ENV: {
-            CXX_LDFLAGS: "-nostdlib -lstdc++ -lc"
+            CXX: "g++"
         },
         root: "/",
         out: [

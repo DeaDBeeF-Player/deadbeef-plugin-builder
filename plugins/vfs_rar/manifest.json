@@ -2,7 +2,6 @@
     source: {
         type: "git",
         url: "https://github.com/shaohao/vfs_rar.git",
-        revision: "3741d759240c93ead820df4db8bc0ac393213fcd",
         exec: [
             "wget http://www.rarlab.com/rar/unrarsrc-5.9.1.tar.gz && tar zxvf unrarsrc-*.tar.gz",
         ],

@@ -51,14 +51,23 @@ foreach (@packages) {
         $descr =~ s/\n/<br\/>/g;
 
         my $links = '';
-        if ($conf{fname_i686}) {
-            $links .= "<a href='http://sourceforge.net/projects/deadbeef/files/plugins/i686/$conf{fname_i686}/download'>i686</a>";
-        }
-        if ($conf{fname_x86_64}) {
-            if ($conf{fname_i686}) {
+        if ($conf{fname_linux_i686}) {
+            if ($links) {
                 $links .= '<br/>';
             }
-            $links .= "<a href='http://sourceforge.net/projects/deadbeef/files/plugins/x86_64/$conf{fname_x86_64}/download'>Linux x86_64</a>";
+            $links .= "<a href='http://sourceforge.net/projects/deadbeef/files/plugins/i686/$conf{fname_linux_i686}/download'>Linux i686</a>";
+        }
+        if ($conf{fname_linux_x86_64}) {
+            if ($links) {
+                $links .= '<br/>';
+            }
+            $links .= "<a href='http://sourceforge.net/projects/deadbeef/files/plugins/x86_64/$conf{fname_linux_x86_64}/download'>Linux x86_64</a>";
+        }
+        if ($conf{fname_mac_x86_64}) {
+            if ($links) {
+                $links .= '<br/>';
+            }
+            $links .= "<a href='http://sourceforge.net/projects/deadbeef/files/plugins/x86_64/$conf{fname_mac_x86_64}/download'>Mac x86_64</a>";
         }
 
         print F "<tr><td scope='row' valign='top'><a href='$conf{website}'>$conf{name}</a></td><td scope='row' valign='top'>$conf{revision}</td><td scope='row' valign='top'> $links</td><td scope='row' valign='top'>$descr</td></tr>\n";

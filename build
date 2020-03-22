@@ -14,14 +14,16 @@ my $help;
 my $conf_use_cached_src;
 my $conf_nopackage;
 my $ARCH = $ENV{ARCH};
+my $os;
 
 #$conf_use_cached_src = 1;
 
 GetOptions ("help|?" => \$help,
         "nofetch" => \$conf_use_cached_src,
         "nopackage" => \$conf_nopackage,
-        "arch=s" => \$ARCH),
-or die ("error in cmdline args\n");
+        "arch=s" => \$ARCH,
+        "os=s" => \$os,
+    ) or die ("error in cmdline args\n");
 
 if ($help) {
     print "Usage: $0 [options] [plugin_name(s)]\n";
@@ -41,75 +43,111 @@ my $LDFLAGS="";
 my $CONFIGURE_FLAGS;
 my $MULTILIB_DIR;
 
+if (!defined $os) {
+    if ($^O eq 'darwin') {
+        $os = 'mac';
+        $ARCH = 'x86_64';
+    }
+    elsif ($^O eq 'linux') {
+        $os = 'linux';
+    }
+    else {
+        die "Unsupported OS ($^O)\n";
+    }
+}
+
 if (!defined $ARCH) {
     die "Target arch is unspecified. Please use ARCH env variable, or --arch option\n";
 }
 
-if ($ARCH eq 'i686') {
-    $MULTILIB_DIR='i386-linux-gnu';
-    $LIBDIR="$ORIGIN/static-deps/lib-x86-32";
-    $CFLAGS="-m32 -I$LIBDIR/include/$MULTILIB_DIR";
-    $CONFIGURE_FLAGS = "--build=i686-unknown-linux-gnu";
-    $LDFLAGS="-L$LIBDIR/lib -L$LIBDIR/lib/$MULTILIB_DIR";
-}
-elsif ($ARCH eq 'x86_64') {
-    $MULTILIB_DIR='x86_64-linux-gnu';
+if ($os eq 'mac') {
     $LIBDIR="$ORIGIN/static-deps/lib-x86-64";
-    $CFLAGS="-m64 -fPIC -I$LIBDIR/include/$MULTILIB_DIR";
-    $CONFIGURE_FLAGS="--build=x86_64-unknown-linux-gnu";
-    $LDFLAGS="-L$LIBDIR/lib -L$LIBDIR/lib/$MULTILIB_DIR";
 }
-else {
-    die "unknown arch $ARCH\n";
+elsif ($os eq 'linux') {
+    if ($ARCH eq 'i686') {
+        $MULTILIB_DIR='i386-linux-gnu';
+        $LIBDIR="$ORIGIN/static-deps/lib-x86-32";
+        $CFLAGS="-m32 -I$LIBDIR/include/$MULTILIB_DIR";
+        $CONFIGURE_FLAGS = "--build=i686-unknown-linux-gnu";
+        $LDFLAGS="-L$LIBDIR/lib -L$LIBDIR/lib/$MULTILIB_DIR";
+    }
+    elsif ($ARCH eq 'x86_64') {
+        $MULTILIB_DIR='x86_64-linux-gnu';
+        $LIBDIR="$ORIGIN/static-deps/lib-x86-64";
+        $CFLAGS="-m64 -fPIC -I$LIBDIR/include/$MULTILIB_DIR";
+        $CONFIGURE_FLAGS="--build=x86_64-unknown-linux-gnu";
+        $LDFLAGS="-L$LIBDIR/lib -L$LIBDIR/lib/$MULTILIB_DIR";
+    }
+    else {
+        die "unknown arch $ARCH\n";
+    }
 }
-
-my $PLUGINFO="$ORIGIN/tools/pluginfo/$ARCH/pluginfo";
 
 $ENV{ARCH} = $ARCH;
 
-if (-e 'static-deps') {
-    print "static-deps exists, delete for redownload\n";
+my @libpaths = ("");
+
+my $PLUGINFO;
+
+if ($os eq 'linux') {
+    $PLUGINFO="$ORIGIN/tools/pluginfo/$ARCH/pluginfo";
+    if (-e 'static-deps') {
+        print "static-deps exists, delete for redownload\n";
+    }
+    else {
+        print "downloading static-deps...\n";
+        mkdir "temp";
+        system ('wget http://sourceforge.net/projects/deadbeef/files/staticdeps/ddb-static-deps-latest.tar.bz2/download -O temp/ddb-static-deps.tar.bz2 && mkdir static-deps && tar jxf temp/ddb-static-deps.tar.bz2 -C static-deps') && die "failed to download static-deps\n";
+    }
+    print "removing libstdc++ from static-deps...\n";
+    system ('rm static-deps/lib-x86-64/lib/libstdc++*');
+
+    my $AP="$ORIGIN/tools/apbuild";
+    `cd $AP; ./apinit`;
+    $ENV{CC}="$AP/apgcc";
+    $ENV{CXX}="$AP/apg++";
+    $ENV{APBUILD_STATIC_LIBGCC}=1;
+    $ENV{CFLAGS} = "$CFLAGS -I$LIBDIR/include";
+    $ENV{CXXFLAGS} = "$CFLAGS -I$LIBDIR/include";
+    $ENV{LDFLAGS} = "$LDFLAGS -L$LIBDIR/lib";
+    my $GTK_ROOT_216="$LIBDIR/gtk-2.16.0";
+    my $GTK_ROOT_310="$LIBDIR/gtk-3.10.8";
+
+    my $GTK216_CFLAGS = "-I${GTK_ROOT_216}/include/gtk-2.0 -I${GTK_ROOT_216}/lib/gtk-2.0/include -I${GTK_ROOT_216}/include/atk-1.0 -I${GTK_ROOT_216}/include/cairo -I${GTK_ROOT_216}/include/pango-1.0 -I${GTK_ROOT_216}/include -I${GTK_ROOT_216}/include/glib-2.0 -I${GTK_ROOT_216}/lib/glib-2.0/include";
+
+    my $GTK216_LIBS="-L${GTK_ROOT_216}/lib -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgio-2.0 -lpangoft2-1.0 -lgdk_pixbuf-2.0 -lpangocairo-1.0 -lcairo -lpango-1.0 -lfreetype -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lglib-2.0 -lpthread";
+
+    my $GTK310_CFLAGS;
+    my $GTK310_LIBS;
+
+
+    if ($ARCH eq 'i686') {
+        $GTK310_CFLAGS="-I${GTK_ROOT_310}/include/gtk-3.0 -I${GTK_ROOT_310}/include/pango-1.0 -I${GTK_ROOT_310}/include/gio-unix-2.0/ -I${GTK_ROOT_310}/include/atk-1.0 -I${GTK_ROOT_310}/include/cairo -I${GTK_ROOT_310}/include/gdk-pixbuf-2.0 -I${GTK_ROOT_310}/include/freetype2 -I${GTK_ROOT_310}/include/glib-2.0 -I${GTK_ROOT_310}/lib/glib-2.0/include -I${GTK_ROOT_310}/lib/glib-2.0/include";
+
+        $GTK310_LIBS="-L${GTK_ROOT_310}/lib -L${GTK_ROOT_310}/lib/i386-linux-gnu -lgtk-3 -lpango-1.0 -lcairo -lgobject-2.0 -lgthread-2.0 -lglib-2.0";
+    }
+    elsif ($ARCH eq 'x86_64') {
+        $GTK310_CFLAGS="-I${GTK_ROOT_310}/include/gtk-3.0 -I${GTK_ROOT_310}/include/pango-1.0 -I${GTK_ROOT_310}/include/gio-unix-2.0/ -I${GTK_ROOT_310}/include/atk-1.0 -I${GTK_ROOT_310}/include/cairo -I${GTK_ROOT_310}/include/gdk-pixbuf-2.0 -I${GTK_ROOT_310}/include/freetype2 -I${GTK_ROOT_310}/include/glib-2.0 -I${GTK_ROOT_310}/lib/glib-2.0/include";
+
+        $GTK310_LIBS="-L${GTK_ROOT_310}/lib -L${GTK_ROOT_310}/lib/x86_64-linux-gnu -lgtk-3 -lpango-1.0 -lcairo -lgobject-2.0 -lgthread-2.0 -lglib-2.0";
+    }
+
+    @libpaths = ("$GTK_ROOT_216", "$GTK_ROOT_310");
+}
+elsif ($os eq 'mac') {
+    $ENV{CFLAGS}="-fPIC -I$LIBDIR/include";
+    $PLUGINFO="$ORIGIN/tools/pluginfo/mac/pluginfo";
+}
+
+
+if (-e "$LIBDIR/include/deadbeef/deadbeef.h") {
+    print "deadbeef.h exists, delete for redownload\n";
 }
 else {
-    print "downloading static-deps...\n";
-    mkdir "temp";
-    system ('wget http://sourceforge.net/projects/deadbeef/files/staticdeps/ddb-static-deps-latest.tar.bz2/download -O temp/ddb-static-deps.tar.bz2 && mkdir static-deps && tar jxf temp/ddb-static-deps.tar.bz2 -C static-deps') && die "failed to download static-deps\n";
+    system ("mkdir -p $LIBDIR/include");
     system ('wget -q http://sourceforge.net/projects/deadbeef/files/staticdeps/ddb-headers-latest.tar.bz2/download -O temp/ddb-headers-latest.tar.bz2') && die "failed to download ddb-headers-latest.tar.bz2\n";
     print "unpacking deadbeef headers...\n";
-    system ('tar jxf temp/ddb-headers-latest.tar.bz2 -C static-deps/lib-x86-64/include/') && die "Failed to unpack temp/ddb-headers-latest.tar.bz2\n";
-}
-print "removing libstdc++ from static-deps...\n";
-system ('rm static-deps/lib-x86-64/lib/libstdc++*');
-
-
-my $AP="$ORIGIN/tools/apbuild";
-`cd $AP; ./apinit`;
-$ENV{CC}="$AP/apgcc";
-$ENV{CXX}="$AP/apg++";
-$ENV{APBUILD_STATIC_LIBGCC}=1;
-$ENV{CFLAGS} = "$CFLAGS -I$LIBDIR/include";
-$ENV{CXXFLAGS} = "$CFLAGS -I$LIBDIR/include";
-$ENV{LDFLAGS} = "$LDFLAGS -L$LIBDIR/lib";
-my $GTK_ROOT_216="$LIBDIR/gtk-2.16.0";
-my $GTK_ROOT_310="$LIBDIR/gtk-3.10.8";
-
-my $GTK216_CFLAGS = "-I${GTK_ROOT_216}/include/gtk-2.0 -I${GTK_ROOT_216}/lib/gtk-2.0/include -I${GTK_ROOT_216}/include/atk-1.0 -I${GTK_ROOT_216}/include/cairo -I${GTK_ROOT_216}/include/pango-1.0 -I${GTK_ROOT_216}/include -I${GTK_ROOT_216}/include/glib-2.0 -I${GTK_ROOT_216}/lib/glib-2.0/include";
-
-my $GTK216_LIBS="-L${GTK_ROOT_216}/lib -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgio-2.0 -lpangoft2-1.0 -lgdk_pixbuf-2.0 -lpangocairo-1.0 -lcairo -lpango-1.0 -lfreetype -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lglib-2.0 -lpthread";
-
-my $GTK310_CFLAGS;
-my $GTK310_LIBS;
-
-
-if ($ARCH eq 'i686') {
-    $GTK310_CFLAGS="-I${GTK_ROOT_310}/include/gtk-3.0 -I${GTK_ROOT_310}/include/pango-1.0 -I${GTK_ROOT_310}/include/gio-unix-2.0/ -I${GTK_ROOT_310}/include/atk-1.0 -I${GTK_ROOT_310}/include/cairo -I${GTK_ROOT_310}/include/gdk-pixbuf-2.0 -I${GTK_ROOT_310}/include/freetype2 -I${GTK_ROOT_310}/include/glib-2.0 -I${GTK_ROOT_310}/lib/glib-2.0/include -I${GTK_ROOT_310}/lib/glib-2.0/include";
-
-    $GTK310_LIBS="-L${GTK_ROOT_310}/lib -L${GTK_ROOT_310}/lib/i386-linux-gnu -lgtk-3 -lpango-1.0 -lcairo -lgobject-2.0 -lgthread-2.0 -lglib-2.0";
-}
-elsif ($ARCH eq 'x86_64') {
-    $GTK310_CFLAGS="-I${GTK_ROOT_310}/include/gtk-3.0 -I${GTK_ROOT_310}/include/pango-1.0 -I${GTK_ROOT_310}/include/gio-unix-2.0/ -I${GTK_ROOT_310}/include/atk-1.0 -I${GTK_ROOT_310}/include/cairo -I${GTK_ROOT_310}/include/gdk-pixbuf-2.0 -I${GTK_ROOT_310}/include/freetype2 -I${GTK_ROOT_310}/include/glib-2.0 -I${GTK_ROOT_310}/lib/glib-2.0/include";
-
-    $GTK310_LIBS="-L${GTK_ROOT_310}/lib -L${GTK_ROOT_310}/lib/x86_64-linux-gnu -lgtk-3 -lpango-1.0 -lcairo -lgobject-2.0 -lgthread-2.0 -lglib-2.0";
+    system ("tar jxf temp/ddb-headers-latest.tar.bz2 -C $LIBDIR/include/") && die "Failed to unpack temp/ddb-headers-latest.tar.bz2\n";
 }
 
 my %CLEAN_ENV = %ENV;
@@ -248,7 +286,11 @@ for my $package (@packages) {
     for my $o (@{$manifest->{make}->{out}}) {
         my $fname = "$ROOT/$o";
         print "copying $fname to $outdir\n";
-        system ("cp $fname $outdir") && die "failed to copy $o to $outdir\n";
+        my $newname = $o;
+        if ($os eq 'mac') {
+            $newname =~ s/\.so$/\.dylib/;
+        }
+        system ("cp $fname $outdir/$newname") && die "failed to copy $o to $outdir\n";
     }
 
     # FIXME: support putting output into subdirs in 'plugins'
@@ -264,13 +306,14 @@ for my $package (@packages) {
     # try loading all files from 'out',
     # alternating GTK2 and GTK3 libs,
     # until we find one that works
-    my @libpaths = ("$GTK_ROOT_216", "$GTK_ROOT_310");
     my $found = 0;
     foreach (@$out) {
         foreach my $gtklibpath (@libpaths) {
-            print "Trying to load $_ with $gtklibpath...\n";
-            $ENV{LD_LIBRARY_PATH} = "${gtklibpath}/lib:${gtklibpath}/lib/${MULTILIB_DIR}:${LIBDIR}/lib:${LIBDIR}/lib/${MULTILIB_DIR}";
-            print "LD_LIBRARY_PATH=$ENV{LD_LIBRARY_PATH}\n";
+            if ($gtklibpath) {
+                print "Trying to load $_ with $gtklibpath...\n";
+                $ENV{LD_LIBRARY_PATH} = "${gtklibpath}/lib:${gtklibpath}/lib/${MULTILIB_DIR}:${LIBDIR}/lib:${LIBDIR}/lib/${MULTILIB_DIR}";
+                print "LD_LIBRARY_PATH=$ENV{LD_LIBRARY_PATH}\n";
+            }
             my $curr = $_;
             my $config = `$PLUGINFO $ROOT/$curr`;
             if (!$?) {
@@ -301,9 +344,15 @@ for my $package (@packages) {
         $build = "-$manifest->{build}";
     }
 
-    my $out_fname = "$package-$rev$build-$ARCH.zip";
+    my $out_fname = "$package-$rev$build-$os-$ARCH.zip";
+
+    my $linux_fname = "$package-$rev$build-linux-$ARCH.zip";
+    my $mac_fname = "$package-$rev$build-mac-$ARCH.zip";
     print F "revision=\"$rev\"\n";
-    print F "fname_$ARCH=\"$out_fname\"\n";
+    print F "fname_linux_$ARCH=\"$linux_fname\"\n";
+    if ($manifest->{supports_macos}) {
+       print F "fname_mac_$ARCH=\"$mac_fname\"\n";
+    }
     close F;
     print "will pack $out_fname\n";
     unlink $out_fname;

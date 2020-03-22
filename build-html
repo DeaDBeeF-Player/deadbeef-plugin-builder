@@ -58,10 +58,10 @@ foreach (@packages) {
             if ($conf{fname_i686}) {
                 $links .= '<br/>';
             }
-            $links .= "<a href='http://sourceforge.net/projects/deadbeef/files/plugins/x86_64/$conf{fname_x86_64}/download'>x86_64</a>";
+            $links .= "<a href='http://sourceforge.net/projects/deadbeef/files/plugins/x86_64/$conf{fname_x86_64}/download'>Linux x86_64</a>";
         }
 
-        print F "<tr><td scope='row' valign='top'>$conf{name}</td><td scope='row' valign='top'>$conf{revision}</td><td scope='row' valign='top'> $links</td><td scope='row' valign='top'>$descr<br/>[<a href=\"$conf{website}\">Author's website</a>]</td></tr>\n";
+        print F "<tr><td scope='row' valign='top'><a href='$conf{website}'>$conf{name}</a></td><td scope='row' valign='top'>$conf{revision}</td><td scope='row' valign='top'> $links</td><td scope='row' valign='top'>$descr</td></tr>\n";
     }
     else {
         print STDERR "skipping plugin $package (bad .descr)\n";

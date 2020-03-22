@@ -189,6 +189,12 @@ for my $package (@packages) {
         next;
     }
 
+    if ($os eq 'mac' && !$manifest->{supports_macos}) {
+        print STDERR "skipping $package because it doesn't declare macOS support\n";
+        next;
+    }
+
+
     if (!$manifest->{make}->{out} || !(~~@{$manifest->{make}->{out}})) {
         print STDERR "skipping $package because it doesn't define output\n";
         next;

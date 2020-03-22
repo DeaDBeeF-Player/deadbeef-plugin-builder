@@ -13,6 +13,9 @@
     },
     make: {
         type: "make",
+        ENV: {
+            CXX: "g++"
+        },
         root: "",
         out: [
             "vfs_rar.so"

@@ -291,12 +291,12 @@ for my $package (@packages) {
     system ("mkdir -p $outdir") && die "failed to mkdir $outdir\n";
     for my $o (@{$manifest->{make}->{out}}) {
         my $fname = "$ROOT/$o";
-        print "copying $fname to $outdir\n";
         my $newname = $o;
         if ($os eq 'mac') {
             $newname =~ s/\.so$/\.dylib/;
         }
-        system ("cp $fname $outdir/$newname") && die "failed to copy $o to $outdir\n";
+        print "copying $fname to $outdir/$newname\n";
+        system ("cp $fname $outdir/$newname") && die "failed to copy $o to $outdir/$newname\n";
     }
 
     # FIXME: support putting output into subdirs in 'plugins'

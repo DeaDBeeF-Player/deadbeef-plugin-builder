@@ -23,6 +23,10 @@ case "$TRAVIS_OS_NAME" in
         ./build-html || exit 1
     ;;
     osx)
+        echo "downloading deadbeef headers..."
+        wget -q http://sourceforge.net/projects/deadbeef/files/staticdeps/ddb-headers-latest.tar.bz2/download -O temp/ddb-headers-latest.tar.bz2
+        echo "unpacking deadbeef headers..."
+        tar jxf temp/ddb-headers-latest.tar.bz2 -C static-deps/lib-x86-64/include/ || exit 1
         echo "building for Mac x86_64..."
         ./build || exit 1
     ;;

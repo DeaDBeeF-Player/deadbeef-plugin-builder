@@ -77,9 +77,9 @@ else {
     system ('wget -q http://sourceforge.net/projects/deadbeef/files/staticdeps/ddb-headers-latest.tar.bz2/download -O temp/ddb-headers-latest.tar.bz2') && die "failed to download ddb-headers-latest.tar.bz2\n";
     print "unpacking deadbeef headers...\n";
     system ('tar jxf temp/ddb-headers-latest.tar.bz2 -C static-deps/lib-x86-64/include/') && die "Failed to unpack temp/ddb-headers-latest.tar.bz2\n";
-    print "removing libstdc++...\n";
-    system ('rm static-deps/lib-x86-64/lib/libstdc++*');
 }
+print "removing libstdc++ from static-deps...\n";
+system ('rm static-deps/lib-x86-64/lib/libstdc++*');
 
 
 my $AP="$ORIGIN/tools/apbuild";

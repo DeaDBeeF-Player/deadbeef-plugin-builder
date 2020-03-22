@@ -22,4 +22,8 @@ case "$TRAVIS_OS_NAME" in
         echo "building HTML..."
         ./build-html || exit 1
     ;;
+    osx)
+        echo "building for Mac x86_64..."
+        ./build || exit 1
+    ;;
 esac

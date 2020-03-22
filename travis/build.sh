@@ -25,6 +25,7 @@ case "$TRAVIS_OS_NAME" in
     osx)
         echo "downloading deadbeef headers..."
         mkdir -p temp
+        mkdir -p static-deps/lib-x86-64/include
         curl http://sourceforge.net/projects/deadbeef/files/staticdeps/ddb-headers-latest.tar.bz2/download -o temp/ddb-headers-latest.tar.bz2
         echo "unpacking deadbeef headers..."
         tar jxf temp/ddb-headers-latest.tar.bz2 -C static-deps/lib-x86-64/include/ || exit 1

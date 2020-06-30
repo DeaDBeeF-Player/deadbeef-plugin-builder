@@ -1,8 +1,8 @@
 {
     disable: true,
     source: {
-        type: "hg",
-        url: "https://bitbucket.org/trollixx/deadbeef-lyrics",
+        type: "git",
+        url: "https://github.com/DeaDBeeF-Player/deadbeef-lyrics.git",
         patches: [
             "buildfix.diff"
         ],

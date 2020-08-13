@@ -8,7 +8,8 @@
     make: {
         type: "make",
         ENV: {
-            CXX: "g++"
+            CXX: "g++",
+            SUFFIX: "so"
         },
         root: "/",
         out: [

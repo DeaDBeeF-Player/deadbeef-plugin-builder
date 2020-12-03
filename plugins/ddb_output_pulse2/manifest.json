@@ -2,8 +2,7 @@
     source: {
         type: "git",
         url: "https://github.com/saivert/ddb_output_pulse2.git",
-        revision: "v1.0",
-        patches: ["make.diff"]
+        revision: "v1.1"
     },
     make: {
         type: "make",

@@ -3,7 +3,8 @@
         type: "git",
         url: "https://gitlab.com/zykure/deadbeef-fb.git",
         patches: [
-            "deadbeef-fb.patch"
+            "deadbeef-fb.patch",
+            "errno_mkdir.patch"
         ],
     },
     make: {

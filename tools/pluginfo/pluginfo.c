@@ -40,19 +40,19 @@ main (int argc, char *argv[]) {
         slash++;
     }
     l = strlen (slash);
-    if (l < 3 || strcasecmp (&slash[l-3], ".so")) {
-        fprintf (stderr, "pluginfo: invalid fname %s\n", argv[1]);
-        exit (-1);
-    }
-
     strcpy (d_name, slash);
+
+    size_t suffix_len = 0;
+    if (strrchr(slash,'.')) {
+        suffix_len = strlen(strrchr(slash,'.'));
+    }
 
     handle = dlopen (argv[1], RTLD_NOW);
     if (!handle) {
         fprintf (stderr, "dlopen error: %s\n", dlerror ());
         exit (-1);
     }
-    d_name[l-3] = 0;
+    d_name[l-suffix_len] = 0;
     strcat (d_name, "_load");
     DB_plugin_t *(*plug_load)(DB_functions_t *api) = dlsym (handle, d_name);
     if (!plug_load) {

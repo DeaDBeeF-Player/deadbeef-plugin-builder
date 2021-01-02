@@ -15,6 +15,8 @@ case "$TRAVIS_OS_NAME" in
         echo "unpacking deadbeef headers..."
         tar jxf temp/ddb-headers-latest.tar.bz2 -C static-deps/lib-x86-64/include/ || exit 1
         #tar jxf temp/ddb-headers-latest.tar.bz2 -C static-deps/lib-x86-32/include/ || exit 1
+        echo "compiling deadbeef pluginfo..."
+        make -C tools/pluginfo/ || exit 1
         echo "building for x86_64..."
         ./build --arch=x86_64 || exit 1
 #        echo "building for i686..."
@@ -29,6 +31,8 @@ case "$TRAVIS_OS_NAME" in
         curl -L http://sourceforge.net/projects/deadbeef/files/staticdeps/ddb-headers-latest.tar.bz2/download -o temp/ddb-headers-latest.tar.bz2
         echo "unpacking deadbeef headers..."
         tar jxf temp/ddb-headers-latest.tar.bz2 -C static-deps/lib-x86-64/include/ || exit 1
+        echo "compiling deadbeef pluginfo..."
+        make -C tools/pluginfo/ || exit 1
         echo "building for Mac x86_64..."
         ./build || exit 1
     ;;
@@ -40,7 +44,7 @@ case "$TRAVIS_OS_NAME" in
         echo "unpacking deadbeef headers..."
         $mingw64 tar jxf temp/ddb-headers-latest.tar.bz2 -C static-deps/lib-x86-64/include/ || exit 1
         echo "compiling deadbeef pluginfo..."
-        $mingw64 make -C tools/pluginfo/ -f Makefile_windows.make || exit 1
+        $mingw64 make -C tools/pluginfo/ || exit 1
         echo "building for Windows x86_64..."
         $mingw64 ./build || exit 1
         #STATICDEPS_URL="http://sourceforge.net/projects/deadbeef/files/staticdeps/ddb-xdispatch-win-latest.zip/download"

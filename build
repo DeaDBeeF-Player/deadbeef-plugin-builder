@@ -86,6 +86,7 @@ elsif ($os eq 'linux') {
 elsif ($os eq 'windows') {
     if ($ARCH eq 'x86_64') {
         $LIBDIR="/mingw64/";
+        $CFLAGS="-I static-deps/lib-x86-64/include/"
     }
     else {
         die "unknown arch $ARCH\n";
@@ -150,6 +151,8 @@ elsif ($os eq 'mac') {
     $PLUGINFO="$ORIGIN/tools/pluginfo/mac/pluginfo";
 }
 elsif ($os eq 'windows') {
+    $ENV{CFLAGS} = "$CFLAGS";
+    $ENV{CXXFLAGS} = "$CFLAGS";
     $PLUGINFO="$ORIGIN/tools/pluginfo/$ARCH/pluginfo.exe";
     $GTK216_CFLAGS=`pkg-config --cflags gtk+-2.0`;
     $GTK216_LIBS=`pkg-config --libs gtk+-2.0`;

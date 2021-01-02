@@ -30,8 +30,8 @@ index bb9af4c..6d16a29 100644
 -	cd   fex;$(CXX) -I.. -c -Os -fno-rtti -fno-exceptions *.cpp -fPIC -Wall
 -	cd unrar;$(CXX)      -c -Os -fno-rtti -fno-exceptions *.cpp -fPIC -Wall
 -	cd  7z_C;$(CC)       -c -Os *.c -fPIC -Wall
-+	cd   fex;$(CXX) $(CXXFLAGS) -I.. -c -Os -fno-rtti -fno-exceptions *.cpp -Wall
-+	cd unrar;$(CXX) $(CXXFLAGS)      -c -Os -fno-rtti -fno-exceptions *.cpp -Wall
++	cd   fex;$(CXX) $(CXXFLAGS) -I.. -c -Os -fno-rtti -fno-exceptions -fpermissive *.cpp -Wall
++	cd unrar;$(CXX) $(CXXFLAGS)      -c -Os -fno-rtti -fno-exceptions -fpermissive *.cpp -Wall
 +	cd  7z_C;$(CC) $(CFLAGS)       -c -Os *.c -Wall
  	$(AR) $(ARFLAGS) libfex.a fex/*.o unrar/*.o 7z_C/*.o
  	-ranlib libfex.a 

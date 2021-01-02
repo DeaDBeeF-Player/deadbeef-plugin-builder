@@ -51,6 +51,9 @@ if (!defined $os) {
     elsif ($^O eq 'linux') {
         $os = 'linux';
     }
+    elsif ($^O eq 'msys') {
+        $os = 'windows'
+    }
     else {
         die "Unsupported OS ($^O)\n";
     }
@@ -77,6 +80,12 @@ elsif ($os eq 'linux') {
         $CFLAGS="-m64 -fPIC -I$LIBDIR/include/$MULTILIB_DIR";
         $CONFIGURE_FLAGS="--build=x86_64-unknown-linux-gnu";
         $LDFLAGS="-L$LIBDIR/lib -L$LIBDIR/lib/$MULTILIB_DIR";
+    }
+
+}
+elsif ($os eq 'windows') {
+    if ($ARCH eq 'x86_64') {
+        $LIBDIR="/mingw64/";
     }
     else {
         die "unknown arch $ARCH\n";
@@ -139,6 +148,17 @@ elsif ($os eq 'mac') {
     $ENV{CFLAGS}="-fPIC -I$LIBDIR/include";
     $ENV{CXXFLAGS}="-fPIC -I$LIBDIR/include";
     $PLUGINFO="$ORIGIN/tools/pluginfo/mac/pluginfo";
+}
+elsif ($os eq 'windows') {
+    $PLUGINFO="$ORIGIN/tools/pluginfo/$ARCH/pluginfo.exe";
+    $GTK216_CFLAGS=`pkg-config --cflags gtk+-2.0`;
+    $GTK216_LIBS=`pkg-config --libs gtk+-2.0`;
+    $GTK310_CFLAGS=`pkg-config --cflags gtk+-3.0`;
+    $GTK310_LIBS=`pkg-config --libs gtk+-3.0`;
+    chomp($GTK216_CFLAGS);
+    chomp($GTK216_LIBS);
+    chomp($GTK310_CFLAGS);
+    chomp($GTK310_LIBS);
 }
 
 
@@ -272,6 +292,13 @@ for my $package (@packages) {
             $conf_flags .= ' '.$manifest->{make}->{configure_flags};
         }
         system ("cd $ROOT/$manifest->{make}->{root}; ./configure $conf_flags") && die "configure finished with an error\n";
+
+        # Windows libtool patch
+        if ($os eq 'windows' && -e "$ROOT/$manifest->{make}->{root}/libtool") {
+            print "patching libtool...\n";
+            system ("sed -i.bak -r -e \"s/(allow_undefined=)yes/\\1no/\" $ROOT/$manifest->{make}->{root}/libtool");
+        }
+
         system ("cd $ROOT/$manifest->{make}->{root}; make clean") if $conf_use_cached_src;
         system ("cd $ROOT/$manifest->{make}->{root}; make") && die "make finished with an error\n";
     }
@@ -298,8 +325,24 @@ for my $package (@packages) {
         if ($os eq 'mac') {
             $newname =~ s/\.so$/\.dylib/;
         }
+        elsif ($os eq 'windows') {
+            $newname =~ s/\.so$/\.dll/;
+        }
         print "copying $fname to $outdir/$newname\n";
-        system ("cp $fname $outdir/$newname") && die "failed to copy $o to $outdir/$newname\n";
+        my $ret = system ("cp $fname $outdir/$newname");
+        if ($ret && $os eq 'windows') {
+            print "failed to copy $o to $outdir/$newname\n";
+            $fname =~ s/\.so$/\.dll/;
+            $o =~ s/\.so$/\.dll/;
+            print "trying to copy $fname to $outdir/$newname\n";
+            $ret = system ("cp $fname $outdir/$newname");
+            if ($ret) {
+                die "failed to copy $o to $outdir/$newname\n";
+            }
+        }
+        elsif ($ret) {
+            die "failed to copy $o to $outdir/$newname\n";
+        }
     }
 
     # FIXME: support putting output into subdirs in 'plugins'
@@ -357,11 +400,13 @@ for my $package (@packages) {
 
     my $linux_fname = "$package-$rev$build-linux-$ARCH.zip";
     my $mac_fname = "$package-$rev$build-mac-$ARCH.zip";
+    my $windows_fname = "$package-$rev$build-windows-$ARCH.zip";
     print F "revision=\"$rev\"\n";
     print F "fname_linux_$ARCH=\"$linux_fname\"\n";
     if ($manifest->{supports_macos}) {
        print F "fname_mac_$ARCH=\"$mac_fname\"\n";
     }
+    print F "fname_windows_$ARCH=\"$windows_fname\"\n";
     close F;
     print "will pack $out_fname\n";
     unlink $out_fname;

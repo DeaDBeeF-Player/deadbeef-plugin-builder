@@ -87,7 +87,7 @@ elsif ($os eq 'windows') {
     if ($ARCH eq 'x86_64') {
         $LIBDIR="/mingw64/";
         $CFLAGS="-I static-deps/lib-x86-64/include/";
-	$LDFLAGS="-L/mingw64/bin -L /mingw64/lib";
+        $LDFLAGS="-Wl,--export-all-symbols"
     }
     else {
         die "unknown arch $ARCH\n";

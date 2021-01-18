@@ -154,12 +154,14 @@ elsif ($os eq 'windows') {
     $ENV{CXXFLAGS} = "$CFLAGS";
     $ENV{LDFLAGS} = "$LDFLAGS";
     $GTK216_CFLAGS=`pkg-config --cflags gtk+-2.0`;
+    $GTK216_CFLAGS =~ s/\R//g;
     $GTK216_LIBS=`pkg-config --libs gtk+-2.0`;
+    $GTK216_LIBS =~ s/\R//g;
     $GTK310_CFLAGS=`pkg-config --cflags gtk+-3.0`;
+    $GTK310_CFLAGS =~ s/\R//g;
     $GTK310_LIBS=`pkg-config --libs gtk+-3.0`;
-    chomp($GTK216_CFLAGS);
+    $GTK310_LIBS =~ s/\R//g;
     chomp($GTK216_LIBS);
-    chomp($GTK310_CFLAGS);
     chomp($GTK310_LIBS);
 }
 

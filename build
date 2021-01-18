@@ -389,7 +389,7 @@ for my $package (@packages) {
         last if $found;
     }
     if (!$found) {
-        die "Failed to get descr for the plugin $package";
+        die "Failed to get descr for the plugin $package\n";
     }
     if (!$ver) {
         $ver = 'unknown';

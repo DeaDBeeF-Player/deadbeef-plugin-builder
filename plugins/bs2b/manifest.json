@@ -1,5 +1,5 @@
 {
-    supports_macos: true,
+    supported_platforms: ['linux','mac','windows'],
     source: {
         type: "git",
         url: "https://github.com/DeaDBeeF-Player/bs2b.git",

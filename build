@@ -308,7 +308,7 @@ for my $package (@packages) {
         # Windows libtool patch
         if ($os eq 'windows' && -e "$ROOT/$manifest->{make}->{root}/libtool") {
             print "patching libtool...\n";
-            system ("sed -i.bak -r -e \"s/(allow_undefined=)yes/\\1no/\" $ROOT/$manifest->{make}->{root}/libtool");
+            system ("sed -i.bak -r -e \"s/(allow_undefined=)yes/\\1no/\" $ROOT/$manifest->{make}->{root}/libtool") && die "libtool patch finished with an error\n";
         }
 
         system ("cd $ROOT/$manifest->{make}->{root}; make clean") if $conf_use_cached_src;

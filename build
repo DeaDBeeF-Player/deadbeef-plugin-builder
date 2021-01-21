@@ -51,6 +51,9 @@ if (!defined $os) {
     elsif ($^O eq 'linux') {
         $os = 'linux';
     }
+    elsif ($^O eq 'msys') {
+        $os = 'windows'
+    }
     else {
         die "Unsupported OS ($^O)\n";
     }
@@ -78,6 +81,14 @@ elsif ($os eq 'linux') {
         $CONFIGURE_FLAGS="--build=x86_64-unknown-linux-gnu";
         $LDFLAGS="-L$LIBDIR/lib -L$LIBDIR/lib/$MULTILIB_DIR";
     }
+
+}
+elsif ($os eq 'windows') {
+    if ($ARCH eq 'x86_64') {
+        $LIBDIR="/mingw64/";
+        $CFLAGS="-I static-deps/lib-x86-64/include/";
+        $LDFLAGS="-Wl,--export-all-symbols"
+    }
     else {
         die "unknown arch $ARCH\n";
     }
@@ -87,7 +98,7 @@ $ENV{ARCH} = $ARCH;
 
 my @libpaths = ("");
 
-my $PLUGINFO;
+my $PLUGINFO="$ORIGIN/tools/pluginfo/$ARCH/pluginfo";
 
 my $GTK216_CFLAGS;
 my $GTK216_LIBS;
@@ -95,7 +106,6 @@ my $GTK310_CFLAGS;
 my $GTK310_LIBS;
 
 if ($os eq 'linux') {
-    $PLUGINFO="$ORIGIN/tools/pluginfo/$ARCH/pluginfo";
     if (-e 'static-deps') {
         print "static-deps exists, delete for redownload\n";
     }
@@ -138,7 +148,21 @@ if ($os eq 'linux') {
 elsif ($os eq 'mac') {
     $ENV{CFLAGS}="-fPIC -I$LIBDIR/include";
     $ENV{CXXFLAGS}="-fPIC -I$LIBDIR/include";
-    $PLUGINFO="$ORIGIN/tools/pluginfo/mac/pluginfo";
+}
+elsif ($os eq 'windows') {
+    $ENV{CFLAGS} = "$CFLAGS";
+    $ENV{CXXFLAGS} = "$CFLAGS";
+    $ENV{LDFLAGS} = "$LDFLAGS";
+    $GTK216_CFLAGS=`pkg-config --cflags gtk+-2.0`;
+    $GTK216_CFLAGS =~ s/\R//g;
+    $GTK216_LIBS=`pkg-config --libs gtk+-2.0`;
+    $GTK216_LIBS =~ s/\R//g;
+    $GTK310_CFLAGS=`pkg-config --cflags gtk+-3.0`;
+    $GTK310_CFLAGS =~ s/\R//g;
+    $GTK310_LIBS=`pkg-config --libs gtk+-3.0`;
+    $GTK310_LIBS =~ s/\R//g;
+    chomp($GTK216_LIBS);
+    chomp($GTK310_LIBS);
 }
 
 
@@ -166,6 +190,7 @@ else {
 for my $package (@packages) {
     %ENV = %CLEAN_ENV;
     my $filename = "plugins/$package/manifest.json";
+    my @platforms_enabled = ('linux', 'windows');
     next unless -e $filename;
 
     print "Preparing to build package: $package\n";
@@ -191,11 +216,18 @@ for my $package (@packages) {
         next;
     }
 
-    if ($os eq 'mac' && !$manifest->{supports_macos}) {
-        print STDERR "skipping $package because it doesn't declare macOS support\n";
-        next;
+    if (exists $manifest->{supported_platforms}) {
+        @platforms_enabled = ();
+        for my $p (@{$manifest->{supported_platforms}}) {
+            push(@platforms_enabled, $p);
+        }
     }
 
+    my $package_enabled = grep /^$os$/, @platforms_enabled;
+    if (!$package_enabled) {
+        print STDERR "skipping the $package since it doesn't support current platform\n";
+        next;
+    }
 
     if (!$manifest->{make}->{out} || !(~~@{$manifest->{make}->{out}})) {
         print STDERR "skipping $package because it doesn't define output\n";
@@ -272,6 +304,13 @@ for my $package (@packages) {
             $conf_flags .= ' '.$manifest->{make}->{configure_flags};
         }
         system ("cd $ROOT/$manifest->{make}->{root}; ./configure $conf_flags") && die "configure finished with an error\n";
+
+        # Windows libtool patch
+        if ($os eq 'windows' && -e "$ROOT/$manifest->{make}->{root}/libtool") {
+            print "patching libtool...\n";
+            system ("sed -i.bak -r -e \"s/(allow_undefined=)yes/\\1no/\" $ROOT/$manifest->{make}->{root}/libtool") && die "libtool patch finished with an error\n";
+        }
+
         system ("cd $ROOT/$manifest->{make}->{root}; make clean") if $conf_use_cached_src;
         system ("cd $ROOT/$manifest->{make}->{root}; make") && die "make finished with an error\n";
     }
@@ -298,8 +337,24 @@ for my $package (@packages) {
         if ($os eq 'mac') {
             $newname =~ s/\.so$/\.dylib/;
         }
+        elsif ($os eq 'windows') {
+            $newname =~ s/\.so$/\.dll/;
+        }
         print "copying $fname to $outdir/$newname\n";
-        system ("cp $fname $outdir/$newname") && die "failed to copy $o to $outdir/$newname\n";
+        my $ret = system ("cp $fname $outdir/$newname");
+        if ($ret && $os eq 'windows') {
+            print "failed to copy $o to $outdir/$newname\n";
+            $fname =~ s/\.so$/\.dll/;
+            $o =~ s/\.so$/\.dll/;
+            print "trying to copy $fname to $outdir/$newname\n";
+            $ret = system ("cp $fname $outdir/$newname");
+            if ($ret) {
+                die "failed to copy $o to $outdir/$newname\n";
+            }
+        }
+        elsif ($ret) {
+            die "failed to copy $o to $outdir/$newname\n";
+        }
     }
 
     # FIXME: support putting output into subdirs in 'plugins'
@@ -342,7 +397,7 @@ for my $package (@packages) {
         last if $found;
     }
     if (!$found) {
-        die "Failed to get descr for the plugin $package";
+        die "Failed to get descr for the plugin $package\n";
     }
     if (!$ver) {
         $ver = 'unknown';
@@ -355,12 +410,9 @@ for my $package (@packages) {
 
     my $out_fname = "$package-$rev$build-$os-$ARCH.zip";
 
-    my $linux_fname = "$package-$rev$build-linux-$ARCH.zip";
-    my $mac_fname = "$package-$rev$build-mac-$ARCH.zip";
     print F "revision=\"$rev\"\n";
-    print F "fname_linux_$ARCH=\"$linux_fname\"\n";
-    if ($manifest->{supports_macos}) {
-       print F "fname_mac_$ARCH=\"$mac_fname\"\n";
+    foreach(@platforms_enabled) {
+        print F "fname_${_}_$ARCH=\"$package-$rev$build-${_}-$ARCH.zip\"\n";
     }
     close F;
     print "will pack $out_fname\n";

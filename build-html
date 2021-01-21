@@ -69,6 +69,12 @@ foreach (@packages) {
             }
             $links .= "<a href='http://sourceforge.net/projects/deadbeef/files/plugins/x86_64/$conf{fname_mac_x86_64}/download'>Mac</a>";
         }
+        if ($conf{fname_windows_x86_64}) {
+            if ($links) {
+                $links .= '<br/>';
+            }
+            $links .= "<a href='http://sourceforge.net/projects/deadbeef/files/plugins/x86_64/$conf{fname_windows_x86_64}/download'>Windows</a>";
+        }
 
         print F "<tr><td scope='row' valign='top'><a href='$conf{website}'>$conf{name}</a></td><td scope='row' valign='top'>$conf{revision}</td><td scope='row' valign='top'> $links</td><td scope='row' valign='top'>$descr</td></tr>\n";
     }

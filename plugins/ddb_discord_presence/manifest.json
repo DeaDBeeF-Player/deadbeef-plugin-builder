@@ -1,5 +1,5 @@
 {
-    supports_macos: true,
+    supported_platforms: ['linux','mac','windows'],
     source: {
         type: "git",
         url: "https://github.com/kuba160/ddb_discord_presence.git",

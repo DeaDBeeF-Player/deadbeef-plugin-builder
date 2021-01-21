@@ -1,12 +1,26 @@
-CC=gcc
-CFLAGS=-Wall
-LDFLAGS=-lpthread -ldl -lm
+CC:=gcc
+CFLAGS:=-Wall
+LDFLAGS:=-lpthread -ldl -lm
 
-all:
+SUFFIX=
+ifeq ($(OS),Windows_NT)
+	SUFFIX=.exe
+endif
+
+all: x86_64/pluginfo
+
+x86_64: x86_64/pluginfo
+
+i686: i686/pluginfo
+
+x86_64/pluginfo: 
 	mkdir -p x86_64
-	mkdir -p i686
-	$(CC) -m32 $(CFLAGS) pluginfo.c $(LDFLAGS) -o i686/pluginfo
-	$(CC) -m64 $(CFLAGS) pluginfo.c $(LDFLAGS) -o x86_64/pluginfo
+	$(CC) -m64 -I ../../static-deps/lib-x86-64/include $(CFLAGS) pluginfo.c $(LDFLAGS) -o x86_64/pluginfo
 
+i686/pluginfo:
+	mkdir -p i686
+	$(CC) -m32 -I ../../static-deps/lib-x86-32/include $(CFLAGS) pluginfo.c $(LDFLAGS) -o i686/pluginfo
+
+.PHONY: clean
 clean:
-	rm *.o i686/pluginfo x86_64/pluginfo
+	rm -f i686/pluginfo$(SUFFIX) x86_64/pluginfo$(SUFFIX)

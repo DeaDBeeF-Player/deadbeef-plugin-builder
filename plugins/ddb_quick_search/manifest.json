@@ -2,6 +2,9 @@
     source: {
         type: "git",
         url: "https://github.com/cboxdoerfer/ddb_quick_search.git",
+        patches: [
+            "mkdir_windows.patch",
+        ]
     },
     make: {
         type: "make",

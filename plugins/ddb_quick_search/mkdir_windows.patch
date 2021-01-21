@@ -1,0 +1,16 @@
+diff --git a/main.c b/main.c
+index 1a2f069..4c91f00 100644
+--- a/main.c
++++ b/main.c
+@@ -87,7 +87,11 @@ check_dir (const char *dir, mode_t mode)
+             *slash = 0;
+         if (-1 == stat (tmp, &stat_buf))
+         {
++#ifdef __MINGW32__
++            if (0 != mkdir (tmp))
++#else
+             if (0 != mkdir (tmp, mode))
++#endif
+             {
+                 free (tmp);
+                 return 0;

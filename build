@@ -223,14 +223,9 @@ for my $package (@packages) {
         }
     }
 
-    my $package_enabled = 0;
-    foreach(@platforms_enabled) {
-        if ($_ eq "$os") {
-            $package_enabled = 1;
-        }
-    }
-    if ($package_enabled eq 0) {
-        print STDERR "skipping $package because it doesn't declare platform support\n";
+    my $package_enabled = grep /^$os$/, @platforms_enabled;
+    if (!$package_enabled) {
+        print STDERR "skipping the $package since it doesn't support current platform\n";
         next;
     }
 

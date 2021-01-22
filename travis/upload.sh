@@ -33,5 +33,6 @@ case "$TRAVIS_OS_NAME" in
         echo Uploading Windows artifacts...
         echo x86_64 ...
         rsync -a -e "$SSHOPTS" $OUTDIR/x86_64/*.zip waker,deadbeef@frs.sourceforge.net:/home/frs/project/d/de/deadbeef/plugins/x86_64 || exit 1
+        taskkill //IM ssh-agent.exe //F
     ;;
 esac

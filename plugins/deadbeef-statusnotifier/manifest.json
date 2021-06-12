@@ -1,0 +1,23 @@
+{
+    supported_platforms: ['linux'],
+    source: {
+        type: "git",
+        url: "https://github.com/vovochka404/deadbeef-statusnotifier-plugin.git",
+	patches: [
+		"make.patch"
+	]
+    },
+    make: {
+        type: "make",
+        root: "/",
+	ENV: {
+            GTK3_CFLAGS: "$GTK310_CFLAGS",
+            GTK3_LIBS: "$GTK310_LIBS",
+            LIBDIR: "$LIBDIR"
+        },
+        out: [
+            "build/sni_gtk3.so"
+        ],
+    }
+}
+

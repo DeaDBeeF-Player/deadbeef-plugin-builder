@@ -1,0 +1,42 @@
+diff --git a/Makefile b/Makefile
+index 403b94d..2d6b196 100755
+--- a/Makefile
++++ b/Makefile
+@@ -9,6 +9,11 @@ PATH_BUILD  ?= build
+ PATH_BUILD2 ?= $(PATH_BUILD)/gtk2
+ PATH_BUILD3 ?= $(PATH_BUILD)/gtk3
+ 
++PATH_BUNDLE ?= builder
++FILE_BUNDLE ?= $(PATH_BUNDLE)/bundle.tar.xz
++FILE_DBUS_LIBRARY = $(PATH_BUNDLE)/libdbusmenu-glib.so.4
++PATH_STATIC_DEPS = $(LIBDIR)/gtk-3.10.8/lib
++
+ OUT_GTK2 ?= sni_gtk2.so
+ OUT_GTK3 ?= sni_gtk3.so
+ 
+@@ -28,11 +33,8 @@ LIST_CLEAN = CMakeCache.txt         \
+ 			 .ninja_log             \
+ 			 *.ninja
+ 
+-SNI_DEPS += dbusmenu-glib-0.4
+-SNI_CFLAGS ?= $(call pkg_cflags, $(SNI_DEPS))
+-SNI_LDFLAGS ?= $(call pkg_ldflags, $(SNI_DEPS))
+-
+-SNI_CFLAGS += -DUSE_DBUSMENU -DENABLE_NLS -DG_LOG_DOMAIN=\"plugin-sni\"
++SNI_CFLAGS += -DUSE_DBUSMENU -DENABLE_NLS -DG_LOG_DOMAIN=\"plugin-sni\" -I $(abspath $(PATH_BUNDLE))
++SNI_LDFLAGS += -DUSE_DBUSMENU -DENABLE_NLS -DG_LOG_DOMAIN=\"plugin-sni\" -L $(abspath $(PATH_BUNDLE)) -ldbusmenu-glib
+ 
+ CFLAGS   += -Wall -Wextra -fPIC -std=c99 -D_GNU_SOURCE -Wno-unused -O2 -fvisibility=hidden
+ LDFLAGS  += -shared -s -fdata-sections -ffunction-sections -Wl,-gc-sections -lX11
+@@ -63,7 +65,10 @@ endef
+ 
+ ### TARGETS
+ 
+-all: gtk3
++all: deps gtk3
++deps: $(abspath $(FILE_BUNDLE))
++	@tar -xvf $^ -C $(abspath $(PATH_BUNDLE)) && ln -s $(abspath $(FILE_DBUS_LIBRARY)) $(PATH_STATIC_DEPS)
++
+ 
+ mkenums: enums.c enums.h
+ enums.h: $(PATH_EXTRA)/enums.h.template $(PATH_EXTRA)/statusnotifier.h

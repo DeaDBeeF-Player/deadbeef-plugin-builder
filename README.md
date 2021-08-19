@@ -77,14 +77,15 @@ When you're adding a new plugin to the system, in most cases, you'll need to app
 ## Step by step instructions on adding a new plugin
 
 1. Clone this repository
-2. Run ```./build --arch=x86_64``` to verify that everything works. All plugins should build without errors. NOTE that the 1st time you run it -- a large archive with libraries will be downloaded.
-3. Create a new folder with manifest.json file for your plugin. Copy a manifest.json from any other plugin as a template, try to find one which looks close to what you need. E.g. using the same VCS, same build system, same libraries, etc.
-4. run ```./build --arch=x86_64 pluginname```. The pluginname here is the name of the folder you've created.
-5. Fix the errors in the manifest. Fix the errors in the code. Rerun with --nofetch argument, so that your changes are not deleted.
-6. Repeat step 5, until the plugin builds completes successfully. At this point, you may create a patch. See the section ```How to make a patch``` above for instructions.
-7. Verify that the plugin builds without errors. Copy the plugin to a place where deadbeef can find it. Run deadbeef, and verify that your plugin works.
-8. Run readelf -d on all your *.so files, to verify they link to what they need to link.
-9. After this is done - you're ready to submit a pull request. Hopefully you know how to do it. If not -- please refer to github manual.
+1. Run `make -C tools/pluginfo/`
+1. Run ```./build --arch=x86_64``` to verify that everything works. All plugins should build without errors. NOTE that the 1st time you run it -- a large archive with libraries will be downloaded.
+1. Create a new folder with manifest.json file for your plugin. Copy a manifest.json from any other plugin as a template, try to find one which looks close to what you need. E.g. using the same VCS, same build system, same libraries, etc.
+1. run ```./build --arch=x86_64 pluginname```. The pluginname here is the name of the folder you've created.
+1. Fix the errors in the manifest. Fix the errors in the code. Rerun with --nofetch argument, so that your changes are not deleted.
+1. Repeat step 5, until the plugin builds completes successfully. At this point, you may create a patch. See the section ```How to make a patch``` above for instructions.
+1. Verify that the plugin builds without errors. Copy the plugin to a place where deadbeef can find it. Run deadbeef, and verify that your plugin works.
+1. Run readelf -d on all your *.so files, to verify they link to what they need to link.
+1. After this is done - you're ready to submit a pull request. Hopefully you know how to do it. If not -- please refer to github manual.
 
 ## Running a build locally, via docker
 

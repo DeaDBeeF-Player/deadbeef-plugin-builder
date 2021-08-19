@@ -357,7 +357,16 @@ for my $package (@packages) {
         }
     }
 
-    # FIXME: support putting output into subdirs in 'plugins'
+    # copy with custom paths
+    for my $copy (@{$manifest->{make}->{copy}}) {
+        my $path = "$outdir/$copy->{path}";
+        my $files = $copy->{files};
+        system ("mkdir -p '$outdir/$path'");
+        for my $p (@{$files}) {
+            my $fname = "$ROOT/$p";
+            system ("cp '$fname' '$path/'") && die "Failed to copy $fname to $path\n";
+        }
+    }
     
     # get plugin version, and generate descr file
     # this is needed e.g. for build-md script to find the right plugin zip

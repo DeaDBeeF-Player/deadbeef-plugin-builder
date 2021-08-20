@@ -358,8 +358,11 @@ for my $package (@packages) {
     }
 
     # copy with custom paths
+    my @extra_libpaths = ();
+
     for my $copy (@{$manifest->{make}->{copy}}) {
         my $path = "$outdir/$copy->{path}";
+        push @extra_libpaths, $path;
         my $files = $copy->{files};
         system ("mkdir -p '$path'");
         for my $p (@{$files}) {
@@ -384,7 +387,9 @@ for my $package (@packages) {
         foreach my $gtklibpath (@libpaths) {
             if ($gtklibpath) {
                 print "Trying to load $_ with $gtklibpath...\n";
-                $ENV{LD_LIBRARY_PATH} = "${gtklibpath}/lib:${gtklibpath}/lib/${MULTILIB_DIR}:${LIBDIR}/lib:${LIBDIR}/lib/${MULTILIB_DIR}";
+                my $addpaths = '';
+                map { $addpaths .= ":$_"; } @extra_libpaths;
+                $ENV{LD_LIBRARY_PATH} = "${gtklibpath}/lib:${gtklibpath}/lib/${MULTILIB_DIR}:${LIBDIR}/lib:${LIBDIR}/lib/${MULTILIB_DIR}" . $addpaths;
                 print "LD_LIBRARY_PATH=$ENV{LD_LIBRARY_PATH}\n";
             }
             my $curr = $_;

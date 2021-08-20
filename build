@@ -117,7 +117,7 @@ if ($os eq 'linux') {
     print "removing libstdc++ from static-deps...\n";
     system ('rm static-deps/lib-x86-64/lib/libstdc++*');
 
-    my $AP="$ORIGIN/tools/apbuild";
+    my $AP="$ORIGIN/external/apbuild";
     `cd $AP; ./apinit`;
     $ENV{CC}="$AP/apgcc";
     $ENV{CXX}="$AP/apg++";

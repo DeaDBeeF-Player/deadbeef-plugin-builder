@@ -1,12 +1,12 @@
 diff --git a/Makefile b/Makefile
-index 05d88b8..b29150a 100644
+index 11c951f..752e235 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -15,6 +15,7 @@ $(TARGETS): $(SUBDIRS)
  dr_meter:
- 	@$(MAKE) -C $@ $(MAKECMDGOALS)
+ 	$(MAKE) -C $@ $(MAKECMDGOALS)
  dr_plugin dr_plugin_gui: dr_meter
--	@$(MAKE) -C $@ $(MAKECMDGOALS) DRMETER_DIR=$(DRMETER_DIR) $(SET_RPATH)
+-	$(MAKE) -C $@ $(MAKECMDGOALS) DRMETER_DIR=$(DRMETER_DIR) $(SET_RPATH) 
 +	$(MAKE) -C $@ $(MAKECMDGOALS) DRMETER_DIR=$(DRMETER_DIR) $(SET_RPATH) GTKCFLAGS="$(GTK3_CFLAGS)" GTKLIBS="$(GTK3_LIBS)"
 +	$(MAKE) -C $@ $(MAKECMDGOALS) DRMETER_DIR=$(DRMETER_DIR) $(SET_RPATH) GTKCFLAGS="$(GTK2_CFLAGS)" GTKLIBS="$(GTK2_LIBS)" GTK=2
  

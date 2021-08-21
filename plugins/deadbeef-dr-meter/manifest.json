@@ -8,6 +8,7 @@
     },
     make: {
         type: "make",
+        root: "/",
         copy: [
             {
                 path: 'lib',

@@ -19,7 +19,7 @@
         },
         copy: [
             {
-                path: 'lib',
+                path: "/",
                 files: [
                     "dr_meter/lib/libdrmeter.so",
                 ]

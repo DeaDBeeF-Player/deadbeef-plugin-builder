@@ -117,7 +117,7 @@ if ($os eq 'linux') {
     print "removing libstdc++ from static-deps...\n";
     system ('rm static-deps/lib-x86-64/lib/libstdc++*');
 
-    my $AP="$ORIGIN/tools/apbuild";
+    my $AP="$ORIGIN/external/apbuild";
     `cd $AP; ./apinit`;
     $ENV{CC}="$AP/apgcc";
     $ENV{CXX}="$AP/apg++";
@@ -357,7 +357,19 @@ for my $package (@packages) {
         }
     }
 
-    # FIXME: support putting output into subdirs in 'plugins'
+    # copy with custom paths
+    my @extra_libpaths = ();
+
+    for my $copy (@{$manifest->{make}->{copy}}) {
+        my $path = "$outdir/$copy->{path}";
+        push @extra_libpaths, $path;
+        my $files = $copy->{files};
+        system ("mkdir -p '$path'");
+        for my $p (@{$files}) {
+            my $fname = "$ROOT/$p";
+            system ("cp '$fname' '$path/'") && die "Failed to copy $fname to $path\n";
+        }
+    }
     
     # get plugin version, and generate descr file
     # this is needed e.g. for build-md script to find the right plugin zip
@@ -375,7 +387,9 @@ for my $package (@packages) {
         foreach my $gtklibpath (@libpaths) {
             if ($gtklibpath) {
                 print "Trying to load $_ with $gtklibpath...\n";
-                $ENV{LD_LIBRARY_PATH} = "${gtklibpath}/lib:${gtklibpath}/lib/${MULTILIB_DIR}:${LIBDIR}/lib:${LIBDIR}/lib/${MULTILIB_DIR}";
+                my $addpaths = '';
+                map { $addpaths .= ":$_"; } @extra_libpaths;
+                $ENV{LD_LIBRARY_PATH} = "${gtklibpath}/lib:${gtklibpath}/lib/${MULTILIB_DIR}:${LIBDIR}/lib:${LIBDIR}/lib/${MULTILIB_DIR}" . $addpaths;
                 print "LD_LIBRARY_PATH=$ENV{LD_LIBRARY_PATH}\n";
             }
             my $curr = $_;

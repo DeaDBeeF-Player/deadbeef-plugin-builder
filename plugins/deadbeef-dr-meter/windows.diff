@@ -1,5 +1,5 @@
 diff --git a/Makefile b/Makefile
-index 3d1315e..8a68465 100644
+index 3d1315e..7b950a8 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -1,5 +1,8 @@
@@ -11,3 +11,21 @@ index 3d1315e..8a68465 100644
  
  TARGETS := all debug install clean
  SUBDIRS := dr_meter dr_plugin dr_plugin_gui
+diff --git a/dr_meter/Makefile b/dr_meter/Makefile
+index d27485d..dd161b7 100644
+--- a/dr_meter/Makefile
++++ b/dr_meter/Makefile
+@@ -3,7 +3,12 @@ OBJDIR := objects
+ SRCDIR := src
+ INCLDIR := include
+ LIBDIR := lib
+-LIBRARY := $(LIBDIR)/libdrmeter.so
++ifeq ($(OS), Windows_NT)
++	EXT := dll
++else
++	EXT := so
++endif
++LIBRARY := $(LIBDIR)/libdrmeter.$(EXT)
+ 
+ OPTFLAG := -O3 -flto -DNDEBUG
+ CFLAGS += $(OPTFLAG) -std=c99 -Wall -Wextra -fPIC -pthread

@@ -370,6 +370,7 @@ for my $package (@packages) {
             if ($os eq 'windows') {
                 $fname =~ s/\.so$/\.dll/;
             }
+            print "copying extra $fname to $path\n";
             system ("cp '$fname' '$path/'") && die "Failed to copy $fname to $path\n";
         }
     }

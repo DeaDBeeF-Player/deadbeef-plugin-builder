@@ -1,101 +1,13 @@
 diff --git a/Makefile b/Makefile
-index 05d88b8..2dfad00 100644
+index 05d88b8..b29150a 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -13,8 +13,9 @@ endif
- 
- $(TARGETS): $(SUBDIRS)
+@@ -15,6 +15,7 @@ $(TARGETS): $(SUBDIRS)
  dr_meter:
--	@$(MAKE) -C $@ $(MAKECMDGOALS)
-+	$(MAKE) -C $@ $(MAKECMDGOALS)
+ 	@$(MAKE) -C $@ $(MAKECMDGOALS)
  dr_plugin dr_plugin_gui: dr_meter
 -	@$(MAKE) -C $@ $(MAKECMDGOALS) DRMETER_DIR=$(DRMETER_DIR) $(SET_RPATH)
-+	$(MAKE) -C $@ $(MAKECMDGOALS) DRMETER_DIR=$(DRMETER_DIR) $(SET_RPATH) GTK_CFLAGS="$(GTK3_CFLAGS)" GTK_LIBS="$(GTK3_LIBS)"
-+	$(MAKE) -C $@ $(MAKECMDGOALS) DRMETER_DIR=$(DRMETER_DIR) $(SET_RPATH) GTK_CFLAGS="$(GTK2_CFLAGS)" GTK_LIBS="$(GTK2_LIBS)" GTK=2
++	$(MAKE) -C $@ $(MAKECMDGOALS) DRMETER_DIR=$(DRMETER_DIR) $(SET_RPATH) GTKCFLAGS="$(GTK3_CFLAGS)" GTKLIBS="$(GTK3_LIBS)"
++	$(MAKE) -C $@ $(MAKECMDGOALS) DRMETER_DIR=$(DRMETER_DIR) $(SET_RPATH) GTKCFLAGS="$(GTK2_CFLAGS)" GTKLIBS="$(GTK2_LIBS)" GTK=2
  
  .PHONY: $(TARGETS) $(SUBDIRS)
-diff --git a/dr_meter/Makefile b/dr_meter/Makefile
-index d27485d..5222e45 100644
---- a/dr_meter/Makefile
-+++ b/dr_meter/Makefile
-@@ -7,7 +7,7 @@ LIBRARY := $(LIBDIR)/libdrmeter.so
- 
- OPTFLAG := -O3 -flto -DNDEBUG
- CFLAGS += $(OPTFLAG) -std=c99 -Wall -Wextra -fPIC -pthread
--CPPFLAGS += -I./$(INCLDIR)
-+CFLAGS += -I./$(INCLDIR)
- LDFLAGS += -flto -lpthread
- 
- OBJECTS := $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(wildcard $(SRCDIR)/*.c))
-@@ -24,7 +24,7 @@ $(OBJDIR) $(LIBDIR):
- 	mkdir -p $@
- 
- $(OBJDIR)/%.o: $(SRCDIR)/%.c $(INCLDIR)/%.h
--	$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
-+	$(CC) $(CFLAGS) -c -o $@ $<
- 
- $(LIBRARY): $(OBJECTS) | $(LIBDIR)
- 	$(CC) -shared -o $@ $^ $(LDFLAGS)
-diff --git a/dr_plugin/Makefile b/dr_plugin/Makefile
-index 4d2c2d6..58c440c 100644
---- a/dr_plugin/Makefile
-+++ b/dr_plugin/Makefile
-@@ -6,9 +6,9 @@ PLUGIN := ddb_dr_meter.so
- 
- OPTFLAG := -O3 -flto -DNDEBUG
- CFLAGS += $(OPTFLAG) -std=c99 -Wall -Wextra -fPIC
--CPPFLAGS += -I./$(INCLDIR)
-+CFLAGS += -I./$(INCLDIR)
- ifdef DRMETER_DIR
--	CPPFLAGS += -I$(DRMETER_DIR)/include
-+	CFLAGS += -I$(DRMETER_DIR)/include
- 	LDFLAGS += -L$(DRMETER_DIR)/lib
- endif
- LDFLAGS += -ldrmeter
-@@ -31,7 +31,7 @@ $(OBJDIR):
- 	mkdir -p $@
- 
- $(OBJDIR)/%.o: $(SRCDIR)/%.c $(INCLDIR)/%.h
--	$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
-+	$(CC) $(CFLAGS) -c $< -o $@
- 
- $(PLUGIN): $(OBJECTS)
- 	$(CC) -shared -o $@ $^ $(LDFLAGS)
-diff --git a/dr_plugin_gui/Makefile b/dr_plugin_gui/Makefile
-index 84d549c..a6bf7c7 100644
---- a/dr_plugin_gui/Makefile
-+++ b/dr_plugin_gui/Makefile
-@@ -15,16 +15,19 @@ else
- 	GTKLIB=gtk+-3.0
- endif
- 
-+GTK_CFLAGS ?= $(shell pkg-config --cflags $(GTKLIB))
-+GTK_LIBS ?= $(shell pkg-config --libs $(GTKLIB))
-+
- OPTFLAG := -O3 -flto -DNDEBUG
- CFLAGS += $(OPTFLAG) -std=c99 -Wall -Wextra -fPIC
--CPPFLAGS += $(shell pkg-config --cflags $(GTKLIB))
--CPPFLAGS += -I./$(INCLDIR)
--CPPFLAGS += -I$(DRPLUGDIR)/include
-+CFLAGS += $(GTK_CFLAGS)
-+CFLAGS += -I./$(INCLDIR)
-+CFLAGS += -I$(DRPLUGDIR)/include
- ifdef DRMETER_DIR
--	CPPFLAGS += -I$(DRMETER_DIR)/include
-+	CFLAGS += -I$(DRMETER_DIR)/include
- 	LDFLAGS += -L$(DRMETER_DIR)/lib
- endif
--LDFLAGS += $(shell pkg-config --libs $(GTKLIB))
-+LDFLAGS += $(GTK_LIBS)
- LDFLAGS += -ldrmeter
- LDFLAGS += -flto
- ifdef RPATH
-@@ -49,7 +52,7 @@ $(OBJDIR):
- 	mkdir -p $@
- 
- $(OBJDIR)/%.o: $(SRCDIR)/%.c $(INCLDIR)/%.h $(GTKCACHE)
--	$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
-+	$(CC) $(CFLAGS) -c $< -o $@
- 
- $(PLUGIN): $(OBJECTS) $(GTKCACHE)
- 	$(CC) -shared -o $@ $(OBJECTS) $(LDFLAGS)

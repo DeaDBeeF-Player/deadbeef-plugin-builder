@@ -9,7 +9,13 @@
     },
     make: {
         type: "make",
-        root: "/",
+        root: "",
+        ENV: {
+            GTK2_CFLAGS: "$GTK216_CFLAGS",
+            GTK2_LIBS: "$GTK216_LIBS",
+            GTK3_CFLAGS: "$GTK310_CFLAGS",
+            GTK3_LIBS: "$GTK310_LIBS"
+        },
         copy: [
             {
                 path: 'lib',

@@ -1,16 +1,3 @@
-diff --git a/Makefile b/Makefile
-index 3d1315e..7b950a8 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1,5 +1,8 @@
- export PREFIX ?= ${HOME}/.local/lib/deadbeef
- DRMETER_DIR ?= $(PWD)/dr_meter
-+ifeq ($(OS),Windows_NT)
-+     DRMETER_DIR := $(shell echo $(DRMETER_DIR) | sed -E 's#^/([a-z])/#\U\1:/#')
-+endif
- 
- TARGETS := all debug install clean
- SUBDIRS := dr_meter dr_plugin dr_plugin_gui
 diff --git a/dr_meter/Makefile b/dr_meter/Makefile
 index d27485d..dd161b7 100644
 --- a/dr_meter/Makefile

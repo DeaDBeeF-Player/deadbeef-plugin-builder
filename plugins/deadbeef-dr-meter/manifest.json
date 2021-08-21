@@ -2,6 +2,9 @@
     source: {
         type: "git",
         url: "https://github.com/dakeryas/deadbeef-dr-meter",
+        patches: [
+            "add_gtk2.diff",
+        ]
     },
     make: {
         type: "make",
@@ -15,6 +18,7 @@
         ],
         out: [
             "dr_plugin/ddb_dr_meter.so",
+            "dr_plugin_gui/ddb_dr_meter_gtk2.so",
             "dr_plugin_gui/ddb_dr_meter_gtk3.so",
         ],
     }

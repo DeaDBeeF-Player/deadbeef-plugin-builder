@@ -5,6 +5,7 @@
         url: "https://github.com/dakeryas/deadbeef-dr-meter",
         patches: [
             "add_gtk2.diff",
+            "windows.diff",
         ]
     },
     make: {

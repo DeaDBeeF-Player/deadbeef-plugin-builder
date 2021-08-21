@@ -1,5 +1,5 @@
 {
-    supported_platforms: ['linux'],
+    supported_platforms: ['linux', 'windows'],
     source: {
         type: "git",
         url: "https://github.com/dakeryas/deadbeef-dr-meter",
@@ -18,7 +18,13 @@
         },
         copy: [
             {
-                path: 'lib',
+                path: "",
+                files: [
+                    "dr_meter/lib/libdrmeter.so",
+                ]
+            },
+            {
+                path: "./../../../deadbeef-dr-meter/dr_plugin",
                 files: [
                     "dr_meter/lib/libdrmeter.so",
                 ]

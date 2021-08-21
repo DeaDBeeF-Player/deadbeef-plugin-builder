@@ -367,6 +367,10 @@ for my $package (@packages) {
         system ("mkdir -p '$path'");
         for my $p (@{$files}) {
             my $fname = "$ROOT/$p";
+            if ($os eq 'windows') {
+                $fname =~ s/\.so$/\.dll/;
+            }
+            print "copying extra $fname to $path\n";
             system ("cp '$fname' '$path/'") && die "Failed to copy $fname to $path\n";
         }
     }

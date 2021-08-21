@@ -1,10 +1,21 @@
 {
+    supported_platforms: ['linux'],
     source: {
         type: "git",
         url: "https://github.com/dakeryas/deadbeef-dr-meter",
+        patches: [
+            "add_gtk2.diff",
+        ]
     },
     make: {
         type: "make",
+        root: "",
+        ENV: {
+            GTK2_CFLAGS: "$GTK216_CFLAGS",
+            GTK2_LIBS: "$GTK216_LIBS",
+            GTK3_CFLAGS: "$GTK310_CFLAGS",
+            GTK3_LIBS: "$GTK310_LIBS"
+        },
         copy: [
             {
                 path: 'lib',
@@ -15,6 +26,7 @@
         ],
         out: [
             "dr_plugin/ddb_dr_meter.so",
+            "dr_plugin_gui/ddb_dr_meter_gtk2.so",
             "dr_plugin_gui/ddb_dr_meter_gtk3.so",
         ],
     }

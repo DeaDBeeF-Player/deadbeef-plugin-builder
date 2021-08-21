@@ -1,0 +1,3 @@
+[submodule "external/apbuild"]
+	path = external/apbuild
+	url = ../apbuild.git

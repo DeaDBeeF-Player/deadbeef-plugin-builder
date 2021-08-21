@@ -1,5 +1,5 @@
 {
-    supported_platforms: ['linux','mac','windows'],
+    supported_platforms: ['linux'],
     source: {
         type: "git",
         url: "https://github.com/dakeryas/deadbeef-dr-meter",

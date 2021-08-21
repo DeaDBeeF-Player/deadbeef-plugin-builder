@@ -46,7 +46,7 @@ case "$TRAVIS_OS_NAME" in
         echo "compiling deadbeef pluginfo..."
         $mingw64 make -C tools/pluginfo/ || exit 1
         echo "building for Windows x86_64..."
-        $mingw64 ./build --arch=x86_64 || exit 1
+        $mingw64 ./build --arch=x86_64 deadbeef-dr-meter || exit 1
         #STATICDEPS_URL="http://sourceforge.net/projects/deadbeef/files/staticdeps/ddb-xdispatch-win-latest.zip/download"
         #echo "downloading xdispatch_ddb..."
         #wget -q "$STATICDEPS_URL" -O ddb-xdispatch-win-latest.zip || exit 1

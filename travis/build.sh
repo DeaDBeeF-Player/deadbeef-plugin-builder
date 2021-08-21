@@ -18,7 +18,7 @@ case "$TRAVIS_OS_NAME" in
         echo "compiling deadbeef pluginfo..."
         make -C tools/pluginfo/ || exit 1
         echo "building for x86_64..."
-        ./build --arch=x86_64 || exit 1
+        ./build --arch=x86_64 deadbeef-dr-meter || exit 1
 #        echo "building for i686..."
 #        ./build --arch=i686 --nofetch || exit 1
         echo "building HTML..."

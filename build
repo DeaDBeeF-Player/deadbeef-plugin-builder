@@ -332,29 +332,17 @@ for my $package (@packages) {
     system ("mkdir -p $outdir") && die "failed to mkdir $outdir\n";
     for my $o (@{$manifest->{make}->{out}}) {
         my $fname = "$ROOT/$o";
-        my $newname = $o;
-        $newname =~ s/.*\/([^\/]*$)/$1/;
-        if ($os eq 'mac') {
-            $newname =~ s/\.so$/\.dylib/;
-        }
-        elsif ($os eq 'windows') {
-            $newname =~ s/\.so$/\.dll/;
-        }
+        my $newname = get_dest_filename($o);
         print "copying $fname to $outdir/$newname\n";
-        my $ret = system ("cp $fname $outdir/$newname");
-        if ($ret && $os eq 'windows') {
-            print "failed to copy $o to $outdir/$newname\n";
+
+        # some makefiles produce dlls directly
+        if ($os eq 'windows' && !-e $fname) {
             $fname =~ s/\.so$/\.dll/;
-            $o =~ s/\.so$/\.dll/;
-            print "trying to copy $fname to $outdir/$newname\n";
-            $ret = system ("cp $fname $outdir/$newname");
-            if ($ret) {
-                die "failed to copy $o to $outdir/$newname\n";
+            if (!-e $fname) {
+                die "File $fname not found\n";
             }
         }
-        elsif ($ret) {
-            die "failed to copy $o to $outdir/$newname\n";
-        }
+        system ("cp $fname $outdir/$newname") && die "failed to copy $o to $outdir/$newname\n";
     }
 
     # copy with custom paths
@@ -400,7 +388,7 @@ for my $package (@packages) {
                 print "LD_LIBRARY_PATH=$ENV{LD_LIBRARY_PATH}\n";
             }
             my $curr = $_;
-            $curr =~ s/.*\/([^\/]*)$/$1/;
+            $curr = get_dest_filename($curr);
             print "getting plugin info: $outdir/$curr\n";
             my $config = `$PLUGINFO $outdir/$curr`;
             if (!$?) {
@@ -450,4 +438,16 @@ sub parse_config {
         $out{$1} = $2;
     }
     return %out;
+}
+
+sub get_dest_filename {
+    my $newname = shift;
+    $newname =~ s/.*\/([^\/]*$)/$1/;
+    if ($os eq 'mac') {
+        $newname =~ s/\.so$/\.dylib/;
+    }
+    elsif ($os eq 'windows') {
+        $newname =~ s/\.so$/\.dll/;
+    }
+    return $newname;
 }

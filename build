@@ -229,7 +229,11 @@ for my $package (@packages) {
         next;
     }
 
-    if (!$manifest->{make}->{out} || !(~~@{$manifest->{make}->{out}})) {
+    my $out = $manifest->{make}->{"out_$os"};
+    if (!($out)) {
+        $out = $manifest->{make}->{out};
+    }
+    if (!$out || !(~~@{$out})) {
         print STDERR "skipping $package because it doesn't define output\n";
         next;
     }
@@ -330,7 +334,7 @@ for my $package (@packages) {
     my $outdir = "temp/output/$ARCH/plugins";
     system ("rm -rf $outdir") && die "failed to remove $outdir\n";
     system ("mkdir -p $outdir") && die "failed to mkdir $outdir\n";
-    for my $o (@{$manifest->{make}->{out}}) {
+    for my $o (@{$out}) {
         my $fname = "$ROOT/$o";
         my $newname = get_dest_filename($o);
         print "copying $fname to $outdir/$newname\n";
@@ -370,7 +374,6 @@ for my $package (@packages) {
     # this is needed e.g. for build-md script to find the right plugin zip
     my $ver;
 
-    my $out = $manifest->{make}->{out};
     my $descr_fname = "temp/output/$ARCH/$package.descr";
     open F,">temp/output/$ARCH/$package.descr" || die "failed to open $descr_fname\n";
 

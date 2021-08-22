@@ -1,8 +1,12 @@
 {
+    supported_platforms: ['linux','mac','windows'],
     source: {
         type: "git",
         url: "https://github.com/danpla/ddb_copy_info.git",
         revision: "v1.0.2",
+        patches: [
+            "patch.diff",
+        ]
     },
     make: {
         type: "make",
@@ -16,6 +20,9 @@
         out: [
             'ddb_copy_info_gtk2.so',
             'ddb_copy_info_gtk3.so',
-        ]
+        ],
+        out_mac: [
+            'ddb_copy_info.dylib',
+        ],
     }
 }

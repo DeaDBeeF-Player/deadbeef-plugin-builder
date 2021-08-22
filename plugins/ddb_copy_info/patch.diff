@@ -1,0 +1,181 @@
+diff --git a/Makefile b/Makefile
+index 4432e41..d2f5b29 100644
+--- a/Makefile
++++ b/Makefile
+@@ -19,6 +19,15 @@ DEADBEEF_INC :=
+ 
+ SOURCES := main.c
+ 
++
++UNAME_S := $(shell uname -s)
++
++ifeq ($(UNAME_S),Darwin)
++OBJC_SOURCES = clipboard.m
++MACOS_TARGET := ddb_copy_info.dylib
++MACOS_OBJECTS := $(SOURCES:.c=_macos.o)
++MACOS_OBJC_OBJECTS := $(OBJC_SOURCES:.m=_objc.o)
++else
+ # We use conditional assignment for GTK2_CFLAGS and GTK2_LIBS
+ # to support DeaDBeeF Plugin Builder.
+ GTK2_TARGET := ddb_copy_info_gtk2.so
+@@ -30,10 +39,14 @@ GTK3_TARGET := ddb_copy_info_gtk3.so
+ GTK3_CFLAGS ?= $(shell pkg-config --cflags gtk+-3.0)
+ GTK3_LIBS ?= $(shell pkg-config --libs gtk+-3.0)
+ GTK3_OBJECTS := $(SOURCES:.c=_gtk3.o)
+-
++endif
+ 
+ .PHONY: all
++ifeq ($(UNAME_S),Darwin)
++all: macos
++else
+ all: gtk2 gtk3
++endif
+ 
+ .PHONY: gtk2
+ gtk2: $(GTK2_TARGET)
+@@ -41,6 +54,9 @@ gtk2: $(GTK2_TARGET)
+ .PHONY: gtk3
+ gtk3: $(GTK3_TARGET)
+ 
++.PHONY: macos
++macos: $(MACOS_TARGET)
++
+ $(GTK2_TARGET): $(GTK2_OBJECTS)
+ 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LDLIBS) $(GTK2_LIBS)
+ 
+@@ -53,6 +69,15 @@ $(GTK3_TARGET): $(GTK3_OBJECTS)
+ %_gtk3.o: %.c
+ 	$(CC) $(CFLAGS) $(GTK3_CFLAGS) $(DEADBEEF_INC) -c -o $@ $<
+ 
++$(MACOS_TARGET): $(MACOS_OBJECTS) $(MACOS_OBJC_OBJECTS)
++	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LDLIBS) -framework AppKit
++
++%_macos.o: %.c
++	$(CC) $(CFLAGS) $(DEADBEEF_INC) -c -o $@ $<
++
++%_objc.o: %.m
++	$(CC) $(CFLAGS) $(DEADBEEF_INC) -c -o $@ $<
++
+ .PHONY: clean
+ clean:
+-	rm -f $(GTK2_TARGET) $(GTK2_OBJECTS) $(GTK3_TARGET) $(GTK3_OBJECTS)
++	rm -f $(GTK2_TARGET) $(GTK2_OBJECTS) $(GTK3_TARGET) $(GTK3_OBJECTS) $(MACOS_TARGET) $(MACOS_OBJECTS)
+diff --git a/clipboard.m b/clipboard.m
+new file mode 100644
+index 0000000..1c49868
+--- /dev/null
++++ b/clipboard.m
+@@ -0,0 +1,5 @@
++#import <AppKit/AppKit.h>
++void copy_to_clipboard(const char *text, size_t len) {
++    [NSPasteboard.generalPasteboard clearContents];
++    [NSPasteboard.generalPasteboard setString:[NSString stringWithUTF8String:text] forType:NSStringPboardType];
++}
+diff --git a/main.c b/main.c
+index 5a1b0e6..d458a07 100644
+--- a/main.c
++++ b/main.c
+@@ -4,14 +4,16 @@
+ #include <stdlib.h>
+ #include <string.h>
+ 
+-#include <gdk/gdk.h>
+-#include <gtk/gtk.h>
+ 
+ // Formatting v2 requires API >= 1.8
+ #define DDB_API_LEVEL 8
+ #define DDB_WARN_DEPRECATED 1
+ #include <deadbeef/deadbeef.h>
++#if !__APPLE__
++#include <gdk/gdk.h>
++#include <gtk/gtk.h>
+ #include <deadbeef/gtkui_api.h>
++#endif
+ 
+ 
+ #define VERSION_MAJOR 1
+@@ -20,14 +22,16 @@
+ 
+ 
+ static DB_functions_t *deadbeef;
++#if !__APPLE__
+ static ddb_gtkui_t *gtkui_plugin;
++#endif
+ 
+ static char* tf;
+ 
+-
+ #define CFG_FORMAT "copy_info.format"
+ #define DEFAULT_FORMAT "%tracknumber%. %artist% - %title% (%length%)"
+ 
++extern void copy_to_clipboard(const char *text, size_t text_length);
+ 
+ static void recompile_tf(void)
+ {
+@@ -58,6 +62,7 @@ static int stop(void)
+ }
+ 
+ 
++#if !__APPLE__
+ static int connect(void)
+ {
+     gtkui_plugin = (
+@@ -65,8 +70,7 @@ static int connect(void)
+     return gtkui_plugin ? 0 : -1;
+ }
+ 
+-
+-static void copy_to_clipboard(const char *text, size_t text_length)
++void copy_to_clipboard(const char *text, size_t text_length)
+ {
+     assert(text);
+ 
+@@ -75,6 +79,7 @@ static void copy_to_clipboard(const char *text, size_t text_length)
+         display, GDK_SELECTION_CLIPBOARD);
+     gtk_clipboard_set_text(clipboard, text, text_length);
+ }
++#endif
+ 
+ 
+ static void copy_tf_error_msg_to_clipboard(void)
+@@ -260,10 +265,14 @@ static DB_misc_t plugin = {
+     .plugin.version_major = VERSION_MAJOR,
+     .plugin.version_minor = VERSION_MINOR,
+     .plugin.type = DB_PLUGIN_MISC,
++#if __APPLE__
++    .plugin.id = "ddb_copy_info_macos",
++#else
+ #if GTK_CHECK_VERSION(3, 0, 0)
+     .plugin.id = "ddb_copy_info_gtk3",
+ #else
+     .plugin.id = "ddb_copy_info_gtk2",
++#endif
+ #endif
+     .plugin.name = "Copy info",
+     .plugin.descr =
+@@ -292,18 +301,24 @@ static DB_misc_t plugin = {
+     .plugin.website = "https://github.com/danpla/ddb_copy_info",
+     .plugin.start = start,
+     .plugin.stop = stop,
++#if !__APPLE__
+     .plugin.connect = connect,
++#endif
+     .plugin.get_actions = get_actions,
+     .plugin.configdialog = configdialog,
+     .plugin.message = message,
+ };
+ 
+ 
++#if __APPLE__
++DB_plugin_t *ddb_copy_info_load(DB_functions_t *api)
++#else
+ #if GTK_CHECK_VERSION(3, 0, 0)
+ DB_plugin_t *ddb_copy_info_gtk3_load(DB_functions_t *api)
+ #else
+ DB_plugin_t *ddb_copy_info_gtk2_load(DB_functions_t *api)
+ #endif
++#endif
+ {
+     deadbeef = api;
+     return DB_PLUGIN(&plugin);

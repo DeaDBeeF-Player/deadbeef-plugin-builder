@@ -370,7 +370,7 @@ for my $package (@packages) {
             if ($os eq 'windows') {
                 $fname =~ s/\.so$/\.dll/;
             }
-            if ($os eq 'mac') {
+            elsif ($os eq 'mac') {
                 $fname =~ s/\.so$/\.dylib/;
             }
             print "copying extra $fname to $path\n";

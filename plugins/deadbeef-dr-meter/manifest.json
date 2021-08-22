@@ -24,7 +24,7 @@
                 ]
             },
             {
-                path: "./../../../deadbeef-dr-meter/dr_plugin",
+                path: "../../../deadbeef-dr-meter/dr_plugin",
                 files: [
                     "dr_meter/lib/libdrmeter.so",
                 ]

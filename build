@@ -400,7 +400,9 @@ for my $package (@packages) {
                 print "LD_LIBRARY_PATH=$ENV{LD_LIBRARY_PATH}\n";
             }
             my $curr = $_;
-            my $config = `$PLUGINFO $ROOT/$curr`;
+            $curr =~ s/.*\/([^\/]*)$/$1/;
+            print "getting plugin info: $outdir/$curr\n";
+            my $config = `$PLUGINFO $outdir/$curr`;
             if (!$?) {
                 my %conf_vars = parse_config ($config);
                 $ver = $conf_vars{version};

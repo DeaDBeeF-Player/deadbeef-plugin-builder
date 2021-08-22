@@ -16,21 +16,8 @@
             GTK3_CFLAGS: "$GTK310_CFLAGS",
             GTK3_LIBS: "$GTK310_LIBS"
         },
-        copy: [
-            {
-                path: "",
-                files: [
-                    "dr_meter/lib/libdrmeter.so",
-                ]
-            },
-            {
-                path: "../../../deadbeef-dr-meter/dr_plugin",
-                files: [
-                    "dr_meter/lib/libdrmeter.so",
-                ]
-            }
-        ],
         out: [
+            "dr_meter/lib/libdrmeter.so",
             "dr_plugin/ddb_dr_meter.so",
             "dr_plugin_gui/ddb_dr_meter_gtk2.so",
             "dr_plugin_gui/ddb_dr_meter_gtk3.so",

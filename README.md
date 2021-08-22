@@ -85,6 +85,9 @@ When you're adding a new plugin to the system, in most cases, you'll need to app
 1. Repeat step 5, until the plugin builds completes successfully. At this point, you may create a patch. See the section ```How to make a patch``` above for instructions.
 1. Verify that the plugin builds without errors. Copy the plugin to a place where deadbeef can find it. Run deadbeef, and verify that your plugin works.
 1. Run readelf -d on all your *.so files, to verify they link to what they need to link.
+1. Run the build using docker, as described below. This is required to make sure that building and running your plugin (and other plugins) will work on the build server.
+    * Note: you can limit the docker build to your plugin only, by modifying the
+      ./build command in the `travis/build.sh` file
 1. After this is done - you're ready to submit a pull request. Hopefully you know how to do it. If not -- please refer to github manual.
 
 ## Running a build locally, via docker

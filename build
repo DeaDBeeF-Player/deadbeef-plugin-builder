@@ -72,7 +72,7 @@ elsif ($os eq 'linux') {
         $LIBDIR="$ORIGIN/static-deps/lib-x86-32";
         $CFLAGS="-m32 -I$LIBDIR/include/$MULTILIB_DIR";
         $CONFIGURE_FLAGS = "--build=i686-unknown-linux-gnu";
-        $LDFLAGS="-m32 -L$LIBDIR/lib -L$LIBDIR/lib/$MULTILIB_DIR";
+        $LDFLAGS="-L$LIBDIR/lib -L$LIBDIR/lib/$MULTILIB_DIR";
     }
     elsif ($ARCH eq 'x86_64') {
         $MULTILIB_DIR='x86_64-linux-gnu';

@@ -37,6 +37,9 @@ case "$TRAVIS_OS_NAME" in
         ./build || exit 1
     ;;
     windows)
+        echo "Downgrading openssh"
+        wget http://repo.msys2.org/msys/x86_64/openssh-8.7p1-1-x86_64.pkg.tar.zst
+        pacman --noconfirm -U openssh-8.7p1-1-x86_64.pkg.tar.zst
         echo "downloading deadbeef headers..."
         mkdir -p temp
         mkdir -p static-deps/lib-x86-64/include

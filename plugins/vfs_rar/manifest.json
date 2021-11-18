@@ -1,5 +1,5 @@
 {
-    supported_platforms: ['linux','mac','windows'],
+    supported_platforms: ['linux','mac'],
     source: {
         type: "git",
         url: "https://github.com/DeaDBeeF-Player/vfs_rar.git",

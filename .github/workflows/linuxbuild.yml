@@ -12,6 +12,8 @@ jobs:
       run: |
         apt-get -qq update
         apt-get install -y -qq autopoint automake autoconf intltool libc6-dev yasm libglib2.0-bin perl wget zip bzip2 make libtool pkg-config fakeroot clang openssh-client rsync git gcc g++ fontconfig xorg libharfbuzz0b libthai0 libwrap0 libsndfile1 libasyncns0
+        sed -i 's/mozilla\/DST_Root_CA_X3\.crt/\!mozilla\/DST_Root_CA_X3\.crt/' /etc/ca-certificates.conf
+        update-ca-certificates
     - name: Checkout for Linux
       uses: actions/checkout@v1
       with:

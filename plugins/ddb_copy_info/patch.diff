@@ -73,7 +73,7 @@ index 0000000..1c49868
 +    [NSPasteboard.generalPasteboard setString:[NSString stringWithUTF8String:text] forType:NSStringPboardType];
 +}
 diff --git a/main.c b/main.c
-index 5a1b0e6..d458a07 100644
+index ac3d395..c712cbd 100644
 --- a/main.c
 +++ b/main.c
 @@ -4,14 +4,16 @@
@@ -95,7 +95,7 @@ index 5a1b0e6..d458a07 100644
  
  
  #define VERSION_MAJOR 1
-@@ -20,14 +22,16 @@
+@@ -20,7 +22,9 @@
  
  
  static DB_functions_t *deadbeef;
@@ -105,15 +105,15 @@ index 5a1b0e6..d458a07 100644
  
  static char* tf;
  
--
- #define CFG_FORMAT "copy_info.format"
- #define DEFAULT_FORMAT "%tracknumber%. %artist% - %title% (%length%)"
+@@ -33,6 +37,7 @@ static char* tf;
+ #define CFG_ADD_TRAILING_NEWLINE CFG_PREFIX "add_trailing_newline"
+ #define CFG_ADD_TRAILING_NEWLINE_DEFAULT 1
  
 +extern void copy_to_clipboard(const char *text, size_t text_length);
  
  static void recompile_tf(void)
  {
-@@ -58,6 +62,7 @@ static int stop(void)
+@@ -63,6 +68,7 @@ static int stop(void)
  }
  
  
@@ -121,7 +121,7 @@ index 5a1b0e6..d458a07 100644
  static int connect(void)
  {
      gtkui_plugin = (
-@@ -65,8 +70,7 @@ static int connect(void)
+@@ -70,8 +76,7 @@ static int connect(void)
      return gtkui_plugin ? 0 : -1;
  }
  
@@ -131,7 +131,7 @@ index 5a1b0e6..d458a07 100644
  {
      assert(text);
  
-@@ -75,6 +79,7 @@ static void copy_to_clipboard(const char *text, size_t text_length)
+@@ -80,6 +85,7 @@ static void copy_to_clipboard(const char *text, size_t text_length)
          display, GDK_SELECTION_CLIPBOARD);
      gtk_clipboard_set_text(clipboard, text, text_length);
  }
@@ -139,7 +139,7 @@ index 5a1b0e6..d458a07 100644
  
  
  static void copy_tf_error_msg_to_clipboard(void)
-@@ -260,10 +265,14 @@ static DB_misc_t plugin = {
+@@ -278,10 +284,14 @@ static DB_misc_t plugin = {
      .plugin.version_major = VERSION_MAJOR,
      .plugin.version_minor = VERSION_MINOR,
      .plugin.type = DB_PLUGIN_MISC,
@@ -154,7 +154,7 @@ index 5a1b0e6..d458a07 100644
  #endif
      .plugin.name = "Copy info",
      .plugin.descr =
-@@ -292,18 +301,24 @@ static DB_misc_t plugin = {
+@@ -310,18 +320,24 @@ static DB_misc_t plugin = {
      .plugin.website = "https://github.com/danpla/ddb_copy_info",
      .plugin.start = start,
      .plugin.stop = stop,

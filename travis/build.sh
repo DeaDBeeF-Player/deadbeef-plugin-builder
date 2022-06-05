@@ -21,8 +21,6 @@ case "$TRAVIS_OS_NAME" in
         ./build --arch=x86_64 || exit 1
 #        echo "building for i686..."
 #        ./build --arch=i686 --nofetch || exit 1
-        echo "building HTML..."
-        ./build-html || exit 1
     ;;
     osx)
         echo "downloading deadbeef headers..."

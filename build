@@ -318,6 +318,9 @@ for my $package (@packages) {
         system ("cd $ROOT/$manifest->{make}->{root}; make clean") if $conf_use_cached_src;
         system ("cd $ROOT/$manifest->{make}->{root}; make") && die "make finished with an error\n";
     }
+    elsif ($manifest->{make}->{type} eq 'msbuild') {
+        system ("cd $ROOT/$manifest->{make}->{root}; MSYS2_ARG_CONV_EXCL=* powershell msbuild /m /p:Configuration=Release .") && die "msbuild finished with an error\n";
+    }
     else {
         die "make type '$manifest->{make}->{type}' is not supported\n";
     }

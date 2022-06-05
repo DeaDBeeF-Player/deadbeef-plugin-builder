@@ -2,7 +2,7 @@
     supported_platforms: ['linux'],
     source: {
         type: "git",
-        url: "https://github.com/Serranya/deadbeef-mpris2-plugin",
+        url: "https://github.com/DeaDBeeF-Player/deadbeef-mpris2-plugin",
         patches: [
             "make.diff"
         ],

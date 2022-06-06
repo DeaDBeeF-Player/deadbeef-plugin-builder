@@ -1,0 +1,125 @@
+name: DeaDBeeF Plugin Builder
+
+on: [ push, pull_request, workflow_dispatch ]
+
+jobs:
+  build_linux:
+    name: CI for Linux
+    runs-on: ubuntu-latest
+    container: ubuntu:14.04
+    steps:
+    - name: Install dependencies for Linux
+      run: |
+        apt-get -qq update
+        apt-get install -y -qq autopoint automake autoconf intltool libc6-dev yasm libglib2.0-bin perl wget zip bzip2 make libtool pkg-config fakeroot clang openssh-client rsync git gcc g++ fontconfig xorg libharfbuzz0b libthai0 libwrap0 libsndfile1 libasyncns0
+        sed -i 's/mozilla\/DST_Root_CA_X3\.crt/\!mozilla\/DST_Root_CA_X3\.crt/' /etc/ca-certificates.conf
+        update-ca-certificates
+    - name: Checkout for Linux
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - name: Build for Linux
+      run: TRAVIS_OS_NAME=linux travis/build.sh
+    - name: Upload for Linux
+      env:
+          gh_rsa_key: ${{ secrets.GH_ENCRYPTED_RSA_KEY }}
+          gh_rsa_iv: ${{ secrets.GH_ENCRYPTED_RSA_IV }}
+      run: TRAVIS_OS_NAME=linux travis/upload.sh
+    - name: Upload linux plugin descriptors
+      uses: actions/upload-artifact@v2
+      with:
+        name: plug-descr-linux
+        path: temp/output/x86_64/*.descr
+  build_macos:
+    name: CI for macOS
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout for macOS
+      uses: actions/checkout@v2
+      with:
+        submodules: true
+    - name: Build for macOS
+      run: TRAVIS_OS_NAME=osx travis/build.sh
+    - name: Upload for macOS
+      env:
+          gh_rsa_key: ${{ secrets.GH_ENCRYPTED_RSA_KEY }}
+          gh_rsa_iv: ${{ secrets.GH_ENCRYPTED_RSA_IV }}
+      run: TRAVIS_OS_NAME=osx travis/upload.sh
+    - name: Upload macOS plugin descriptors
+      uses: actions/upload-artifact@v2
+      with:
+        name: plug-descr-mac
+        path: temp/output/x86_64/*.descr
+  build_windows:
+    name: CI for Windows
+    runs-on: windows-latest
+    steps:
+    - name: Checkout for Windows
+      uses: actions/checkout@v2
+      with:
+        submodules: true
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v1.1
+    - name: Install msys2
+      uses: msys2/setup-msys2@v2
+      with:
+        update: true
+        path-type: inherit
+        install: >-
+          mingw-w64-x86_64-toolchain mingw-w64-x86_64-libzip mingw-w64-x86_64-pkg-config mingw-w64-x86_64-dlfcn
+          git make tar unzip xz zip mingw-w64-x86_64-clang mingw-w64-x86_64-libblocksruntime
+          mingw-w64-x86_64-jansson mingw-w64-x86_64-gtk3 mingw-w64-x86_64-gtk2 mingw-w64-x86_64-mpg123
+          mingw-w64-x86_64-flac mingw-w64-x86_64-curl mingw-w64-x86_64-portaudio mingw-w64-x86_64-faad2 mingw-w64-x86_64-flac
+          mingw-w64-x86_64-wavpack mingw-w64-x86_64-libvorbis mingw-w64-x86_64-libogg mingw-w64-x86_64-opusfile mingw-w64-x86_64-opus
+          mingw-w64-x86_64-libsndfile mingw-w64-x86_64-libsamplerate mingw-w64-x86_64-yasm rsync patch autoconf automake autotools
+    - name: Build for Windows
+      shell: msys2 {0}
+      run: TRAVIS_OS_NAME=windows travis/build.sh
+    - name: Upload for Windows
+      env:
+          gh_rsa_key: ${{ secrets.GH_ENCRYPTED_RSA_KEY }}
+          gh_rsa_iv: ${{ secrets.GH_ENCRYPTED_RSA_IV }}
+      shell: msys2 {0}
+      run: TRAVIS_OS_NAME=windows travis/upload.sh
+    - name: Upload windows plugin descriptors
+      uses: actions/upload-artifact@v2
+      with:
+        name: plug-descr-win
+        path: temp/output/x86_64/*.descr
+  build_html:
+    name: HTML update build
+    needs: [build_linux, build_windows, build_macos]
+    runs-on: ubuntu-latest
+    container: ubuntu:14.04
+    steps:
+    - name: Install dependencies for Linux
+      run: |
+        apt-get -qq update
+        apt-get install -y -qq perl wget zip bzip2 openssh-client rsync git gcc g++
+    - name: Checkout for Linux
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - name: Download macOS plugin descriptors
+      uses: actions/download-artifact@v3
+      with:
+        name: plug-descr-mac
+        path: temp/output/x86_64
+    - name: Download Windows plugin descriptors
+      uses: actions/download-artifact@v3
+      with:
+        name: plug-descr-win
+        path: temp/output/x86_64
+    - name: Download Linux plugin descriptors
+      uses: actions/download-artifact@v3
+      with:
+        name: plug-descr-linux
+        path: temp/output/x86_64
+    - name: Build HTML
+      run: TRAVIS_OS_NAME=linux travis/build_html.sh
+    - name: Upload HTML
+      env:
+          gh_rsa_key: ${{ secrets.GH_ENCRYPTED_RSA_KEY }}
+          gh_rsa_iv: ${{ secrets.GH_ENCRYPTED_RSA_IV }}
+      run: TRAVIS_OS_NAME=linux travis/upload_html.sh

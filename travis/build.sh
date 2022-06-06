@@ -21,8 +21,6 @@ case "$TRAVIS_OS_NAME" in
         ./build --arch=x86_64 || exit 1
 #        echo "building for i686..."
 #        ./build --arch=i686 --nofetch || exit 1
-        echo "building HTML..."
-        ./build-html || exit 1
     ;;
     osx)
         echo "downloading deadbeef headers..."
@@ -50,6 +48,8 @@ case "$TRAVIS_OS_NAME" in
         $mingw64 make -C tools/pluginfo/ || exit 1
         echo "building for Windows x86_64..."
         $mingw64 ./build --arch=x86_64 || exit 1
+        echo "converting .descr files to Unix format..."
+        $mingw64 dos2unix temp/output/x86_64/*.descr
         #STATICDEPS_URL="http://sourceforge.net/projects/deadbeef/files/staticdeps/ddb-xdispatch-win-latest.zip/download"
         #echo "downloading xdispatch_ddb..."
         #wget -q "$STATICDEPS_URL" -O ddb-xdispatch-win-latest.zip || exit 1

@@ -48,5 +48,7 @@ case "$TRAVIS_OS_NAME" in
         $mingw64 make -C tools/pluginfo/ || exit 1
         echo "building for Windows x86_64..."
         $mingw64 ./build --arch=x86_64 || exit 1
+        echo "converting .descr files to Unix format..."
+        $mingw64 dos2unix temp/output/x86_64/*.descr
     ;;
 esac

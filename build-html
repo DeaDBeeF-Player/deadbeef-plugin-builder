@@ -90,9 +90,6 @@ close F;
 sub parse_config {
     $_ = shift;
     s/\\"/&quot;/g;
-    if ($^O eq 'msys') {
-        s/\r//g; # dos2unix
-    }
     my %out;
     while (/([a-z_0-9]*)="([^"]*)"\n/g) {
         my $key = $1;

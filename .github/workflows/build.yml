@@ -91,7 +91,7 @@ jobs:
     name: HTML update build
     needs: [build_linux, build_windows, build_macos]
     runs-on: ubuntu-latest
-    container: ubuntu:14.04
+    container: ubuntu:16.04
     steps:
     - name: Install dependencies for Linux
       run: |

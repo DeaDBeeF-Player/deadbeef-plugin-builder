@@ -43,8 +43,8 @@ jobs:
       run: TRAVIS_OS_NAME=osx travis/build.sh
     - name: Upload for macOS
       env:
-          gh_rsa_key: ${{ secrets.GH_ENCRYPTED_RSA_KEY }}
-          gh_rsa_iv: ${{ secrets.GH_ENCRYPTED_RSA_IV }}
+          gh_ed25519_key: ${{ secrets.GH_ENCRYPTED_ED25519_KEY }}
+          gh_ed25519_iv: ${{ secrets.GH_ENCRYPTED_ED25519_IV }}
       run: TRAVIS_OS_NAME=osx travis/upload.sh
     - name: Upload macOS plugin descriptors
       uses: actions/upload-artifact@v2
@@ -78,8 +78,8 @@ jobs:
       run: TRAVIS_OS_NAME=windows travis/build.sh
     - name: Upload for Windows
       env:
-          gh_rsa_key: ${{ secrets.GH_ENCRYPTED_RSA_KEY }}
-          gh_rsa_iv: ${{ secrets.GH_ENCRYPTED_RSA_IV }}
+          gh_ed25519_key: ${{ secrets.GH_ENCRYPTED_ED25519_KEY }}
+          gh_ed25519_iv: ${{ secrets.GH_ENCRYPTED_ED25519_IV }}
       shell: msys2 {0}
       run: TRAVIS_OS_NAME=windows travis/upload.sh
     - name: Upload windows plugin descriptors
@@ -120,6 +120,6 @@ jobs:
       run: TRAVIS_OS_NAME=linux travis/build_html.sh
     - name: Upload HTML
       env:
-          gh_rsa_key: ${{ secrets.GH_ENCRYPTED_RSA_KEY }}
-          gh_rsa_iv: ${{ secrets.GH_ENCRYPTED_RSA_IV }}
+          gh_ed25519_key: ${{ secrets.GH_ENCRYPTED_ED25519_KEY }}
+          gh_ed25519_iv: ${{ secrets.GH_ENCRYPTED_ED25519_IV }}
       run: TRAVIS_OS_NAME=linux travis/upload_html.sh

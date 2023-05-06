@@ -161,6 +161,10 @@ elsif ($os eq 'windows') {
     $GTK310_CFLAGS =~ s/\R//g;
     $GTK310_LIBS=`pkg-config --libs gtk+-3.0`;
     $GTK310_LIBS =~ s/\R//g;
+    # -luuid is a static-only library, and libtool can't
+    # handle it. Smh GTK2 flags already have the right thing that works on
+    # windows, but not GTK3.
+    $GTK310_LIBS =~ s/ -luuid / -Wl,-luuid /;
     chomp($GTK216_LIBS);
     chomp($GTK310_LIBS);
 }

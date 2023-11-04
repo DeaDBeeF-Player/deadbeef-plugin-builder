@@ -1,21 +1,16 @@
 diff --git a/utils.c b/utils.c
-index 5ffaaa3..dc859dd 100644
+index b687ab3..a3d3bf0 100644
 --- a/utils.c
 +++ b/utils.c
-@@ -234,9 +234,13 @@ utils_check_dir (const gchar *dir, mode_t mode)
+@@ -234,7 +234,11 @@ utils_check_dir (const gchar *dir, mode_t mode)
          if (slash)
              *slash = 0;
          if (-1 == stat (tmp, &stat_buf)) {
--            int errno = mkdir (tmp, mode);
--            if (0 != errno) {
--                fprintf (stderr, "Failed to create %s (%d)\n", tmp, errno);
 +#ifdef __MINGW32__
-+            int errno1 = mkdir (tmp);
++            int err_no = mkdir (tmp);
 +#else
-+            int errno1 = mkdir (tmp, mode);
+             int err_no = mkdir (tmp, mode);
 +#endif
-+            if (0 != errno1) {
-+                fprintf (stderr, "Failed to create %s (%d)\n", tmp, errno1);
+             if (0 != err_no) {
+                 fprintf (stderr, "Failed to create %s (%d)\n", tmp, err_no);
                  g_free (tmp);
-                 return 0;
-             }

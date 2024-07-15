@@ -3,7 +3,8 @@
         type: "git",
         url: "https://github.com/saivert/ddb_misc_headerbar_GTK3.git",
         patches: [
-            "build.diff"
+            "build.diff",
+            "cast.diff"
         ],
     },
     make: {

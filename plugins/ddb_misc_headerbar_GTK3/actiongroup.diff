@@ -1,0 +1,28 @@
+diff --git a/src/headerbarui.c b/src/headerbarui.c
+index 76f0bf2..e57614d 100644
+--- a/src/headerbarui.c
++++ b/src/headerbarui.c
+@@ -1144,14 +1144,15 @@ refresh_undo_redo_menu () {
+ }
+ 
+ static void init_refresh_undo_redo_menu () {
+-    GActionGroup *db_action_group = G_ACTION_GROUP(gtk_widget_get_action_group (headerbar, "db"));
+-
+-    // Use the menu items
+-    refresh_undo_redo.undo_menu_item = lookup_widget (GTK_WIDGET(mainwin), "undo");
+-    refresh_undo_redo.redo_menu_item = lookup_widget (GTK_WIDGET(mainwin), "redo");
+-
+-    refresh_undo_redo.undo_action = g_action_map_lookup_action (G_ACTION_MAP (db_action_group), "undo");
+-    refresh_undo_redo.redo_action = g_action_map_lookup_action (G_ACTION_MAP (db_action_group), "redo");
++// Disabled because of too high GTK requirement (3.16)
++//    GActionGroup *db_action_group = G_ACTION_GROUP(gtk_widget_get_action_group (headerbar, "db"));
++//
++//    // Use the menu items
++//    refresh_undo_redo.undo_menu_item = lookup_widget (GTK_WIDGET(mainwin), "undo");
++//    refresh_undo_redo.redo_menu_item = lookup_widget (GTK_WIDGET(mainwin), "redo");
++//
++//    refresh_undo_redo.undo_action = g_action_map_lookup_action (G_ACTION_MAP (db_action_group), "undo");
++//    refresh_undo_redo.redo_action = g_action_map_lookup_action (G_ACTION_MAP (db_action_group), "redo");
+ }
+ 
+ static void

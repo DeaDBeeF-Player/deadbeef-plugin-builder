@@ -4,7 +4,8 @@
         url: "https://github.com/saivert/ddb_misc_headerbar_GTK3.git",
         patches: [
             "build.diff",
-            "cast.diff"
+            "cast.diff",
+            "actiongroup.diff"
         ],
     },
     make: {

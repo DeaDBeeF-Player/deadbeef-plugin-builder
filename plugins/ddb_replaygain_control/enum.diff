@@ -1,0 +1,13 @@
+diff --git a/rg_control.c b/rg_control.c
+index 4c05971..2ef8ed5 100644
+--- a/rg_control.c
++++ b/rg_control.c
+@@ -72,7 +72,7 @@ replaygain_control_set_replaygain (int replaygain_mode)
+ 
+ 
+ static int
+-replaygain_control_action_callback(DB_plugin_action_t *action, int ctx) {
++replaygain_control_action_callback(DB_plugin_action_t *action, ddb_action_context_t ctx) {
+     on_button_config (NULL);
+     return 0;
+ }

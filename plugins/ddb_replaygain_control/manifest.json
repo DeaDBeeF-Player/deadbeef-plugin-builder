@@ -4,6 +4,7 @@
         url: "https://github.com/cboxdoerfer/ddb_replaygain_control.git",
         patches: [
             "make.diff",
+            "enum.diff"
         ]
     },
     make: {

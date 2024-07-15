@@ -3,7 +3,8 @@
         type: "git",
         url: "https://github.com/cboxdoerfer/ddb_playback_status.git",
         patches: [
-            "make.diff"
+            "make.diff",
+            "format.diff"
         ],
     },
     make: {

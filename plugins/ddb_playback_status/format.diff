@@ -1,0 +1,21 @@
+diff --git a/main.c b/main.c
+index d6bbef1..0ed0edd 100644
+--- a/main.c
++++ b/main.c
+@@ -89,13 +89,13 @@ load_config (gpointer user_data)
+     for (int i = 0; i < CONFIG_NUM_LINES; i++) {
+         snprintf (conf_format_str, sizeof (conf_format_str), "%s%02d", CONFSTR_VM_FORMAT, i);
+         if (i == 0) {
+-            CONFIG_FORMAT[i] = strdup (deadbeef->conf_get_str_fast (conf_format_str, "<span foreground='grey' weight='bold' size='medium'>%playback_time% / %length%</span>"));
++            CONFIG_FORMAT[i] = strdup (deadbeef->conf_get_str_fast (conf_format_str, "\\<span foreground=\\'grey\\' weight=\\'bold\\' size=\\'medium\\'\\>%playback_time% / %length%\\</span\\>"));
+         }
+         else if (i == 1) {
+-            CONFIG_FORMAT[i] = strdup (deadbeef->conf_get_str_fast (conf_format_str, "<span weight='bold' size='x-large'>%tracknumber%. %title%</span>"));
++            CONFIG_FORMAT[i] = strdup (deadbeef->conf_get_str_fast (conf_format_str, "\\<span weight=\\'bold\\' size=\\'x-large\\'\\>%tracknumber%. %title%\\</span\\>"));
+         }
+         else if (i== 2) {
+-            CONFIG_FORMAT[i] = strdup (deadbeef->conf_get_str_fast (conf_format_str, "%album% - <i>%album artist%</i>"));
++            CONFIG_FORMAT[i] = strdup (deadbeef->conf_get_str_fast (conf_format_str, "%album% - \\<i\\>%album artist%\\</i\\>"));
+         }
+         else {
+             CONFIG_FORMAT[i] = strdup (deadbeef->conf_get_str_fast (conf_format_str, ""));

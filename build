@@ -150,7 +150,7 @@ elsif ($os eq 'mac') {
     $ENV{CXXFLAGS}="-fPIC -I$LIBDIR/include";
 }
 elsif ($os eq 'windows') {
-    $ENV{CFLAGS} = "$CFLAGS";
+    $ENV{CFLAGS} = "$CFLAGS -Wno-incompatible-pointer-types";
     $ENV{CXXFLAGS} = "$CFLAGS";
     $ENV{LDFLAGS} = "$LDFLAGS";
     $GTK216_CFLAGS=`pkg-config --cflags gtk+-2.0`;

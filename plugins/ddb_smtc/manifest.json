@@ -1,5 +1,4 @@
 {
-    disable: true,
     supported_platforms: ['windows'],
     source: {
         type: "git",

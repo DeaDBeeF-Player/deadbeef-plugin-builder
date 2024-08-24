@@ -4,7 +4,8 @@
         type: "git",
         url: "https://github.com/splushii/deadbeef-rating.git",
         patches: [
-            'make.diff'
+            'make.diff',
+	    'warnings.diff'
         ],
     },
     make: {

@@ -112,7 +112,7 @@ if ($os eq 'linux') {
     else {
         print "downloading static-deps...\n";
         mkdir "temp";
-        system ('wget http://sourceforge.net/projects/deadbeef/files/staticdeps/ddb-static-deps-latest.tar.bz2/download -O temp/ddb-static-deps.tar.bz2 && mkdir static-deps && tar jxf temp/ddb-static-deps.tar.bz2 -C static-deps') && die "failed to download static-deps\n";
+        system ('curl -s -L http://sourceforge.net/projects/deadbeef/files/staticdeps/ddb-static-deps-latest.tar.bz2/download -o temp/ddb-static-deps.tar.bz2 && mkdir static-deps && tar jxf temp/ddb-static-deps.tar.bz2 -C static-deps') && die "failed to download static-deps\n";
     }
     print "removing libstdc++ from static-deps...\n";
     system ('rm static-deps/lib-x86-64/lib/libstdc++*');
@@ -175,7 +175,8 @@ if (-e "$LIBDIR/include/deadbeef/deadbeef.h") {
 }
 else {
     system ("mkdir -p $LIBDIR/include");
-    system ('wget -q http://sourceforge.net/projects/deadbeef/files/staticdeps/ddb-headers-latest.tar.bz2/download -O temp/ddb-headers-latest.tar.bz2') && die "failed to download ddb-headers-latest.tar.bz2\n";
+    mkdir "temp";
+    system ('curl -s -L http://sourceforge.net/projects/deadbeef/files/staticdeps/ddb-headers-latest.tar.bz2/download -o temp/ddb-headers-latest.tar.bz2') && die "failed to download ddb-headers-latest.tar.bz2\n";
     print "unpacking deadbeef headers...\n";
     system ("tar jxf temp/ddb-headers-latest.tar.bz2 -C $LIBDIR/include/") && die "Failed to unpack temp/ddb-headers-latest.tar.bz2\n";
 }

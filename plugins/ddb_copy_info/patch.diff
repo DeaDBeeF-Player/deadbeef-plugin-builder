@@ -1,5 +1,5 @@
 diff --git a/Makefile b/Makefile
-index 4432e41..d2f5b29 100644
+index 4432e41..b6735ee 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -19,6 +19,15 @@ DEADBEEF_INC :=
@@ -60,7 +60,7 @@ index 4432e41..d2f5b29 100644
  .PHONY: clean
  clean:
 -	rm -f $(GTK2_TARGET) $(GTK2_OBJECTS) $(GTK3_TARGET) $(GTK3_OBJECTS)
-+	rm -f $(GTK2_TARGET) $(GTK2_OBJECTS) $(GTK3_TARGET) $(GTK3_OBJECTS) $(MACOS_TARGET) $(MACOS_OBJECTS)
++	rm -f $(GTK2_TARGET) $(GTK2_OBJECTS) $(GTK3_TARGET) $(GTK3_OBJECTS) $(MACOS_TARGET) $(MACOS_OBJECTS) $(MACOS_OBJC_OBJECTS)
 diff --git a/clipboard.m b/clipboard.m
 new file mode 100644
 index 0000000..1c49868

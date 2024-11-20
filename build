@@ -16,8 +16,6 @@ my $conf_nopackage;
 my $ARCH = $ENV{ARCH};
 my $os;
 
-#$conf_use_cached_src = 1;
-
 GetOptions ("help|?" => \$help,
         "nofetch" => \$conf_use_cached_src,
         "nopackage" => \$conf_nopackage,
@@ -46,7 +44,7 @@ my $MULTILIB_DIR;
 if (!defined $os) {
     if ($^O eq 'darwin') {
         $os = 'mac';
-        $ARCH = 'x86_64';
+        $ARCH = 'universal';
     }
     elsif ($^O eq 'linux') {
         $os = 'linux';
@@ -81,7 +79,6 @@ elsif ($os eq 'linux') {
         $CONFIGURE_FLAGS="--build=x86_64-unknown-linux-gnu";
         $LDFLAGS="-L$LIBDIR/lib -L$LIBDIR/lib/$MULTILIB_DIR";
     }
-
 }
 elsif ($os eq 'windows') {
     if ($ARCH eq 'x86_64') {
@@ -144,10 +141,6 @@ if ($os eq 'linux') {
     }
 
     @libpaths = ("$GTK_ROOT_216", "$GTK_ROOT_310");
-}
-elsif ($os eq 'mac') {
-    $ENV{CFLAGS}="-fPIC -I$LIBDIR/include";
-    $ENV{CXXFLAGS}="-fPIC -I$LIBDIR/include";
 }
 elsif ($os eq 'windows') {
     $ENV{CFLAGS} = "$CFLAGS -Wno-incompatible-pointer-types";
@@ -297,65 +290,29 @@ for my $package (@packages) {
         }
     }
 
-    print "changing to: $ROOT/$manifest->{make}->{root}\n";
-    print "\ninvoking make\n";
-    if ($manifest->{make}->{type} eq 'make') {
-        system ("cd $ROOT/$manifest->{make}->{root}; make clean") if $conf_use_cached_src;
-        system ("cd $ROOT/$manifest->{make}->{root}; make") && die "make finished with an error\n";
-    }
-    elsif ($manifest->{make}->{type} eq 'autotools') {
-        system ("cd $ROOT/$manifest->{make}->{root}; make distclean") if $conf_use_cached_src;
-        if (exists $manifest->{make}->{bootstrap}) {
-            system ("cd $ROOT/$manifest->{make}->{root}; $manifest->{make}->{bootstrap}") && die "$manifest->{make}->{bootstrap} finished with an error\n";
-        }
-        my $conf_flags = $CONFIGURE_FLAGS;
-        if (exists $manifest->{make}->{configure_flags}) {
-            $conf_flags .= ' '.$manifest->{make}->{configure_flags};
-        }
-        system ("cd $ROOT/$manifest->{make}->{root}; ./configure $conf_flags") && die "configure finished with an error\n";
+    if ($os eq 'mac') {
+        $ARCH='x86_64';
+        $ENV{CFLAGS}="-arch x86_64 -fPIC -I$LIBDIR/include";
+        $ENV{CXXFLAGS}="-arch x86_64 -fPIC -I$LIBDIR/include";
+        print "Building $package x86_64...\n";
+        build_plugin($package, $manifest, $ROOT, $out);
+        $ARCH='arm64';
+        $ENV{CFLAGS}="-arch arm64 -fPIC -I$LIBDIR/include";
+        $ENV{CXXFLAGS}="-arch arm64 -fPIC -I$LIBDIR/include";
+        print "Building $package arm64...\n";
+        build_plugin($package, $manifest, $ROOT, $out, 1);
+        $ARCH='universal';
 
-        # Windows libtool patch
-        if ($os eq 'windows' && -e "$ROOT/$manifest->{make}->{root}/libtool") {
-            print "patching libtool...\n";
-            system ("sed -i.bak -r -e \"s/(allow_undefined=)yes/\\1no/\" $ROOT/$manifest->{make}->{root}/libtool") && die "libtool patch finished with an error\n";
-        }
-
-        system ("cd $ROOT/$manifest->{make}->{root}; make clean") if $conf_use_cached_src;
-        system ("cd $ROOT/$manifest->{make}->{root}; make") && die "make finished with an error\n";
-    }
-    elsif ($manifest->{make}->{type} eq 'msbuild') {
-        system ("cd $ROOT/$manifest->{make}->{root}; MSYS2_ARG_CONV_EXCL=* powershell msbuild /m /p:Configuration=Release .") && die "msbuild finished with an error\n";
+        # make universal
+        system("cp -r temp/output/arm64 temp/output/universal") && die "Copy to  temp/output/universal failed\n";
+        system("for f in temp/output/x86_64/plugins/*.dylib; do ff=`basename \$f`; lipo -create -output \$f temp/output/x86_64/plugins/\$ff temp/output/arm64/plugins/\$ff; done") && die "lipo failed\n";
+        
     }
     else {
-        die "make type '$manifest->{make}->{type}' is not supported\n";
+        build_plugin($package, $manifest, $ROOT, $out);
     }
 
-    next if $conf_nopackage;
-    print "packaging $package...\n";
-
-    # packaging
-    # each plugin must list its output
-    # the simple case is "out" list, that's for when plugin only consists of *.so
-
-    # output is 1st copied to 'temp/plugins' folder,
-    # then the plugins folder is zipped
     my $outdir = "temp/output/$ARCH/plugins";
-    system ("rm -rf $outdir") && die "failed to remove $outdir\n";
-    system ("mkdir -p $outdir") && die "failed to mkdir $outdir\n";
-    for my $o (@{$out}) {
-        my $fname = "$ROOT/$o";
-        my $newname = get_dest_filename($o);
-        print "copying $fname to $outdir/$newname\n";
-
-        # some makefiles produce dlls directly
-        if ($os eq 'windows' && !-e $fname) {
-            $fname =~ s/\.so$/\.dll/;
-            if (!-e $fname) {
-                die "File $fname not found\n";
-            }
-        }
-        system ("cp $fname $outdir/$newname") && die "failed to copy $o to $outdir/$newname\n";
-    }
 
     # copy with custom paths
     my @extra_libpaths = ();
@@ -437,6 +394,7 @@ for my $package (@packages) {
         print F "fname_${_}_$ARCH=\"$package-$rev$build-${_}-$ARCH.zip\"\n";
     }
     close F;
+
     print "will pack $out_fname\n";
     unlink $out_fname;
     system ("cd temp/output/$ARCH && zip -r $out_fname plugins") && die "failed to zip $out_fname\n";
@@ -461,4 +419,71 @@ sub get_dest_filename {
         $newname =~ s/\.so$/\.dll/;
     }
     return $newname;
+}
+
+sub build_plugin {
+    my ($package, $manifest, $ROOT, $out, $force_clean) = @_;
+    print "changing to: $ROOT/$manifest->{make}->{root}\n";
+    print "\ninvoking make\n";
+    if ($manifest->{make}->{type} eq 'make') {
+        print "make clean...\n";
+        if ($conf_use_cached_src || $force_clean) {
+            system ("cd $ROOT/$manifest->{make}->{root}; make clean");
+        }
+        print "make...\n";
+        system ("cd $ROOT/$manifest->{make}->{root}; make") && die "make finished with an error\n";
+    }
+    elsif ($manifest->{make}->{type} eq 'autotools') {
+        system ("cd $ROOT/$manifest->{make}->{root}; make distclean") if $conf_use_cached_src;
+        if (exists $manifest->{make}->{bootstrap}) {
+            system ("cd $ROOT/$manifest->{make}->{root}; $manifest->{make}->{bootstrap}") && die "$manifest->{make}->{bootstrap} finished with an error\n";
+        }
+        my $conf_flags = $CONFIGURE_FLAGS;
+        if (exists $manifest->{make}->{configure_flags}) {
+            $conf_flags .= ' '.$manifest->{make}->{configure_flags};
+        }
+        system ("cd $ROOT/$manifest->{make}->{root}; ./configure $conf_flags") && die "configure finished with an error\n";
+
+        # Windows libtool patch
+        if ($os eq 'windows' && -e "$ROOT/$manifest->{make}->{root}/libtool") {
+            print "patching libtool...\n";
+            system ("sed -i.bak -r -e \"s/(allow_undefined=)yes/\\1no/\" $ROOT/$manifest->{make}->{root}/libtool") && die "libtool patch finished with an error\n";
+        }
+
+        system ("cd $ROOT/$manifest->{make}->{root}; make clean") if $conf_use_cached_src;
+        system ("cd $ROOT/$manifest->{make}->{root}; make") && die "make finished with an error\n";
+    }
+    elsif ($manifest->{make}->{type} eq 'msbuild') {
+        system ("cd $ROOT/$manifest->{make}->{root}; MSYS2_ARG_CONV_EXCL=* powershell msbuild /m /p:Configuration=Release .") && die "msbuild finished with an error\n";
+    }
+    else {
+        die "make type '$manifest->{make}->{type}' is not supported\n";
+    }
+
+    next if $conf_nopackage;
+    print "packaging $package...\n";
+
+    # packaging
+    # each plugin must list its output
+    # the simple case is "out" list, that's for when plugin only consists of *.so
+
+    # output is 1st copied to 'temp/plugins' folder,
+    # then the plugins folder is zipped
+    my $outdir = "temp/output/$ARCH/plugins";
+    system ("rm -rf $outdir") && die "failed to remove $outdir\n";
+    system ("mkdir -p $outdir") && die "failed to mkdir $outdir\n";
+    for my $o (@{$out}) {
+        my $fname = "$ROOT/$o";
+        my $newname = get_dest_filename($o);
+        print "copying $fname to $outdir/$newname\n";
+
+        # some makefiles produce dlls directly
+        if ($os eq 'windows' && !-e $fname) {
+            $fname =~ s/\.so$/\.dll/;
+            if (!-e $fname) {
+                die "File $fname not found\n";
+            }
+        }
+        system ("cp $fname $outdir/$newname") && die "failed to copy $o to $outdir/$newname\n";
+    }
 }

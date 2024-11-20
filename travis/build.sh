@@ -36,10 +36,8 @@ case "$TRAVIS_OS_NAME" in
         CFLAGS="-arch x86_64" make x86_64 -C tools/pluginfo/ || exit 1
         CFLAGS="-arch arm64" make arm64 -C tools/pluginfo/ || exit 1
         lipo -create -output tools/pluginfo/universal/pluginfo tools/pluginfo/x86_64/pluginfo tools/pluginfo/arm64/pluginfo
-        echo "building for Mac x86_64..."
-        ./build -arch x86_64 || exit 1
-        echo "building for Mac arm64..."
-        ./build -arch arm64 || exit 1
+        echo "building for Mac Universal..."
+        ./build || exit 1
     ;;
     windows)
         echo "Downgrading openssh"

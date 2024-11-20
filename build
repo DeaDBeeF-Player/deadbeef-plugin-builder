@@ -305,7 +305,7 @@ for my $package (@packages) {
 
         # make universal
         system("cp -r temp/output/arm64 temp/output/universal") && die "Copy to  temp/output/universal failed\n";
-        system("for f in temp/output/x86_64/plugins/*.dylib; do ff=`basename \$f`; lipo -create -output \$f temp/output/x86_64/plugins/\$ff temp/output/arm64/plugins/\$ff; done") && die "lipo failed\n";
+        system("for f in temp/output/x86_64/plugins/*.dylib; do ff=`basename \$f`; lipo -create -output temp/output/universal/plugins/\$ff temp/output/x86_64/plugins/\$ff temp/output/arm64/plugins/\$ff; done") && die "lipo failed\n";
         
     }
     else {

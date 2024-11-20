@@ -291,6 +291,7 @@ for my $package (@packages) {
     }
 
     if ($os eq 'mac') {
+        system('rm -rf temp/output/arm64/plugins temp/output/x86_64/plugins');
         $ARCH='x86_64';
         $ENV{CFLAGS}="-arch x86_64 -fPIC -I$LIBDIR/include";
         $ENV{CXXFLAGS}="-arch x86_64 -fPIC -I$LIBDIR/include";
@@ -304,7 +305,9 @@ for my $package (@packages) {
         $ARCH='universal';
 
         # make universal
-        system("cp -r temp/output/arm64 temp/output/universal") && die "Copy to  temp/output/universal failed\n";
+        system('cp -r temp/output/arm64 temp/output/universal') && die "Copy to temp/output/universal failed\n";
+        system('mkdir -p temp/output/universal/plugins') && die "Failed to create temp/output/universal/plugins\n";
+        system('rm temp/output/universal/plugins/*.dylib');
         system("for f in temp/output/x86_64/plugins/*.dylib; do ff=`basename \$f`; lipo -create -output temp/output/universal/plugins/\$ff temp/output/x86_64/plugins/\$ff temp/output/arm64/plugins/\$ff; done") && die "lipo failed\n";
         
     }

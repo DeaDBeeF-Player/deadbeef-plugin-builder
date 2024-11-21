@@ -256,6 +256,9 @@ for my $package (@packages) {
             else {
                 $rev = `cd temp/$package && git rev-parse --short HEAD`;
             }
+            if ($manifest->{source}->{submodules}) {
+                system ("cd $ROOT && git submodule update --init") && die "git submodule update failed\n";
+            }
         }
         elsif ($manifest->{source}->{type} eq 'hg') {
             system ("hg clone --config ui.tls=false $manifest->{source}->{url} $ROOT") && die "hg clone failed\n";

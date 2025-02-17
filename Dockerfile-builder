@@ -1,4 +1,4 @@
-FROM ubuntu:trusty
+FROM ubuntu:16.04
 
 RUN apt-get -qq update
-RUN apt-get install -y -qq autopoint automake autoconf intltool libc6-dev-i386 libc6-dev yasm perl wget g++-multilib zip bzip2 git mercurial subversion make libtool pkg-config libglib2.0-bin libgtk-3.0 libpulse0
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -qq autopoint automake autoconf intltool libc6-dev yasm libglib2.0-bin perl wget zip bzip2 make libtool pkg-config fakeroot clang openssh-client rsync git gcc g++ fontconfig xorg libharfbuzz0b libthai0 libwrap0 libsndfile1 libasyncns0 libjson0-dev

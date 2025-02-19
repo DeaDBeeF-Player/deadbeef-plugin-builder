@@ -49,7 +49,7 @@ if (!defined $os) {
     elsif ($^O eq 'linux') {
         $os = 'linux';
     }
-    elsif ($^O eq 'msys') {
+    elsif ($^O eq 'msys' || $^O eq 'cygwin') {
         $os = 'windows'
     }
     else {

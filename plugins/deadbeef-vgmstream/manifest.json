@@ -1,0 +1,20 @@
+{
+    supported_platforms: ['linux','windows'],
+    source: {
+        type: "git",
+        url: "https://github.com/jchv/deadbeef-vgmstream.git",
+        submodules: true
+    },
+    make: {
+        type: "make",
+        ENV: {
+            "DEFINES": "-DVGM_USE_VORBIS -DVGM_USE_MPEG",
+            "EXTRA_CFLAGS": "-D_GNU_SOURCE -DMPG123_ENUM_API",
+            "EXTRA_LDFLAGS": "-lmpg123 -lvorbis -lvorbisfile -logg -lm"
+        },
+        root: "",
+        out: [
+            "vgm.so"
+        ],
+    }
+}

@@ -406,7 +406,7 @@ for my $package (@packages) {
 
     print F "revision=\"$rev\"\n";
     foreach(@platforms_enabled) {
-        if ($os eq 'mac') {
+        if ($_ eq 'mac') {
             print F "fname_${_}_universal=\"$package-$rev$build-${_}-universal.zip\"\n";
         }
         else {
@@ -414,6 +414,8 @@ for my $package (@packages) {
         }
     }
     close F;
+
+    print "Wrote descr:\n" . `cat temp/output/$ARCH/$package.descr`;
 
     print "will pack $out_fname\n";
     unlink $out_fname;

@@ -377,7 +377,7 @@ for my $package (@packages) {
                 if (defined $webpage) {
                     # override descr website with manifest website entry
                     print "Found plugin website override: ${webpage}\n";
-                    print F "website=${webpage}\n";
+                    print F "website=\"${webpage}\"\n";
                 }
 
                 # special hack for mac: add universal fname
@@ -410,6 +410,10 @@ for my $package (@packages) {
             print F "fname_${_}_universal=\"$package-$rev$build-${_}-universal.zip\"\n";
         }
         else {
+            # NOTE: this always writes the current arch, which is actually quite
+            # wrong, and doesn't match the real filenames.
+            # but the html builder should be able to figure things out from
+            # multiple locations anyway... hopefully...
             print F "fname_${_}_$ARCH=\"$package-$rev$build-${_}-$ARCH.zip\"\n";
         }
     }

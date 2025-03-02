@@ -15,5 +15,8 @@
         out: [
             "src/ddb_archive_reader.so"
         ],
+    },
+    metadata: {
+        "webpage": "https://github.com/carlosanunes/deadbeef_vfs_archive_reader"
     }
 }

@@ -16,5 +16,8 @@
         out: [
             "ddb_gnome_mmkeys.so"
         ],
+    },
+    metadata: {
+        "webpage": "https://github.com/barthez/deadbeef-gnome-mmkeys"
     }
 }

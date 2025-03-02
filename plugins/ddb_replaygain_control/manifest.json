@@ -20,5 +20,8 @@
             'gtk2/ddb_misc_replaygain_control_GTK2.so',
             'gtk3/ddb_misc_replaygain_control_GTK3.so',
         ]
+    },
+    metadata: {
+        "webpage": "https://github.com/cboxdoerfer/ddb_replaygain_control"
     }
 }

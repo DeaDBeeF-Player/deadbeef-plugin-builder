@@ -340,6 +340,8 @@ for my $package (@packages) {
             system ("cp '$fname' '$path/'") && die "Failed to copy $fname to $path\n";
         }
     }
+
+    my $webpage = $manifest->{metadata}->{webpage};
     
     # get plugin version, and generate descr file
     # this is needed e.g. for build-md script to find the right plugin zip
@@ -372,6 +374,10 @@ for my $package (@packages) {
                 # write description file
                 print "Got descr from $curr\n";
                 print F $config;
+                if (defined $webpage) {
+                    # override descr website with manifest website entry
+                    print F "website=${webpage}\n";
+                }
                 $found = 1;
                 last;
             }

@@ -16,5 +16,8 @@
         out: [
             "vgm.so"
         ],
+    },
+    metadata: {
+        "webpage": "https://github.com/jchv/deadbeef-vgmstream"
     }
 }

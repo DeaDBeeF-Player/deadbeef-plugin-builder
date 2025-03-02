@@ -2,7 +2,7 @@
     supported_platforms: ['linux','mac','windows'],
     source: {
         type: "git",
-        url: "https://github.com/Alexey-Yakovenko/stereo-widener.git",
+        url: "https://github.com/DeaDBeeF-Player/stereo-widener.git",
         patches: [
             "makefix.diff"
         ],
@@ -15,5 +15,8 @@
         out: [
             "stereo_widener.so"
         ],
+    },
+    metadata: {
+        "webpage": "https://github.com/DeaDBeeF-Player/stereo-widener"
     }
 }

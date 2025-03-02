@@ -16,5 +16,8 @@
         out: [
             "vfs_rar.so"
         ],
+    },
+    metadata: {
+        "webpage": "https://github.com/DeaDBeeF-Player/vfs_rar"
     }
 }

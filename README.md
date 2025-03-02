@@ -8,9 +8,11 @@ This is the deadbeef plugin build system, as the name implies.
 
 This tool is for the plugin developers, and __not__ for the end-users.
 
-It lets you write a simple configuration file, and build statically linked cross-distro binaries for your plugins using the `build` tool, both for i686 and x86\_64.
+It lets you write a simple configuration file, and build statically linked cross-distro binaries for your plugins using the `build` tool.
 
-The tool called `build-md` can be used to generate markdown file, which is used for publishing all the plugins on the deadbeef website.
+The tool supports producing linux x86\_64, mac universal, and windows x86\_64, provided that the plugin is compatible.
+
+Automated process will build all plugins, upload them, and update the downloads page on deadbeef website.
 
 Each plugin has a subfolder in the `plugins` folder, and a file called `manifest.json` in it.
 
@@ -22,8 +24,8 @@ The folder can also have patch(es), referenced from the manifest.
 
 * fetching sources from svn, hg, git
 * patching
-* building with GNU Make (make->type=make)
-* building with autotools (make->type=autotools)
+* building with GNU Make (make-\>type=make)
+* building with autotools (make-\>type=autotools)
 * generating packages (versioned zip files)
 * extracting descriptions/authorship/licenses (this would have to be written in the manifests)
 * generating the final plugin downloads page

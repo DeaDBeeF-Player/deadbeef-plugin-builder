@@ -1,0 +1,4 @@
+FROM ubuntu:20.04
+
+RUN apt-get -qq update
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -qq autopoint automake autoconf intltool libc6-dev yasm libglib2.0-bin perl wget zip bzip2 make libtool pkg-config fakeroot clang openssh-client rsync git gcc g++ fontconfig xorg libharfbuzz0b libthai0 libwrap0 libsndfile1 libasyncns0 libjson-c-dev libglib2.0-dev-bin

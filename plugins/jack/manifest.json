@@ -4,7 +4,8 @@
         type: "git",
         url: "https://github.com/DeaDBeeF-Player/jack",
         patches: [
-            "buildfix.diff"
+            "buildfix.diff",
+            "bigendian.patch",
         ],
     },
     make: {

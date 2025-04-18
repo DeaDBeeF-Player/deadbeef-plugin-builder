@@ -1,0 +1,12 @@
+diff --git a/jack.c b/jack.c
+index 43e26cb..7aab365 100644
+--- a/jack.c
++++ b/jack.c
+@@ -353,7 +353,6 @@ static DB_output_t plugin = {
+         .is_float = 1,
+         .channels = 2,
+         .channelmask = DDB_SPEAKER_FRONT_LEFT | DDB_SPEAKER_FRONT_RIGHT,
+-        .is_bigendian = 0,
+     },
+     .has_volume = 1,
+ };

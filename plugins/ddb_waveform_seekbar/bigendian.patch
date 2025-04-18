@@ -1,0 +1,12 @@
+diff --git a/waveform.c b/waveform.c
+index fe61771..18847ef 100644
+--- a/waveform.c
++++ b/waveform.c
+@@ -687,7 +687,6 @@ waveform_generate_wavedata (gpointer user_data, DB_playItem_t *it, const char *u
+                 .samplerate = fileinfo->fmt.samplerate,
+                 .channelmask = fileinfo->fmt.channelmask,
+                 .is_float = 1,
+-                .is_bigendian = 0
+             };
+ 
+             int update_counter = 0;

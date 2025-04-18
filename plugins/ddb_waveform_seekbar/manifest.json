@@ -5,6 +5,7 @@
         url: "https://github.com/cboxdoerfer/ddb_waveform_seekbar.git",
         patches: [
             "make.patch",
+            "bigendian.patch",
         ]
     },
     make: {

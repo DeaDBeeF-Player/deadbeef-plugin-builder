@@ -98,7 +98,7 @@ jobs:
         DEBIAN_FRONTEND: noninteractive
       run: |
         apt-get -qq update
-        apt-get install perl wget zip bzip2 openssh-client rsync git
+        apt-get install -y -qq perl wget zip bzip2 openssh-client rsync git
     - name: Checkout for Linux
       uses: actions/checkout@v4
       with:

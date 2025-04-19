@@ -2,32 +2,29 @@ name: DeaDBeeF Plugin Builder
 
 on: [ push, pull_request, workflow_dispatch ]
 
-env:
-  ACTIONS_RUNNER_FORCE_ACTIONS_NODE_VERSION: node16
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
-
 jobs:
   build_linux:
     name: CI for Linux
     runs-on: ubuntu-latest
+    container: ubuntu:20.04
     steps:
+    - name: Install dependencies for Linux
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        apt-get -qq update
+        apt-get install -y -qq autopoint automake autoconf intltool libc6-dev yasm libglib2.0-bin perl wget zip bzip2 make libtool pkg-config fakeroot clang openssh-client rsync git gcc g++ fontconfig xorg libharfbuzz0b libthai0 libwrap0 libsndfile1 libasyncns0 libjson-c-dev libglib2.0-dev-bin
     - name: Checkout for Linux
       uses: actions/checkout@v4
       with:
         submodules: true
-    - name: Build and Upload for Linux
-      uses: docker://ubuntu:20.04
-      with:
-        args: |
-          /bin/bash -c "
-            apt-get -qq update &&
-            DEBIAN_FRONTEND=noninteractive apt-get install -y -qq autopoint automake autoconf intltool libc6-dev yasm libglib2.0-bin perl wget zip bzip2 make libtool pkg-config fakeroot clang openssh-client rsync git gcc g++ fontconfig xorg libharfbuzz0b libthai0 libwrap0 libsndfile1 libasyncns0 libjson-c-dev libglib2.0-dev-bin &&
-            TRAVIS_OS_NAME=linux gh_ed25519_key= gh_ed25519_iv= travis/build.sh &&
-            TRAVIS_OS_NAME=linux travis/upload.sh
-          "
+    - name: Build for Linux
+      run: TRAVIS_OS_NAME=linux travis/build.sh
+    - name: Upload for Linux
+      run: TRAVIS_OS_NAME=linux travis/upload.sh
       env:
-          gh_ed25519_key: ${{ secrets.GH_ENCRYPTED_ED25519_KEY }}
-          gh_ed25519_iv: ${{ secrets.GH_ENCRYPTED_ED25519_IV }}
+        gh_ed25519_key: ${{ secrets.GH_ENCRYPTED_ED25519_KEY }}
+        gh_ed25519_iv: ${{ secrets.GH_ENCRYPTED_ED25519_IV }}
     - name: Upload linux plugin descriptors
       uses: actions/upload-artifact@v4
       with:
@@ -94,6 +91,7 @@ jobs:
     name: HTML update build
     needs: [build_linux, build_windows, build_macos]
     runs-on: ubuntu-latest
+    container: ubuntu:20.04
     steps:
     - name: Checkout for Linux
       uses: actions/checkout@v4
@@ -106,15 +104,11 @@ jobs:
         path: temp/output/x86_64
         merge-multiple: true
     - name: Build and Upload HTML
-      uses: docker://ubuntu:16.04
-      with:
-        args: |
-          /bin/bash -c "
-            apt-get -qq update &&
-            apt-get install -y -qq perl wget zip bzip2 openssh-client rsync git gcc g++ &&
-            TRAVIS_OS_NAME=linux gh_ed25519_key= gh_ed25519_iv= travis/build_html.sh &&
-            TRAVIS_OS_NAME=linux travis/upload_html.sh
-          "
+      run: |
+        apt-get -qq update
+        apt-get install -y -qq perl wget zip bzip2 openssh-client rsync git
+        TRAVIS_OS_NAME=linux gh_ed25519_key= gh_ed25519_iv= travis/build_html.sh
+        TRAVIS_OS_NAME=linux travis/upload_html.sh
       env:
-          gh_ed25519_key: ${{ secrets.GH_ENCRYPTED_ED25519_KEY }}
-          gh_ed25519_iv: ${{ secrets.GH_ENCRYPTED_ED25519_IV }}
+        gh_ed25519_key: ${{ secrets.GH_ENCRYPTED_ED25519_KEY }}
+        gh_ed25519_iv: ${{ secrets.GH_ENCRYPTED_ED25519_IV }}

@@ -93,8 +93,14 @@ jobs:
     runs-on: ubuntu-latest
     container: ubuntu:20.04
     steps:
+    - name: Install dependencies
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        apt-get -qq update
+        apt-get install perl wget zip bzip2 openssh-client rsync git
     - name: Checkout for Linux
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         submodules: true
     - name: Download plugin descriptors
@@ -105,8 +111,6 @@ jobs:
         merge-multiple: true
     - name: Build and Upload HTML
       run: |
-        apt-get -qq update
-        apt-get install -y -qq perl wget zip bzip2 openssh-client rsync git
         TRAVIS_OS_NAME=linux gh_ed25519_key= gh_ed25519_iv= travis/build_html.sh
         TRAVIS_OS_NAME=linux travis/upload_html.sh
       env:

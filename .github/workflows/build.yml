@@ -19,9 +19,9 @@ jobs:
       with:
         submodules: true
     - name: Build for Linux
-      run: TRAVIS_OS_NAME=linux travis/build.sh
+      run: TRAVIS_OS_NAME=linux ci_scripts/build.sh
     - name: Upload for Linux
-      run: TRAVIS_OS_NAME=linux travis/upload.sh
+      run: TRAVIS_OS_NAME=linux ci_scripts/upload.sh
       env:
         gh_ed25519_key: ${{ secrets.GH_ENCRYPTED_ED25519_KEY }}
         gh_ed25519_iv: ${{ secrets.GH_ENCRYPTED_ED25519_IV }}
@@ -40,12 +40,12 @@ jobs:
       with:
         submodules: true
     - name: Build for macOS
-      run: TRAVIS_OS_NAME=osx travis/build.sh
+      run: TRAVIS_OS_NAME=osx ci_scripts/build.sh
     - name: Upload for macOS
       env:
           gh_ed25519_key: ${{ secrets.GH_ENCRYPTED_ED25519_KEY }}
           gh_ed25519_iv: ${{ secrets.GH_ENCRYPTED_ED25519_IV }}
-      run: TRAVIS_OS_NAME=osx travis/upload.sh
+      run: TRAVIS_OS_NAME=osx ci_scripts/upload.sh
     - name: Upload macOS plugin descriptors
       uses: actions/upload-artifact@v4
       with:
@@ -75,13 +75,13 @@ jobs:
           mingw-w64-x86_64-libsndfile mingw-w64-x86_64-libsamplerate mingw-w64-x86_64-yasm rsync patch autoconf automake autotools dos2unix
     - name: Build for Windows
       shell: msys2 {0}
-      run: TRAVIS_OS_NAME=windows travis/build.sh
+      run: TRAVIS_OS_NAME=windows ci_scripts/build.sh
     - name: Upload for Windows
       env:
           gh_ed25519_key: ${{ secrets.GH_ENCRYPTED_ED25519_KEY }}
           gh_ed25519_iv: ${{ secrets.GH_ENCRYPTED_ED25519_IV }}
       shell: msys2 {0}
-      run: TRAVIS_OS_NAME=windows travis/upload.sh
+      run: TRAVIS_OS_NAME=windows ci_scripts/upload.sh
     - name: Upload windows plugin descriptors
       uses: actions/upload-artifact@v4
       with:
@@ -111,8 +111,8 @@ jobs:
         merge-multiple: true
     - name: Build and Upload HTML
       run: |
-        TRAVIS_OS_NAME=linux gh_ed25519_key= gh_ed25519_iv= travis/build_html.sh
-        TRAVIS_OS_NAME=linux travis/upload_html.sh
+        TRAVIS_OS_NAME=linux gh_ed25519_key= gh_ed25519_iv= ci_scripts/build_html.sh
+        TRAVIS_OS_NAME=linux ci_scripts/upload_html.sh
       env:
         gh_ed25519_key: ${{ secrets.GH_ENCRYPTED_ED25519_KEY }}
         gh_ed25519_iv: ${{ secrets.GH_ENCRYPTED_ED25519_IV }}

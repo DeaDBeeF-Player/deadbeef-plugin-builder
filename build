@@ -271,6 +271,7 @@ for my $package (@packages) {
         if (exists $manifest->{source}->{patches}) {
             print "\napplying patches\n";
             for my $p (@{$manifest->{source}->{patches}}) {
+                print("$p ... \n");
                 system ("cd $ROOT; patch -p1 <$ORIGIN/plugins/$package/$p") && die "patch failed\n";
             }
         }

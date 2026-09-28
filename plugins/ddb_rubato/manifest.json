@@ -1,0 +1,24 @@
+{
+    source: {
+        type: "git",
+        url: "https://github.com/shaforostoff/foo_rubato.git",
+        revision: "v0.2.1",
+    },
+    make: {
+        type: "make",
+        root: "deadbeef_rubato",
+        ENV: {
+            GTK3_CFLAGS: "$GTK310_CFLAGS",
+            GTK3_LIBS: "$GTK310_LIBS",
+        },
+        out: [
+            "deadbeef_rubato/ddb_rubato.so",
+        ],
+        out_mac: [
+            "deadbeef_rubato/ddb_rubato.dylib",
+        ],
+    },
+    metadata: {
+        webpage: "https://github.com/shaforostoff/foo_rubato/tree/main/deadbeef_rubato",
+    }
+}
